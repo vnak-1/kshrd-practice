@@ -1,0 +1,68 @@
+# Builds the app and puts it on GitHub Pages on every push to main.
+#
+# `npm run check` runs here too, so a question with a wrong answer key can
+# never reach the live site. That is why this job needs a JDK (javac + java),
+# python3 and sqlite3 as well as Node: the verifier really runs the code in
+# every question.
+#
+# python3 and sqlite3 come with the ubuntu runner image. The JDK does not.
+name: Deploy
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# One deploy at a time. Never cancel one half way, or the live site is left
+# in a broken state.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Show the tools the verifier needs
+        run: |
+          node -v
+          javac -version
+          python3 -V
+          sqlite3 -version
+
+      - run: npm ci
+
+      # validate + verify + tests + build. The question files are checked
+      # before anything is published.
+      - run: npm run check
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
