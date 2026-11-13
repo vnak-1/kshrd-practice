@@ -168,6 +168,7 @@ function checkOptions(where, q) {
       )
     }
     checkText(spot, 'why', o.why, { min: 15, max: 400 })
+    if (o.correct !== true) checkWhyNamesAMistake(spot, o)
     if (o.match !== undefined) {
       checkText(spot, 'match', o.match, { max: 400 })
       checkTextAgreesWithMatch(spot, o)
@@ -179,6 +180,37 @@ function checkOptions(where, q) {
       fail(spot, '"all/none of the above" does not test anything')
     }
   })
+}
+
+/**
+ * A wrong option has to teach something. "No step gives this" teaches nothing:
+ * it tells the reader the answer is wrong, which they already know, and it
+ * usually means the writer picked the number at random.
+ *
+ * Nothing can check that a reason is TRUE — only a human, or a script that
+ * works the wrong method out. This catches the laziest shape, which is the one
+ * that kept appearing. Every wrong option must name the mistake that produces
+ * it: "divided by the new price", "counted each handshake twice".
+ */
+const LAZY_WHY = [
+  /\bno (step|rule|method|working)\b[^.]{0,30}\b(gives?|makes?|leads?)\b/i,
+  /\bnothing (here )?gives\b/i,
+  /\bwhich cannot be right\b/i,
+  /\bthis is (just )?wrong\b/i,
+  /\b(add|check|count|read) (it |them )?again\b/i,
+]
+
+function checkWhyNamesAMistake(spot, o) {
+  for (const pattern of LAZY_WHY) {
+    if (pattern.test(String(o.why ?? ''))) {
+      fail(
+        spot,
+        'the reason does not name a mistake, it only says the answer is wrong. ' +
+          'Say which wrong method gives this option, e.g. "this divides by the new price".',
+      )
+      return
+    }
+  }
 }
 
 /**

@@ -125,17 +125,17 @@
       {
         "text": "30%",
         "correct": false,
-        "why": "Discounts do not simply add. The second 10% is taken off a smaller price, so it saves less."
+        "why": "This adds 20 and 10. Discounts do not add, because the second one is taken off a price that is already smaller."
       },
       {
-        "text": "26%",
+        "text": "72%",
         "correct": false,
-        "why": "No step gives this. 0.8 x 0.9 is 0.72 exactly."
+        "why": "That is the share you still PAY. The discount is what is left over: 100 - 72 = 28."
       },
       {
-        "text": "25%",
+        "text": "15%",
         "correct": false,
-        "why": "This is less than the first discount on its own, which cannot be right."
+        "why": "This averages 20 and 10. Averaging is wrong here, because the two cuts happen one after the other, not side by side."
       }
     ],
     "hint": "Multiply what you still pay, do not add what you save.",
@@ -197,17 +197,17 @@
       {
         "text": "45",
         "correct": false,
-        "why": "That is the number of boys only (3 parts). The question asks for everybody."
+        "why": "That is 3 parts, the boys only. The question asks for everybody."
       },
       {
         "text": "30",
         "correct": false,
-        "why": "That is the number of girls only (2 parts)."
+        "why": "That is 2 parts, the girls only."
       },
       {
-        "text": "25",
+        "text": "15",
         "correct": false,
-        "why": "This treats 15 as the total of the five parts instead of the gap."
+        "why": "That is the gap the question gave you, not the class size. The gap is worth one part out of five."
       }
     ],
     "hint": "How many parts is the DIFFERENCE worth?",
@@ -238,7 +238,7 @@
       {
         "text": "13",
         "correct": false,
-        "why": "This subtracts 5 from 18, which has no meaning here."
+        "why": "This takes 5 away from 18. An average is a total shared out, so you have to multiply to get the total back."
       },
       {
         "text": "3.6",
@@ -269,7 +269,7 @@
       {
         "text": "22",
         "correct": false,
-        "why": "Adding a number equal to the old average would leave the average at 20, not raise it."
+        "why": "That is the NEW average, not the new number. Adding a 22 to four 20s would only lift the average to 20.4."
       },
       {
         "text": "2",
@@ -341,17 +341,17 @@
       {
         "text": "45",
         "correct": false,
-        "why": "This is the plain mean of 30 and 60. You cannot average speeds that way, because the slow leg takes longer."
+        "why": "This is the plain mean of 30 and 60. You cannot average speeds that way, because the slow leg takes twice as long."
       },
       {
-        "text": "50",
+        "text": "30",
         "correct": false,
-        "why": "No step gives this. The slow half pulls the answer down below the middle."
+        "why": "This gives both legs 2 hours: 120 / 4. The fast leg takes only 1 hour."
       },
       {
-        "text": "36",
+        "text": "60",
         "correct": false,
-        "why": "This is too low. Check the times: 2 hours and 1 hour, not 2 and 2."
+        "why": "That is the speed on the way back only. The question asks about the whole trip."
       }
     ],
     "hint": "Total distance divided by total time. Never average the two speeds.",
@@ -387,7 +387,7 @@
       {
         "text": "3",
         "correct": false,
-        "why": "Faster than half of A alone is not possible, because B is slower than A."
+        "why": "This halves A’s 6 days because there are two workers. That would only be right if B were as fast as A, and B is slower."
       }
     ],
     "hint": "Add what each one does in ONE day.",
@@ -413,17 +413,17 @@
       {
         "text": "2/5",
         "correct": false,
-        "why": "That is the part he FINISHED (4/10). The question asks what is left."
+        "why": "That is the part he FINISHED (4/10 cut down). The question asks what is left."
       },
       {
-        "text": "1/5",
+        "text": "4/6",
         "correct": false,
-        "why": "No step gives this. Check that 6/10 cuts down by dividing both numbers by 2."
+        "why": "This compares the 4 days worked with the 6 days left. That is a ratio between two times, not a share of the job."
       },
       {
-        "text": "6/4",
+        "text": "1/10",
         "correct": false,
-        "why": "A fraction of a job cannot be bigger than 1. This compares the two day counts instead of using the whole job."
+        "why": "That is one day of work. He worked 4 days and 6 days are still to come."
       }
     ],
     "hint": "Find the part done first, then take it away from the whole.",
@@ -454,7 +454,7 @@
       {
         "text": "100%",
         "correct": false,
-        "why": "100 is the profit in money, not a percent."
+        "why": "This writes the money profit with a % sign after it. 100 is an amount of money, not a share."
       },
       {
         "text": "125%",
@@ -529,9 +529,9 @@
         "why": "That is the principal plus the interest. The question asks for the interest only."
       },
       {
-        "text": "1500",
+        "text": "1299",
         "correct": false,
-        "why": "No step gives this. 8% of 5000 is 400, and 400 x 3 is 1200."
+        "why": "That is COMPOUND interest for the same numbers. Simple interest never pays interest on interest, so it stays at 400 a year."
       }
     ],
     "hint": "Simple interest is the same amount every year.",

@@ -20,17 +20,17 @@
       {
         "text": "14%",
         "correct": false,
-        "why": "This mistakes the raw Tuesday figure for a percent. 14 is a count of units, not a share."
-      },
-      {
-        "text": "35%",
-        "correct": false,
-        "why": "This is 14 out of 40, so it drops one of the three days from the total."
+        "why": "This writes the raw Tuesday count with a % sign after it. 14 is a number of units, not a share."
       },
       {
         "text": "47%",
         "correct": false,
-        "why": "This is 14 out of 30, the Tuesday total of all three shops. The question asks about shop B only."
+        "why": "This divides by 30, which is shop B’s total with Monday left out. All three days belong in the total."
+      },
+      {
+        "text": "26%",
+        "correct": false,
+        "why": "This divides by 54, the Tuesday column for all three shops. The question is about shop B only."
       }
     ],
     "hint": "First find the total for row B. Then divide Tuesday by that total.",
@@ -86,37 +86,37 @@
     "id": "apt-table-row-average",
     "subtopic": "Data interpretation",
     "difficulty": 1,
-    "prompt": "What is Dara’s average mark over the three subjects, rounded to the nearest whole number?",
+    "prompt": "What is Sok’s average mark over the three subjects?",
     "code": {
       "lang": "table",
       "source": "Name  Mat  Eng  Sci\nDara   72   65   80\nSok    68   74   77\nVuth   90   58   61"
     },
     "options": [
       {
-        "text": "72",
-        "correct": true,
-        "why": "Dara has 72 + 65 + 80 = 217. Divided by 3 subjects that is 72.33, which rounds to 72."
-      },
-      {
-        "text": "217",
-        "correct": false,
-        "why": "That is the total, not the average. You still have to divide by 3."
-      },
-      {
         "text": "73",
-        "correct": false,
-        "why": "72.33 rounds down, because the part after the dot is below 0.5."
+        "correct": true,
+        "why": "Sok has 68 + 74 + 77 = 219. Divided by 3 subjects that is exactly 73."
       },
       {
-        "text": "65",
+        "text": "219",
         "correct": false,
-        "why": "That is one of the three marks, the lowest one."
+        "why": "That is his total. An average still has to be divided by the number of subjects."
+      },
+      {
+        "text": "77",
+        "correct": false,
+        "why": "That is his best single mark, in Science. An average sits between the best and the worst."
+      },
+      {
+        "text": "68",
+        "correct": false,
+        "why": "That is his lowest mark, in Maths."
       }
     ],
-    "hint": "Total first, then divide by how many subjects.",
+    "hint": "Add his row first, then divide by how many subjects.",
     "verify": {
       "runner": "python",
-      "program": "marks = {\n    \"Dara\": [72, 65, 80],\n    \"Sok\": [68, 74, 77],\n    \"Vuth\": [90, 58, 61],\n}\nprint(round(sum(marks[\"Dara\"]) / 3))\n"
+      "program": "marks = {\n    \"Dara\": [72, 65, 80],\n    \"Sok\": [68, 74, 77],\n    \"Vuth\": [90, 58, 61],\n}\nprint(round(sum(marks[\"Sok\"]) / 3))\n"
     }
   },
   {
@@ -178,19 +178,19 @@
         "why": "40 + 55 + 45 + 30 = 170."
       },
       {
+        "text": "140",
+        "correct": false,
+        "why": "This leaves Thursday out: 40 + 55 + 45. All four days count."
+      },
+      {
         "text": "130",
         "correct": false,
-        "why": "This leaves one day out. Check that all four numbers are added."
+        "why": "This leaves Monday out: 55 + 45 + 30."
       },
       {
-        "text": "160",
+        "text": "55",
         "correct": false,
-        "why": "Add again carefully: 40 + 55 is 95, plus 45 is 140, plus 30 is 170."
-      },
-      {
-        "text": "180",
-        "correct": false,
-        "why": "This is 10 too many. 40 + 55 + 45 + 30 is 170."
+        "why": "That is the busiest single day, Tuesday. The question asks for all four days together."
       }
     ],
     "hint": "Just add the row.",

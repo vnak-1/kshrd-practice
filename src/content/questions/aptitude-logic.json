@@ -52,17 +52,17 @@
       {
         "text": "18",
         "correct": false,
-        "why": "This adds 5, repeating the gap before last. The gaps themselves grow."
+        "why": "This repeats the last gap, which was 5. The gaps grow 1, 2, 3, 5, so the next gap is 8."
+      },
+      {
+        "text": "16",
+        "correct": false,
+        "why": "This repeats the gap before last, which was 3. That gap has already been used."
       },
       {
         "text": "26",
         "correct": false,
-        "why": "This doubles 13. The rule is adding, not doubling."
-      },
-      {
-        "text": "20",
-        "correct": false,
-        "why": "No rule here gives 20. Check 8 + 13."
+        "why": "This doubles 13. The rule is adding two neighbours, not doubling."
       }
     ],
     "hint": "Try adding two neighbours together.",
@@ -88,17 +88,17 @@
       {
         "text": "15",
         "correct": false,
-        "why": "This adds 3, but the last step was already an add. The two rules take turns."
+        "why": "This adds 3 twice in a row. The last step was already an add, so the next one must be a take-away."
       },
       {
         "text": "13",
         "correct": false,
-        "why": "This adds 1. No step in the series adds 1."
+        "why": "This adds 1, which is what a WHOLE pair of steps does (+3 then -2). One step at a time is asked for."
       },
       {
         "text": "14",
         "correct": false,
-        "why": "This adds 2. The two steps used are +3 and -2."
+        "why": "This adds 2. The two steps in use are +3 and -2, and 2 is neither of them."
       }
     ],
     "hint": "One rule is not enough here. Try two rules taking turns.",
@@ -134,7 +134,7 @@
       {
         "text": "P",
         "correct": false,
-        "why": "P is four places after L, one too many."
+        "why": "This jumps 4 places from L. Every jump in the series is 3."
       }
     ],
     "hint": "Count the places between each pair of letters.",
@@ -170,7 +170,7 @@
       {
         "text": "M",
         "correct": false,
-        "why": "M is four places back, one too many."
+        "why": "This goes back 4 places from Q. Every step in the series goes back 3."
       }
     ],
     "hint": "The alphabet is running backwards here.",
@@ -458,7 +458,7 @@
       {
         "text": "Wednesday",
         "correct": false,
-        "why": "That is 1 day on. Count again: 7 x 14 = 98, leaving 2 days."
+        "why": "This moves 1 day on, as if the remainder were 1. Divide again: 7 x 14 = 98, which leaves 2 days over."
       }
     ],
     "hint": "Only the remainder after dividing by 7 matters.",

@@ -351,9 +351,9 @@
         "why": "Only the repeat of \"a\" is dropped. \"b\" is a different value and it stays."
       },
       {
-        "text": "It does not compile",
+        "text": "It throws an exception",
         "correct": false,
-        "why": "Set and HashSet are normal Java types from java.util. Adding Strings to them is valid."
+        "why": "Adding a value the Set already holds is allowed. add() simply returns false and leaves the Set as it was."
       }
     ],
     "hint": "What makes a Set different from a List?",
@@ -1294,7 +1294,7 @@
       {
         "text": "1",
         "correct": false,
-        "why": "That is what you would get if n were a normal instance field, where each object keeps its own copy."
+        "why": "This is the count each object would keep if n were NOT static. But then Counter.n would not compile either, because an instance field cannot be read through the class name."
       },
       {
         "text": "0",
@@ -1540,7 +1540,7 @@
       {
         "text": "It does not compile",
         "correct": false,
-        "why": "A return inside finally is legal Java. The compiler only warns, which is why this bug is so easy to hide."
+        "why": "A return inside finally is legal Java and javac says nothing at all about it. That silence is what makes this bug so easy to hide."
       },
       {
         "text": "It prints 1 then 2",
