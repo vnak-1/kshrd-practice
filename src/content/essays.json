@@ -1,0 +1,242 @@
+[
+  {
+    "id": "essay-why-this-scholarship",
+    "kind": "motivation",
+    "prompt": "Why do you want to join this IT scholarship programme, and what do you hope to gain from it?",
+    "minWords": 100,
+    "minutes": 25,
+    "hint": "Say what you want, why you want it, and what you will do with it. One clear reason explained well beats four reasons listed."
+  },
+  {
+    "id": "essay-goals-five-years",
+    "kind": "motivation",
+    "prompt": "What are your goals for the next five years? Explain how you plan to reach them.",
+    "minWords": 100,
+    "minutes": 25,
+    "hint": "A goal with a plan under it reads as serious. A goal on its own reads as a wish."
+  },
+  {
+    "id": "essay-why-software",
+    "kind": "motivation",
+    "prompt": "Why did you choose to study software and information technology instead of another field?",
+    "minWords": 100,
+    "minutes": 25,
+    "hint": "A real moment when you chose is stronger than a general statement that IT is important."
+  },
+  {
+    "id": "essay-project-you-built",
+    "kind": "experience",
+    "prompt": "Describe a project you have built. What was it for, what was the hardest part, and what would you do differently?",
+    "minWords": 120,
+    "minutes": 30,
+    "hint": "The hardest part and what you would change are the interesting bits. Do not spend half the essay describing the features."
+  },
+  {
+    "id": "essay-problem-you-solved",
+    "kind": "experience",
+    "prompt": "Describe a difficult problem you solved. How did you work it out?",
+    "minWords": 100,
+    "minutes": 25,
+    "hint": "Walk through the steps you actually took, including the things you tried that failed."
+  },
+  {
+    "id": "essay-learned-on-your-own",
+    "kind": "experience",
+    "prompt": "Describe something you taught yourself without a teacher. How did you do it, and what made it hard?",
+    "minWords": 100,
+    "minutes": 25,
+    "hint": "Self teaching is what this programme will ask of you, so show your method, not just the result."
+  },
+  {
+    "id": "essay-mistake-you-made",
+    "kind": "experience",
+    "prompt": "Write about a mistake you made and what you learned from it.",
+    "minWords": 100,
+    "minutes": 25,
+    "hint": "Be honest about the mistake. An essay that hides the mistake has nothing left to say about learning."
+  },
+  {
+    "id": "essay-working-in-a-team",
+    "kind": "experience",
+    "prompt": "Describe a time you worked in a team. What was your part, and what did you find difficult?",
+    "minWords": 100,
+    "minutes": 25,
+    "hint": "Name your own contribution clearly. Avoid writing only about what the group did."
+  },
+  {
+    "id": "essay-person-who-influenced-you",
+    "kind": "personal",
+    "prompt": "Write about a person who has influenced you. What did you learn from them?",
+    "minWords": 100,
+    "minutes": 25,
+    "hint": "One specific thing they said or did carries more weight than a list of their good qualities."
+  },
+  {
+    "id": "essay-what-makes-a-good-teacher",
+    "kind": "opinion",
+    "prompt": "What makes a good teacher? Give your reasons.",
+    "minWords": 80,
+    "minutes": 20,
+    "hint": "Pick two or three qualities and explain each one. Do not list ten."
+  },
+  {
+    "id": "essay-importance-of-english",
+    "kind": "opinion",
+    "prompt": "How important is English for a software developer in Cambodia? Explain your view.",
+    "minWords": 80,
+    "minutes": 20,
+    "hint": "You are writing this in English, so the essay is its own evidence. Keep the sentences short and correct."
+  },
+  {
+    "id": "essay-technology-changed-cambodia",
+    "kind": "opinion",
+    "prompt": "How has technology changed daily life in Cambodia in the last ten years? Give examples.",
+    "minWords": 100,
+    "minutes": 25,
+    "hint": "Two or three real examples you have seen yourself beat a general claim about progress."
+  },
+  {
+    "id": "essay-ai-taking-jobs",
+    "kind": "opinion",
+    "prompt": "Some people say AI will take away programming jobs. Do you agree? Give your reasons.",
+    "minWords": 120,
+    "minutes": 30,
+    "hint": "Answer the question directly in the first sentence, then defend it. Mention the other side once and say why you still disagree."
+  },
+  {
+    "id": "essay-should-everyone-learn-to-code",
+    "kind": "opinion",
+    "prompt": "Should every student learn to write computer programs? Give your reasons.",
+    "minWords": 100,
+    "minutes": 25,
+    "hint": "A clear no, well argued, scores as well as a clear yes. Do not sit in the middle."
+  },
+  {
+    "id": "essay-online-or-classroom",
+    "kind": "opinion",
+    "prompt": "Is learning online as good as learning in a classroom? Explain your view.",
+    "minWords": 100,
+    "minutes": 25,
+    "hint": "You have done both. Use what actually happened to you as the evidence."
+  },
+  {
+    "id": "essay-social-media-young-people",
+    "kind": "opinion",
+    "prompt": "Does social media do more good or more harm to young people? Give your reasons.",
+    "minWords": 100,
+    "minutes": 25,
+    "hint": "Choose one side. An essay that says both sides are equal usually says nothing."
+  },
+  {
+    "id": "essay-work-abroad-or-stay",
+    "kind": "opinion",
+    "prompt": "Is it better for a young Cambodian developer to work abroad or to stay and work in Cambodia?",
+    "minWords": 120,
+    "minutes": 30,
+    "hint": "This programme leads to work with Korean companies, so your answer will be read with interest. Be honest."
+  },
+  {
+    "id": "essay-money-or-interest",
+    "kind": "opinion",
+    "prompt": "Should you choose a job for the money or for the work itself? Give your reasons.",
+    "minWords": 100,
+    "minutes": 25,
+    "hint": "A real example from someone you know makes this much stronger than general argument."
+  },
+  {
+    "id": "essay-failure-is-useful",
+    "kind": "opinion",
+    "prompt": "Do people learn more from failure than from success? Explain your view.",
+    "minWords": 100,
+    "minutes": 25,
+    "hint": "Do not just assert that failure teaches. Show one thing a failure taught you that a success could not."
+  },
+  {
+    "id": "essay-teamwork-or-alone",
+    "kind": "opinion",
+    "prompt": "Do you work better alone or in a team? Explain with examples.",
+    "minWords": 80,
+    "minutes": 20,
+    "hint": "Either answer is fine. Saying you are good at both, without examples, is the weak answer."
+  },
+  {
+    "id": "essay-what-makes-good-software",
+    "kind": "technical-opinion",
+    "prompt": "What makes a piece of software good? Give your reasons.",
+    "minWords": 100,
+    "minutes": 25,
+    "hint": "Think beyond \"no bugs\". Speed, clarity and whether ordinary people can use it all count."
+  },
+  {
+    "id": "essay-explain-tech-to-a-child",
+    "kind": "technical-opinion",
+    "prompt": "Explain what a computer program is to someone who has never used a computer.",
+    "minWords": 80,
+    "minutes": 20,
+    "hint": "Explaining simply is a real skill and it is being tested. Avoid every technical word you can."
+  },
+  {
+    "id": "essay-favourite-app",
+    "kind": "technical-opinion",
+    "prompt": "Describe an app you use often. What makes it good, and what would you change about it?",
+    "minWords": 100,
+    "minutes": 25,
+    "hint": "The change you would make shows how you think. Spend half the essay on it."
+  },
+  {
+    "id": "essay-privacy-online",
+    "kind": "opinion",
+    "prompt": "How much should people worry about their privacy online? Give your reasons.",
+    "minWords": 100,
+    "minutes": 25,
+    "hint": "Take a position early. Vague worry is hard to argue."
+  },
+  {
+    "id": "essay-biggest-challenge-cambodia-it",
+    "kind": "opinion",
+    "prompt": "What is the biggest challenge facing the IT industry in Cambodia, and how could it be solved?",
+    "minWords": 120,
+    "minutes": 30,
+    "hint": "Name one challenge, not four. The solution half is where most of the marks will be."
+  },
+  {
+    "id": "essay-how-you-study",
+    "kind": "personal",
+    "prompt": "Describe how you study. What works for you, and what does not?",
+    "minWords": 80,
+    "minutes": 20,
+    "hint": "Be concrete about your routine. This is a question about self knowledge, not about study tips."
+  },
+  {
+    "id": "essay-handle-pressure",
+    "kind": "personal",
+    "prompt": "How do you deal with pressure and deadlines? Give an example.",
+    "minWords": 100,
+    "minutes": 25,
+    "hint": "One story told properly is worth more than a list of techniques."
+  },
+  {
+    "id": "essay-what-you-do-outside-study",
+    "kind": "personal",
+    "prompt": "What do you enjoy doing outside your studies, and what does it give you?",
+    "minWords": 80,
+    "minutes": 20,
+    "hint": "The second half of the question matters. Say what it gives you, not just what it is."
+  },
+  {
+    "id": "essay-advice-to-younger-self",
+    "kind": "personal",
+    "prompt": "What advice would you give to yourself three years ago?",
+    "minWords": 80,
+    "minutes": 20,
+    "hint": "This works best if you say what actually went wrong, then the advice that would have helped."
+  },
+  {
+    "id": "essay-what-you-bring",
+    "kind": "motivation",
+    "prompt": "If you are accepted, what will you bring to this programme and to the other students?",
+    "minWords": 100,
+    "minutes": 25,
+    "hint": "Answer about what you give, not what you get. That is the trap in this question."
+  }
+]
