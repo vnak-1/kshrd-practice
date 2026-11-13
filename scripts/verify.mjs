@@ -59,13 +59,30 @@ function tidy(text) {
 
 const NUMBER = /^-?\d+(\.\d+)?$/
 
-/** Numbers match by value, so 200 and 200.0 are the same answer. */
-function same(actual, expected) {
+/**
+ * Text match, after trimming.
+ *
+ * `numeric` compares numbers by value, so 660 and 660.0 are one answer. That
+ * is right for an aptitude sum, where the reader works out a number and the
+ * trailing zero is noise.
+ *
+ * It is WRONG for a program's output. `3` and `3.0` are the whole point of a
+ * casting or division question: `double d = 7 / 2` prints `3.0`, and a key of
+ * `3` must fail. So only the python runner gets the loose compare.
+ */
+function same(actual, expected, numeric = false) {
   const a = tidy(actual)
   const b = tidy(expected)
   if (a === b) return true
-  if (NUMBER.test(a) && NUMBER.test(b)) return Math.abs(Number(a) - Number(b)) < 1e-9
+  if (numeric && NUMBER.test(a) && NUMBER.test(b)) {
+    return Math.abs(Number(a) - Number(b)) < 1e-9
+  }
   return false
+}
+
+/** Only an aptitude sum may match by value. A program is compared exactly. */
+function numericOk(q) {
+  return q.verify.runner === 'python'
 }
 
 function expectedText(q) {
@@ -80,7 +97,7 @@ function expectedText(q) {
 function wrongOptionMatches(q, actual) {
   for (const o of q.options) {
     if (o.correct) continue
-    if (same(actual, o.match ?? o.text)) {
+    if (same(actual, o.match ?? o.text, numericOk(q))) {
       return `wrong option "${o.text}" also matches the real output "${tidy(actual)}"`
     }
   }
@@ -180,11 +197,28 @@ function programFor(q) {
     members = split.members
     body = src.slice(hit.index + hit[0].length)
   }
+  // An import must sit at the top of the file. One written in the question
+  // would otherwise land inside Main (a member) and javac would reject it.
+  // java.util.* is always added, so a question about ArrayList, HashMap or
+  // HashSet needs no import line on screen at all.
+  const imports = new Set(['import java.util.*;'])
+  const keep = (list) =>
+    list.filter((block) => {
+      const first = block.trim()
+      if (!/^import\s/.test(first)) return true
+      for (const line of block.split('\n')) {
+        if (line.trim()) imports.add(line.trim())
+      }
+      return false
+    })
+  types = keep(types)
+  members = keep(members)
+
   const head = types.length ? `${types.join('\n')}\n` : ''
   const fields = members.length ? `${indentBy(members.join('\n'), '  ')}\n` : ''
   const inner = indentBy(body, '    ').replace(/\n+$/, '')
   return (
-    `${head}public class Main {\n${fields}` +
+    `${[...imports].join('\n')}\n${head}public class Main {\n${fields}` +
     `  public static void main(String[] args) {\n${inner}\n  }\n}\n`
   )
 }
@@ -333,7 +367,7 @@ function checkRunResult(q, out) {
 /** One place for: output equals the key, and no other option equals it. */
 function compare(q, actual, what) {
   const want = expectedText(q)
-  if (!same(actual, want)) {
+  if (!same(actual, want, numericOk(q))) {
     return `${what} "${tidy(actual)}" but the correct option says "${want}"`
   }
   return wrongOptionMatches(q, actual)

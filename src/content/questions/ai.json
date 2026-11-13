@@ -1,0 +1,38 @@
+[
+  {
+    "id": "ai-local-llm-meaning",
+    "section": "technical",
+    "topic": "ai",
+    "subtopic": "Local LLMs",
+    "difficulty": 1,
+    "kind": "concept",
+    "prompt": "What does it mean to run a local LLM?",
+    "options": [
+      {
+        "text": "The model weights sit on your own machine and it answers with no internet",
+        "correct": true,
+        "why": "A local LLM runs on your own hardware with tools like Ollama or LM Studio. Your text never leaves the machine, there is no per-use cost, and it works offline."
+      },
+      {
+        "text": "A cloud model that was trained in your own country",
+        "correct": false,
+        "why": "Where a model was trained says nothing about where it runs. Local means it runs on your hardware."
+      },
+      {
+        "text": "A model you reach through an API key with a monthly bill",
+        "correct": false,
+        "why": "An API key points to someone else's servers. That is the opposite of local."
+      },
+      {
+        "text": "A small copy of a chat app that caches old answers",
+        "correct": false,
+        "why": "A cache stores past replies. A local LLM makes new replies itself, because the weights are on the machine."
+      }
+    ],
+    "hint": "Ask where the weights live.",
+    "verify": {
+      "runner": "review",
+      "reviewed": true
+    }
+  }
+]

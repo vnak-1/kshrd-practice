@@ -1,0 +1,39 @@
+[
+  {
+    "id": "num-percent-discount-then-tax",
+    "section": "aptitude",
+    "topic": "numerical",
+    "subtopic": "Percent change",
+    "difficulty": 2,
+    "kind": "concept",
+    "prompt": "A laptop costs 800 dollars. The shop takes 25 percent off, then adds 10 percent tax on the new price. What is the final price?",
+    "options": [
+      {
+        "text": "660 dollars",
+        "correct": true,
+        "why": "25 percent off 800 leaves 600. Tax of 10 percent on 600 adds 60. The total is 660.",
+        "match": "660"
+      },
+      {
+        "text": "680 dollars",
+        "correct": false,
+        "why": "This adds the 10 percent tax to the first price of 800 instead of to the discounted 600."
+      },
+      {
+        "text": "600 dollars",
+        "correct": false,
+        "why": "600 is the price after the discount. The tax has not been added yet."
+      },
+      {
+        "text": "720 dollars",
+        "correct": false,
+        "why": "This takes 25 percent off and then adds 25 percent back, which is not what the question says."
+      }
+    ],
+    "hint": "Work the two steps in order. The tax goes on the new price.",
+    "verify": {
+      "runner": "python",
+      "check": "round(800 * 0.75 * 1.10)"
+    }
+  }
+]

@@ -1,0 +1,43 @@
+[
+  {
+    "id": "js-event-loop-order-basic",
+    "section": "technical",
+    "topic": "javascript",
+    "subtopic": "Event loop order",
+    "difficulty": 2,
+    "kind": "output",
+    "prompt": "In what order does this JavaScript print?",
+    "code": {
+      "lang": "javascript",
+      "source": "console.log('A');\nsetTimeout(() => {\n  console.log('B');\n}, 0);\nPromise.resolve().then(() => {\n  console.log('C');\n});\nconsole.log('D');"
+    },
+    "options": [
+      {
+        "text": "A D C B",
+        "correct": true,
+        "why": "Plain code runs first (A, D). Then promise jobs, called microtasks, run (C). A setTimeout callback is a macrotask and waits for the next turn of the event loop (B).",
+        "match": "A\nD\nC\nB"
+      },
+      {
+        "text": "A B C D",
+        "correct": false,
+        "why": "This treats the code as if it ran top to bottom with no queues. setTimeout never runs before the rest of the plain code."
+      },
+      {
+        "text": "A D B C",
+        "correct": false,
+        "why": "This puts the timer before the promise. Microtasks always empty out before the next macrotask."
+      },
+      {
+        "text": "C A D B",
+        "correct": false,
+        "why": "A .then callback never runs before the plain code that comes after it, even when the promise is already resolved."
+      }
+    ],
+    "hint": "Plain code, then microtasks, then timers.",
+    "fixedOrder": false,
+    "verify": {
+      "runner": "node"
+    }
+  }
+]

@@ -1,0 +1,39 @@
+[
+  {
+    "id": "sql-clause-order-count",
+    "section": "technical",
+    "topic": "sql",
+    "subtopic": "GROUP BY and HAVING",
+    "difficulty": 2,
+    "kind": "output",
+    "prompt": "A table sales holds (city, amount): ('PP', 10), ('PP', 30), ('SR', 25). How many rows does SELECT city FROM sales GROUP BY city HAVING SUM(amount) > 20 return?",
+    "options": [
+      {
+        "text": "2",
+        "correct": true,
+        "why": "GROUP BY makes one row per city: PP with 40 and SR with 25. HAVING keeps the groups over 20, so both stay."
+      },
+      {
+        "text": "1",
+        "correct": false,
+        "why": "This assumes only PP passes. SR has 25, which is also over 20."
+      },
+      {
+        "text": "3",
+        "correct": false,
+        "why": "3 is the number of raw rows. GROUP BY folds the two PP rows into one group."
+      },
+      {
+        "text": "0",
+        "correct": false,
+        "why": "HAVING filters groups after the sum, and both group sums are over 20."
+      }
+    ],
+    "hint": "Count the groups, not the rows.",
+    "verify": {
+      "runner": "sqlite",
+      "setup": "CREATE TABLE sales (city TEXT, amount INT);\nINSERT INTO sales VALUES ('PP', 10), ('PP', 30), ('SR', 25);",
+      "query": "SELECT COUNT(*) FROM (SELECT city FROM sales GROUP BY city HAVING SUM(amount) > 20);"
+    }
+  }
+]
