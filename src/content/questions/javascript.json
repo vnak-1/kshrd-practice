@@ -39,5 +39,1291 @@
     "verify": {
       "runner": "node"
     }
+  },
+  {
+    "section": "technical",
+    "topic": "javascript",
+    "id": "js-micro-before-macro",
+    "subtopic": "Event loop order",
+    "difficulty": 2,
+    "prompt": "In what order does this print?",
+    "kind": "output",
+    "code": {
+      "lang": "javascript",
+      "source": "setTimeout(() => console.log(1));\nPromise.resolve()\n  .then(() => console.log(2));\nconsole.log(3);"
+    },
+    "verify": {
+      "runner": "node"
+    },
+    "options": [
+      {
+        "text": "3 2 1",
+        "correct": true,
+        "why": "Plain code first, so 3. Then the microtask queue empties, so 2. A setTimeout callback is a macrotask and waits for the next turn, so 1 is last.",
+        "match": "3\n2\n1"
+      },
+      {
+        "text": "1 2 3",
+        "correct": false,
+        "why": "This reads the lines top to bottom. Both setTimeout and .then hand their work to a queue instead of running it now.",
+        "match": "1\n2\n3"
+      },
+      {
+        "text": "3 1 2",
+        "correct": false,
+        "why": "This puts the timer before the promise. Microtasks always finish before the next macrotask starts.",
+        "match": "3\n1\n2"
+      },
+      {
+        "text": "2 3 1",
+        "correct": false,
+        "why": "A .then callback never runs before the plain code below it, even when the promise is already settled.",
+        "match": "2\n3\n1"
+      }
+    ],
+    "hint": "Plain code, then promises, then timers."
+  },
+  {
+    "section": "technical",
+    "topic": "javascript",
+    "id": "js-await-is-a-microtask",
+    "subtopic": "async and await",
+    "difficulty": 3,
+    "prompt": "In what order does this print?",
+    "kind": "output",
+    "code": {
+      "lang": "javascript",
+      "source": "async function go() {\n  console.log('A');\n  await null;\n  console.log('B');\n}\ngo();\nconsole.log('C');"
+    },
+    "verify": {
+      "runner": "node"
+    },
+    "options": [
+      {
+        "text": "A C B",
+        "correct": true,
+        "why": "An async function runs normally until the first await. So A prints at once. The await parks the rest as a microtask, so C runs next, then B.",
+        "match": "A\nC\nB"
+      },
+      {
+        "text": "A B C",
+        "correct": false,
+        "why": "This treats await as if it did nothing. Everything after an await is always deferred, even when you await a plain value.",
+        "match": "A\nB\nC"
+      },
+      {
+        "text": "C A B",
+        "correct": false,
+        "why": "Calling go() starts running it immediately. The body does not wait for the rest of the file.",
+        "match": "C\nA\nB"
+      },
+      {
+        "text": "A C",
+        "correct": false,
+        "why": "B is not skipped. Awaiting null still resumes, just on the next microtask.",
+        "match": "A\nC"
+      }
+    ],
+    "hint": "An async function is normal code until the first await."
+  },
+  {
+    "section": "technical",
+    "topic": "javascript",
+    "id": "js-two-timers-same-delay",
+    "subtopic": "Event loop order",
+    "difficulty": 2,
+    "prompt": "In what order does this print?",
+    "kind": "output",
+    "code": {
+      "lang": "javascript",
+      "source": "setTimeout(\n  () => console.log(\"a\"), 10);\nsetTimeout(\n  () => console.log(\"b\"), 0);\nconsole.log(\"c\");"
+    },
+    "verify": {
+      "runner": "node"
+    },
+    "options": [
+      {
+        "text": "c b a",
+        "correct": true,
+        "why": "Plain code first, so c. Then the timers fire in order of delay, not in the order they were written: 0 before 10.",
+        "match": "c\nb\na"
+      },
+      {
+        "text": "c a b",
+        "correct": false,
+        "why": "This keeps the written order. A shorter delay fires first whatever order it was set in.",
+        "match": "c\na\nb"
+      },
+      {
+        "text": "a b c",
+        "correct": false,
+        "why": "Neither timer can run before the plain code finishes. The call stack has to empty first.",
+        "match": "a\nb\nc"
+      },
+      {
+        "text": "b c a",
+        "correct": false,
+        "why": "A delay of 0 does not mean now. It means as soon as the current code is done.",
+        "match": "b\nc\na"
+      }
+    ],
+    "hint": "A delay of 0 still means \"later\"."
+  },
+  {
+    "section": "technical",
+    "topic": "javascript",
+    "id": "js-chained-then-order",
+    "subtopic": "Promises",
+    "difficulty": 3,
+    "prompt": "In what order does this print?",
+    "kind": "output",
+    "code": {
+      "lang": "javascript",
+      "source": "Promise.resolve()\n  .then(() => console.log(1))\n  .then(() => console.log(3));\nPromise.resolve()\n  .then(() => console.log(2));"
+    },
+    "verify": {
+      "runner": "node"
+    },
+    "options": [
+      {
+        "text": "1 2 3",
+        "correct": true,
+        "why": "Both chains queue their first .then now, so 1 then 2. The second .then of the first chain is only queued once 1 has finished, so 3 goes to the back.",
+        "match": "1\n2\n3"
+      },
+      {
+        "text": "1 3 2",
+        "correct": false,
+        "why": "This runs the whole first chain before touching the second. A chain queues only its next step at a time, so the two chains take turns.",
+        "match": "1\n3\n2"
+      },
+      {
+        "text": "2 1 3",
+        "correct": false,
+        "why": "The first chain registered its callback first, so it is first in the queue.",
+        "match": "2\n1\n3"
+      },
+      {
+        "text": "1 2",
+        "correct": false,
+        "why": "The third log is not skipped. The second .then runs on the turn after the first.",
+        "match": "1\n2"
+      }
+    ],
+    "hint": "Each .then queues the next one only after it finishes."
+  },
+  {
+    "section": "technical",
+    "topic": "javascript",
+    "id": "js-await-in-loop-order",
+    "subtopic": "async and await",
+    "difficulty": 3,
+    "prompt": "In what order does this print?",
+    "kind": "output",
+    "code": {
+      "lang": "javascript",
+      "source": "async function go() {\n  for (const n of [1, 2]) {\n    await n;\n    console.log(n);\n  }\n}\ngo();\nconsole.log('end');"
+    },
+    "verify": {
+      "runner": "node"
+    },
+    "options": [
+      {
+        "text": "end 1 2",
+        "correct": true,
+        "why": "The first await parks the loop before anything is logged, so end prints first. Then the loop resumes one step per microtask.",
+        "match": "end\n1\n2"
+      },
+      {
+        "text": "1 2 end",
+        "correct": false,
+        "why": "The await happens BEFORE the log in each pass, so nothing is printed before the function first pauses.",
+        "match": "1\n2\nend"
+      },
+      {
+        "text": "1 end 2",
+        "correct": false,
+        "why": "The await comes first in the loop body, so the first log is already deferred.",
+        "match": "1\nend\n2"
+      },
+      {
+        "text": "end 1",
+        "correct": false,
+        "why": "The loop runs both passes. Awaiting a plain number resumes on the next microtask every time.",
+        "match": "end\n1"
+      }
+    ],
+    "hint": "Read the order inside the loop body carefully."
+  },
+  {
+    "section": "technical",
+    "topic": "javascript",
+    "id": "js-promise-constructor-is-sync",
+    "subtopic": "Promises",
+    "difficulty": 3,
+    "prompt": "In what order does this print?",
+    "kind": "output",
+    "code": {
+      "lang": "javascript",
+      "source": "new Promise((resolve) => {\n  console.log(\"in\");\n  resolve();\n}).then(\n  () => console.log(\"then\"));\nconsole.log(\"after\");"
+    },
+    "verify": {
+      "runner": "node"
+    },
+    "options": [
+      {
+        "text": "in after then",
+        "correct": true,
+        "why": "The function you pass to new Promise runs straight away, so in prints first. Only the .then callback is queued as a microtask.",
+        "match": "in\nafter\nthen"
+      },
+      {
+        "text": "after in then",
+        "correct": false,
+        "why": "The promise body is not deferred. It runs the moment the promise is built.",
+        "match": "after\nin\nthen"
+      },
+      {
+        "text": "in then after",
+        "correct": false,
+        "why": "Calling resolve does not run .then at once. The callback still waits for the microtask queue.",
+        "match": "in\nthen\nafter"
+      },
+      {
+        "text": "then in after",
+        "correct": false,
+        "why": "A .then callback cannot run before the promise it is attached to even exists.",
+        "match": "then\nin\nafter"
+      }
+    ],
+    "hint": "Which part of a promise runs now, and which part is queued?"
+  },
+  {
+    "section": "technical",
+    "topic": "javascript",
+    "id": "js-settimeout-zero-vs-queuemicrotask",
+    "subtopic": "Event loop order",
+    "difficulty": 2,
+    "prompt": "In what order does this print?",
+    "kind": "output",
+    "code": {
+      "lang": "javascript",
+      "source": "setTimeout(\n  () => console.log(\"t\"), 0);\nqueueMicrotask(\n  () => console.log(\"m\"));\nconsole.log(\"s\");"
+    },
+    "verify": {
+      "runner": "node"
+    },
+    "options": [
+      {
+        "text": "s m t",
+        "correct": true,
+        "why": "Plain code, then the microtask queue, then timers. queueMicrotask puts work in the same queue promises use.",
+        "match": "s\nm\nt"
+      },
+      {
+        "text": "s t m",
+        "correct": false,
+        "why": "This puts the timer first. The whole microtask queue is emptied before any timer gets a turn.",
+        "match": "s\nt\nm"
+      },
+      {
+        "text": "m s t",
+        "correct": false,
+        "why": "A microtask cannot interrupt code that is still running. It waits for the stack to empty.",
+        "match": "m\ns\nt"
+      },
+      {
+        "text": "t m s",
+        "correct": false,
+        "why": "Nothing queued can run before the plain code that queued it has finished.",
+        "match": "t\nm\ns"
+      }
+    ],
+    "hint": "queueMicrotask uses the same queue as a promise."
+  },
+  {
+    "section": "technical",
+    "topic": "javascript",
+    "id": "js-var-in-loop-closure",
+    "subtopic": "var versus let",
+    "difficulty": 3,
+    "prompt": "What does this print?",
+    "kind": "output",
+    "code": {
+      "lang": "javascript",
+      "source": "for (var i = 0; i < 3; i++) {\n  setTimeout(() =>\n    console.log(i));\n}"
+    },
+    "verify": {
+      "runner": "node"
+    },
+    "options": [
+      {
+        "text": "3 3 3",
+        "correct": true,
+        "why": "var makes ONE variable shared by the whole loop. By the time the timers run the loop has finished and i is 3, so all three see 3.",
+        "match": "3\n3\n3"
+      },
+      {
+        "text": "0 1 2",
+        "correct": false,
+        "why": "That is what let would print, because let makes a fresh variable each pass. var does not.",
+        "match": "0\n1\n2"
+      },
+      {
+        "text": "0 0 0",
+        "correct": false,
+        "why": "The shared variable keeps counting up. It ends at 3, not at its starting value.",
+        "match": "0\n0\n0"
+      },
+      {
+        "text": "2 2 2",
+        "correct": false,
+        "why": "The loop stops when i reaches 3, and that failed check is what leaves i at 3, not 2.",
+        "match": "2\n2\n2"
+      }
+    ],
+    "hint": "How many variables does var create here? One, or three?"
+  },
+  {
+    "section": "technical",
+    "topic": "javascript",
+    "id": "js-let-in-loop-closure",
+    "subtopic": "var versus let",
+    "difficulty": 2,
+    "prompt": "What does this print?",
+    "kind": "output",
+    "code": {
+      "lang": "javascript",
+      "source": "for (let i = 0; i < 3; i++) {\n  setTimeout(() =>\n    console.log(i));\n}"
+    },
+    "verify": {
+      "runner": "node"
+    },
+    "options": [
+      {
+        "text": "0 1 2",
+        "correct": true,
+        "why": "let creates a NEW binding on every pass of the loop, so each timer closes over its own copy of i.",
+        "match": "0\n1\n2"
+      },
+      {
+        "text": "3 3 3",
+        "correct": false,
+        "why": "That is what var would print, because var shares one variable across the whole loop.",
+        "match": "3\n3\n3"
+      },
+      {
+        "text": "0 0 0",
+        "correct": false,
+        "why": "Each pass gets its own i, but the value still goes up each time.",
+        "match": "0\n0\n0"
+      },
+      {
+        "text": "1 2 3",
+        "correct": false,
+        "why": "i is captured before the increment, so the first pass holds 0, not 1.",
+        "match": "1\n2\n3"
+      }
+    ],
+    "hint": "let is scoped to the block, and the body is a new block each pass."
+  },
+  {
+    "section": "technical",
+    "topic": "javascript",
+    "id": "js-hoisting-var-undefined",
+    "subtopic": "Hoisting",
+    "difficulty": 2,
+    "prompt": "What does this print?",
+    "kind": "output",
+    "code": {
+      "lang": "javascript",
+      "source": "console.log(x);\nvar x = 5;"
+    },
+    "verify": {
+      "runner": "node"
+    },
+    "options": [
+      {
+        "text": "undefined",
+        "correct": true,
+        "why": "A var declaration is lifted to the top of its scope but the ASSIGNMENT stays where it is. So x exists and holds undefined at that moment.",
+        "match": "undefined"
+      },
+      {
+        "text": "5",
+        "correct": false,
+        "why": "Only the declaration moves up. The value 5 is not assigned until that line is reached.",
+        "match": "5"
+      },
+      {
+        "text": "An error, x is not defined",
+        "correct": false,
+        "why": "That is what you get WITHOUT the var line at all. Here x does exist, it just has no value yet."
+      },
+      {
+        "text": "null",
+        "correct": false,
+        "why": "A declared but unassigned variable is undefined. JavaScript never sets null for you.",
+        "match": "null"
+      }
+    ],
+    "hint": "The declaration moves. Does the value move with it?"
+  },
+  {
+    "section": "technical",
+    "topic": "javascript",
+    "id": "js-closure-counter",
+    "subtopic": "Closures",
+    "difficulty": 2,
+    "prompt": "What does this print?",
+    "kind": "output",
+    "code": {
+      "lang": "javascript",
+      "source": "function make() {\n  let n = 0;\n  return () => ++n;\n}\nconst a = make();\nconst b = make();\nconsole.log(a(), a(), b());"
+    },
+    "verify": {
+      "runner": "node"
+    },
+    "options": [
+      {
+        "text": "1 2 1",
+        "correct": true,
+        "why": "Each call to make() creates a fresh n. So a has its own counter at 2, and b starts again at 1.",
+        "match": "1 2 1"
+      },
+      {
+        "text": "1 2 3",
+        "correct": false,
+        "why": "This treats n as shared by every counter. Each call to make() makes a new one.",
+        "match": "1 2 3"
+      },
+      {
+        "text": "1 1 1",
+        "correct": false,
+        "why": "a keeps its n between calls. That is what a closure is for.",
+        "match": "1 1 1"
+      },
+      {
+        "text": "2 2 1",
+        "correct": false,
+        "why": "++n raises the value and then returns it, so the first call gives 1, not 2.",
+        "match": "2 2 1"
+      }
+    ],
+    "hint": "How many separate n variables exist here?"
+  },
+  {
+    "section": "technical",
+    "topic": "javascript",
+    "id": "js-double-vs-triple-equals",
+    "subtopic": "Comparison",
+    "difficulty": 1,
+    "prompt": "What does this print?",
+    "kind": "output",
+    "code": {
+      "lang": "javascript",
+      "source": "console.log('5' == 5);\nconsole.log('5' === 5);"
+    },
+    "verify": {
+      "runner": "node"
+    },
+    "options": [
+      {
+        "text": "true then false",
+        "correct": true,
+        "why": "== converts the types first, so the text \"5\" becomes the number 5 and they match. === compares the type as well, and text is not a number.",
+        "match": "true\nfalse"
+      },
+      {
+        "text": "false then false",
+        "correct": false,
+        "why": "This treats == and === as the same. == is the loose one and it does convert.",
+        "match": "false\nfalse"
+      },
+      {
+        "text": "true then true",
+        "correct": false,
+        "why": "=== never converts. A string and a number are different types, so it is false.",
+        "match": "true\ntrue"
+      },
+      {
+        "text": "false then true",
+        "correct": false,
+        "why": "The two are the wrong way round. === is the strict one.",
+        "match": "false\ntrue"
+      }
+    ],
+    "hint": "One of them converts the type first."
+  },
+  {
+    "section": "technical",
+    "topic": "javascript",
+    "id": "js-plus-string-and-number",
+    "subtopic": "Type coercion",
+    "difficulty": 2,
+    "prompt": "What does this print?",
+    "kind": "output",
+    "code": {
+      "lang": "javascript",
+      "source": "console.log(1 + '2');\nconsole.log(1 - '2');"
+    },
+    "verify": {
+      "runner": "node"
+    },
+    "options": [
+      {
+        "text": "12 then -1",
+        "correct": true,
+        "why": "+ means join when either side is text, so you get \"12\". There is no text meaning for -, so JavaScript converts \"2\" to a number and subtracts.",
+        "match": "12\n-1"
+      },
+      {
+        "text": "3 then -1",
+        "correct": false,
+        "why": "The + does not add here. As soon as one side is a string, + joins instead.",
+        "match": "3\n-1"
+      },
+      {
+        "text": "12 then NaN",
+        "correct": false,
+        "why": "\"2\" converts to a number cleanly. You only get NaN when the text is not a number.",
+        "match": "12\nNaN"
+      },
+      {
+        "text": "3 then 1",
+        "correct": false,
+        "why": "Neither line is right. + joins, and - gives 1 minus 2, which is negative.",
+        "match": "3\n1"
+      }
+    ],
+    "hint": "Only one of these two operators has a meaning for text."
+  },
+  {
+    "section": "technical",
+    "topic": "javascript",
+    "id": "js-typeof-null",
+    "subtopic": "Types",
+    "difficulty": 2,
+    "prompt": "What does this print?",
+    "kind": "output",
+    "code": {
+      "lang": "javascript",
+      "source": "console.log(typeof null);\nconsole.log(typeof []);"
+    },
+    "verify": {
+      "runner": "node"
+    },
+    "options": [
+      {
+        "text": "object then object",
+        "correct": true,
+        "why": "typeof null giving \"object\" is a famous bug kept for compatibility. Arrays really are objects, so the second is correct behaviour, not a bug.",
+        "match": "object\nobject"
+      },
+      {
+        "text": "null then array",
+        "correct": false,
+        "why": "typeof never returns \"null\" or \"array\". Use Array.isArray to test for an array.",
+        "match": "null\narray"
+      },
+      {
+        "text": "object then array",
+        "correct": false,
+        "why": "There is no \"array\" result from typeof. An array reports as an object.",
+        "match": "object\narray"
+      },
+      {
+        "text": "undefined then object",
+        "correct": false,
+        "why": "typeof undefined is \"undefined\". null is a different value and reports as \"object\".",
+        "match": "undefined\nobject"
+      }
+    ],
+    "hint": "One of these answers is a bug nobody is allowed to fix."
+  },
+  {
+    "section": "technical",
+    "topic": "javascript",
+    "id": "js-nullish-vs-or",
+    "subtopic": "Nullish coalescing",
+    "difficulty": 2,
+    "prompt": "What does this print?",
+    "kind": "output",
+    "code": {
+      "lang": "javascript",
+      "source": "const n = 0;\nconsole.log(n || 10);\nconsole.log(n ?? 10);"
+    },
+    "verify": {
+      "runner": "node"
+    },
+    "options": [
+      {
+        "text": "10 then 0",
+        "correct": true,
+        "why": "|| replaces any falsy value, and 0 is falsy, so it gives 10. ?? only replaces null or undefined, so a real 0 survives.",
+        "match": "10\n0"
+      },
+      {
+        "text": "0 then 0",
+        "correct": false,
+        "why": "|| does not keep 0. It treats 0 as missing, which is the bug ?? was added to fix.",
+        "match": "0\n0"
+      },
+      {
+        "text": "10 then 10",
+        "correct": false,
+        "why": "?? is not the same as ||. It leaves 0, empty text and false alone.",
+        "match": "10\n10"
+      },
+      {
+        "text": "0 then 10",
+        "correct": false,
+        "why": "The two are swapped. || is the one that throws 0 away.",
+        "match": "0\n10"
+      }
+    ],
+    "hint": "Which of the two cares about falsy, and which only about null?"
+  },
+  {
+    "section": "technical",
+    "topic": "javascript",
+    "id": "js-nan-not-equal-itself",
+    "subtopic": "Numbers",
+    "difficulty": 2,
+    "prompt": "What does this print?",
+    "kind": "output",
+    "code": {
+      "lang": "javascript",
+      "source": "console.log(NaN === NaN);\nconsole.log([1, 2] + [3]);"
+    },
+    "verify": {
+      "runner": "node"
+    },
+    "options": [
+      {
+        "text": "false then 1,23",
+        "correct": true,
+        "why": "NaN is the only value not equal to itself. Adding arrays turns each into text first, so \"1,2\" joins \"3\" and gives \"1,23\".",
+        "match": "false\n1,23"
+      },
+      {
+        "text": "true then 1,23",
+        "correct": false,
+        "why": "NaN never equals anything, itself included. Use Number.isNaN to test for it.",
+        "match": "true\n1,23"
+      },
+      {
+        "text": "false then 6",
+        "correct": false,
+        "why": "+ does not add the numbers inside arrays. It converts both arrays to strings and joins them.",
+        "match": "false\n6"
+      },
+      {
+        "text": "false then 1,2,3",
+        "correct": false,
+        "why": "The join adds no comma between the two. You get \"1,2\" directly followed by \"3\".",
+        "match": "false\n1,2,3"
+      }
+    ],
+    "hint": "One value in JavaScript is not equal to itself."
+  },
+  {
+    "section": "technical",
+    "topic": "javascript",
+    "id": "js-map-vs-foreach-return",
+    "subtopic": "Array methods",
+    "difficulty": 2,
+    "prompt": "What does this print?",
+    "kind": "output",
+    "code": {
+      "lang": "javascript",
+      "source": "const a = [1, 2, 3];\nconsole.log(a.map((n) => n * 2));\nconsole.log(\n  a.forEach((n) => n * 2));"
+    },
+    "verify": {
+      "runner": "node"
+    },
+    "options": [
+      {
+        "text": "[ 2, 4, 6 ] then undefined",
+        "correct": true,
+        "why": "map builds and returns a new array. forEach only runs the function for its side effects and always returns undefined.",
+        "match": "[ 2, 4, 6 ]\nundefined"
+      },
+      {
+        "text": "[ 2, 4, 6 ] then [ 2, 4, 6 ]",
+        "correct": false,
+        "why": "forEach throws away whatever the function returns. It never builds an array.",
+        "match": "[ 2, 4, 6 ]\n[ 2, 4, 6 ]"
+      },
+      {
+        "text": "undefined then [ 2, 4, 6 ]",
+        "correct": false,
+        "why": "The two are swapped. map is the one that gives you a new array.",
+        "match": "undefined\n[ 2, 4, 6 ]"
+      },
+      {
+        "text": "[ 1, 2, 3 ] then undefined",
+        "correct": false,
+        "why": "map applies the function, so the values are doubled, not left alone.",
+        "match": "[ 1, 2, 3 ]\nundefined"
+      }
+    ],
+    "hint": "One of these two gives you something back."
+  },
+  {
+    "section": "technical",
+    "topic": "javascript",
+    "id": "js-filter-keeps-truthy",
+    "subtopic": "Array methods",
+    "difficulty": 2,
+    "prompt": "What does this print?",
+    "kind": "output",
+    "code": {
+      "lang": "javascript",
+      "source": "const a = [0, 1, '', 2, null];\nconsole.log(a.filter(Boolean));"
+    },
+    "verify": {
+      "runner": "node"
+    },
+    "options": [
+      {
+        "text": "[ 1, 2 ]",
+        "correct": true,
+        "why": "filter keeps a value only when the function says true. Boolean says false for 0, empty text and null, so only 1 and 2 survive.",
+        "match": "[ 1, 2 ]"
+      },
+      {
+        "text": "[ 0, 1, 2 ]",
+        "correct": false,
+        "why": "This keeps 0. Zero is falsy, so Boolean(0) is false and filter drops it.",
+        "match": "[ 0, 1, 2 ]"
+      },
+      {
+        "text": "[ 1, 2, null ]",
+        "correct": false,
+        "why": "null is falsy too, so it is dropped along with 0 and the empty string.",
+        "match": "[ 1, 2, null ]"
+      },
+      {
+        "text": "[ true, true ]",
+        "correct": false,
+        "why": "filter returns the ORIGINAL values that passed, not the result of the test. That would be map.",
+        "match": "[ true, true ]"
+      }
+    ],
+    "hint": "filter keeps values. It does not replace them."
+  },
+  {
+    "section": "technical",
+    "topic": "javascript",
+    "id": "js-reduce-sum",
+    "subtopic": "Array methods",
+    "difficulty": 2,
+    "prompt": "What does this print?",
+    "kind": "output",
+    "code": {
+      "lang": "javascript",
+      "source": "const a = [1, 2, 3, 4];\nconsole.log(\n  a.reduce((t, n) => t + n, 10)\n);"
+    },
+    "verify": {
+      "runner": "node"
+    },
+    "options": [
+      {
+        "text": "20",
+        "correct": true,
+        "why": "The 10 is the starting value. reduce then adds each item onto it: 10 + 1 + 2 + 3 + 4 = 20.",
+        "match": "20"
+      },
+      {
+        "text": "10",
+        "correct": false,
+        "why": "This ignores the array. The starting value is only where the running total begins.",
+        "match": "10"
+      },
+      {
+        "text": "24",
+        "correct": false,
+        "why": "This adds 10 once per item. The starting value is used once, not four times.",
+        "match": "24"
+      },
+      {
+        "text": "4",
+        "correct": false,
+        "why": "reduce returns the running total, not the number of items. That is a.length.",
+        "match": "4"
+      }
+    ],
+    "hint": "What is the second argument to reduce for?"
+  },
+  {
+    "section": "technical",
+    "topic": "javascript",
+    "id": "js-sort-is-alphabetical",
+    "subtopic": "Array methods",
+    "difficulty": 3,
+    "prompt": "What does this print?",
+    "kind": "output",
+    "code": {
+      "lang": "javascript",
+      "source": "console.log([10, 9, 1].sort());"
+    },
+    "verify": {
+      "runner": "node"
+    },
+    "options": [
+      {
+        "text": "[ 1, 10, 9 ]",
+        "correct": true,
+        "why": "With no compare function sort turns each item into TEXT first. As text \"10\" comes before \"9\", because it compares character by character.",
+        "match": "[ 1, 10, 9 ]"
+      },
+      {
+        "text": "[ 1, 9, 10 ]",
+        "correct": false,
+        "why": "That is the numeric order. You only get it by passing a compare function, such as sort((a, b) => a - b).",
+        "match": "[ 1, 9, 10 ]"
+      },
+      {
+        "text": "[ 10, 9, 1 ]",
+        "correct": false,
+        "why": "sort does change the order. It just does not use the order you expected.",
+        "match": "[ 10, 9, 1 ]"
+      },
+      {
+        "text": "[ 9, 10, 1 ]",
+        "correct": false,
+        "why": "This sorts by the LAST digit of each number: 9, then 0 of 10, then 1. Nothing in JavaScript sorts that way.",
+        "match": "[ 9, 10, 1 ]"
+      }
+    ],
+    "hint": "What does sort turn the items into before comparing?"
+  },
+  {
+    "section": "technical",
+    "topic": "javascript",
+    "id": "js-sort-mutates",
+    "subtopic": "Array methods",
+    "difficulty": 2,
+    "prompt": "What does this print?",
+    "kind": "output",
+    "code": {
+      "lang": "javascript",
+      "source": "const a = [3, 1, 2];\nconst b = a.sort();\nb.push(4);\nconsole.log(a);"
+    },
+    "verify": {
+      "runner": "node"
+    },
+    "options": [
+      {
+        "text": "[ 1, 2, 3, 4 ]",
+        "correct": true,
+        "why": "sort changes the original array and returns that same array. So a and b are the same array, and the push shows up in both.",
+        "match": "[ 1, 2, 3, 4 ]"
+      },
+      {
+        "text": "[ 3, 1, 2 ]",
+        "correct": false,
+        "why": "sort does not leave the original alone. It is one of the methods that changes the array in place.",
+        "match": "[ 3, 1, 2 ]"
+      },
+      {
+        "text": "[ 1, 2, 3 ]",
+        "correct": false,
+        "why": "This assumes b is a copy. It is the very same array, so the 4 is there too.",
+        "match": "[ 1, 2, 3 ]"
+      },
+      {
+        "text": "[ 3, 1, 2, 4 ]",
+        "correct": false,
+        "why": "The sort did happen, so the order changed before the push.",
+        "match": "[ 3, 1, 2, 4 ]"
+      }
+    ],
+    "hint": "Does sort give you a new array, or the same one back?"
+  },
+  {
+    "section": "technical",
+    "topic": "javascript",
+    "id": "js-spread-copies-shallow",
+    "subtopic": "Spread",
+    "difficulty": 3,
+    "prompt": "What does this print?",
+    "kind": "output",
+    "code": {
+      "lang": "javascript",
+      "source": "const a = [{ n: 1 }];\nconst b = [...a];\nb[0].n = 9;\nconsole.log(a[0].n);"
+    },
+    "verify": {
+      "runner": "node"
+    },
+    "options": [
+      {
+        "text": "9",
+        "correct": true,
+        "why": "Spread makes a NEW outer array but copies the same inner objects. Both arrays point at one object, so changing it shows in both.",
+        "match": "9"
+      },
+      {
+        "text": "1",
+        "correct": false,
+        "why": "This expects a deep copy. Spread copies only one level down.",
+        "match": "1"
+      },
+      {
+        "text": "undefined",
+        "correct": false,
+        "why": "a still has its object. Spread does not empty the original.",
+        "match": "undefined"
+      },
+      {
+        "text": "An error",
+        "correct": false,
+        "why": "Nothing here is invalid. Spreading an array of objects is ordinary code."
+      }
+    ],
+    "hint": "How many levels deep does spread copy?"
+  },
+  {
+    "section": "technical",
+    "topic": "javascript",
+    "id": "js-destructure-with-default",
+    "subtopic": "Destructuring",
+    "difficulty": 2,
+    "prompt": "What does this print?",
+    "kind": "output",
+    "code": {
+      "lang": "javascript",
+      "source": "const { a = 1, b = 2 } =\n  { a: undefined, b: null };\nconsole.log(a, b);"
+    },
+    "verify": {
+      "runner": "node"
+    },
+    "options": [
+      {
+        "text": "1 null",
+        "correct": true,
+        "why": "A default fills in only when the value is undefined. a gets its default, but null is a real value so b keeps it.",
+        "match": "1 null"
+      },
+      {
+        "text": "1 2",
+        "correct": false,
+        "why": "This treats null as missing. Only undefined triggers a default.",
+        "match": "1 2"
+      },
+      {
+        "text": "undefined null",
+        "correct": false,
+        "why": "The default for a does apply, because a really is undefined.",
+        "match": "undefined null"
+      },
+      {
+        "text": "undefined 2",
+        "correct": false,
+        "why": "Both are the wrong way round. undefined takes the default, null does not.",
+        "match": "undefined 2"
+      }
+    ],
+    "hint": "Defaults and ?? follow the same rule."
+  },
+  {
+    "section": "technical",
+    "topic": "javascript",
+    "id": "js-rest-collects-the-rest",
+    "subtopic": "Rest parameters",
+    "difficulty": 2,
+    "prompt": "What does this print?",
+    "kind": "output",
+    "code": {
+      "lang": "javascript",
+      "source": "function f(a, ...rest) {\n  return [a, rest.length];\n}\nconsole.log(f(1, 2, 3, 4));"
+    },
+    "verify": {
+      "runner": "node"
+    },
+    "options": [
+      {
+        "text": "[ 1, 3 ]",
+        "correct": true,
+        "why": "a takes the first argument. ...rest gathers everything LEFT OVER into an array, which is 2, 3 and 4, so its length is 3.",
+        "match": "[ 1, 3 ]"
+      },
+      {
+        "text": "[ 1, 4 ]",
+        "correct": false,
+        "why": "This counts all four arguments. a has already taken one, so only three are left.",
+        "match": "[ 1, 4 ]"
+      },
+      {
+        "text": "[ 1, 2 ]",
+        "correct": false,
+        "why": "rest.length is a count, not the next value.",
+        "match": "[ 1, 2 ]"
+      },
+      {
+        "text": "[ 1, 1 ]",
+        "correct": false,
+        "why": "rest holds every remaining argument, not just one.",
+        "match": "[ 1, 1 ]"
+      }
+    ],
+    "hint": "How many arguments are left after a takes one?"
+  },
+  {
+    "section": "technical",
+    "topic": "javascript",
+    "id": "js-arrow-has-no-own-this",
+    "subtopic": "this",
+    "difficulty": 3,
+    "prompt": "What does this print?",
+    "kind": "output",
+    "code": {
+      "lang": "javascript",
+      "source": "const o = {\n  n: 1,\n  normal() { return this.n; },\n  arrow: () => this?.n,\n};\nconsole.log(\n  o.normal(), o.arrow());"
+    },
+    "verify": {
+      "runner": "node"
+    },
+    "options": [
+      {
+        "text": "1 undefined",
+        "correct": true,
+        "why": "A normal method gets this from the object it was called on. An arrow function has no this of its own; it uses the one from where it was WRITTEN, which here is not the object.",
+        "match": "1 undefined"
+      },
+      {
+        "text": "1 1",
+        "correct": false,
+        "why": "The arrow does not pick up the object. Being written inside the braces does not make the object its this.",
+        "match": "1 1"
+      },
+      {
+        "text": "undefined 1",
+        "correct": false,
+        "why": "The two are swapped. The normal method is the one that gets the object.",
+        "match": "undefined 1"
+      },
+      {
+        "text": "undefined undefined",
+        "correct": false,
+        "why": "o.normal() is called ON o, so its this is o and n is found.",
+        "match": "undefined undefined"
+      }
+    ],
+    "hint": "One kind of function never gets its own this."
+  },
+  {
+    "section": "technical",
+    "topic": "javascript",
+    "id": "js-object-keys-order",
+    "subtopic": "Objects",
+    "difficulty": 3,
+    "prompt": "What does this print?",
+    "kind": "output",
+    "code": {
+      "lang": "javascript",
+      "source": "const o = {\n  b: 1, 2: 2, a: 3, 1: 4,\n};\nconsole.log(Object.keys(o));"
+    },
+    "verify": {
+      "runner": "node"
+    },
+    "options": [
+      {
+        "text": "[ '1', '2', 'b', 'a' ]",
+        "correct": true,
+        "why": "Keys that look like whole numbers come first, in rising numeric order. Everything else follows in the order it was written.",
+        "match": "[ '1', '2', 'b', 'a' ]"
+      },
+      {
+        "text": "[ 'b', '2', 'a', '1' ]",
+        "correct": false,
+        "why": "This keeps the written order for everything. Number-like keys are pulled to the front.",
+        "match": "[ 'b', '2', 'a', '1' ]"
+      },
+      {
+        "text": "[ '1', '2', 'a', 'b' ]",
+        "correct": false,
+        "why": "The text keys are NOT sorted alphabetically. They stay in the order they were written, so b before a.",
+        "match": "[ '1', '2', 'a', 'b' ]"
+      },
+      {
+        "text": "[ 'a', 'b', '1', '2' ]",
+        "correct": false,
+        "why": "Number-like keys go first, not last.",
+        "match": "[ 'a', 'b', '1', '2' ]"
+      }
+    ],
+    "hint": "Two of these keys are not really text."
+  },
+  {
+    "section": "technical",
+    "topic": "javascript",
+    "id": "js-json-drops-undefined",
+    "subtopic": "JSON",
+    "difficulty": 2,
+    "prompt": "What does this print?",
+    "kind": "output",
+    "code": {
+      "lang": "javascript",
+      "source": "console.log(JSON.stringify({\n  a: 1,\n  b: undefined,\n  c: null,\n}));"
+    },
+    "verify": {
+      "runner": "node"
+    },
+    "options": [
+      {
+        "text": "{\"a\":1,\"c\":null}",
+        "correct": true,
+        "why": "JSON has no way to write undefined, so a key holding it is left out entirely. null is a real JSON value and stays.",
+        "match": "{\"a\":1,\"c\":null}"
+      },
+      {
+        "text": "{\"a\":1,\"b\":null,\"c\":null}",
+        "correct": false,
+        "why": "undefined is not turned into null inside an object. The whole key disappears.",
+        "match": "{\"a\":1,\"b\":null,\"c\":null}"
+      },
+      {
+        "text": "{\"a\":1,\"b\":undefined,\"c\":null}",
+        "correct": false,
+        "why": "undefined is not valid JSON, so it can never appear in the output text."
+      },
+      {
+        "text": "{\"a\":1}",
+        "correct": false,
+        "why": "null survives. Only the undefined key is dropped.",
+        "match": "{\"a\":1}"
+      }
+    ],
+    "hint": "Which of these two empty-ish values can JSON actually write?"
+  },
+  {
+    "section": "technical",
+    "topic": "javascript",
+    "id": "js-const-object-is-mutable",
+    "subtopic": "const",
+    "difficulty": 2,
+    "prompt": "What does this print?",
+    "kind": "output",
+    "code": {
+      "lang": "javascript",
+      "source": "const o = { n: 1 };\no.n = 2;\nconsole.log(o.n);"
+    },
+    "verify": {
+      "runner": "node"
+    },
+    "options": [
+      {
+        "text": "2",
+        "correct": true,
+        "why": "const stops you REASSIGNING the name, not changing what is inside the object. o still points at the same object, so editing a field is allowed.",
+        "match": "2"
+      },
+      {
+        "text": "1",
+        "correct": false,
+        "why": "The assignment does take effect. const does not freeze the contents.",
+        "match": "1"
+      },
+      {
+        "text": "An error, o is constant",
+        "correct": false,
+        "why": "You would only get an error from o = {} , which replaces the whole thing. Changing a field is fine."
+      },
+      {
+        "text": "undefined",
+        "correct": false,
+        "why": "The field is set to 2, so it is certainly not missing.",
+        "match": "undefined"
+      }
+    ],
+    "hint": "const protects the name, not the contents."
+  },
+  {
+    "section": "technical",
+    "topic": "javascript",
+    "id": "js-template-string",
+    "subtopic": "Template strings",
+    "difficulty": 1,
+    "prompt": "What does this print?",
+    "kind": "output",
+    "code": {
+      "lang": "javascript",
+      "source": "const n = 2;\nconsole.log(`n is ${n + 1}`);"
+    },
+    "verify": {
+      "runner": "node"
+    },
+    "options": [
+      {
+        "text": "n is 3",
+        "correct": true,
+        "why": "Back ticks let you drop an expression into text with ${...}. The expression is worked out first, so 2 + 1 gives 3.",
+        "match": "n is 3"
+      },
+      {
+        "text": "n is ${n + 1}",
+        "correct": false,
+        "why": "That is what plain quotes would give. Back ticks really do fill the value in.",
+        "match": "n is ${n + 1}"
+      },
+      {
+        "text": "n is 21",
+        "correct": false,
+        "why": "The + inside ${} adds, because both sides are numbers. It only joins when one side is text.",
+        "match": "n is 21"
+      },
+      {
+        "text": "n is 2",
+        "correct": false,
+        "why": "The whole expression is worked out, not just the variable.",
+        "match": "n is 2"
+      }
+    ],
+    "hint": "What runs inside ${ } before it is printed?"
+  },
+  {
+    "section": "technical",
+    "topic": "javascript",
+    "id": "js-short-circuit-returns-value",
+    "subtopic": "Logical operators",
+    "difficulty": 3,
+    "prompt": "What does this print?",
+    "kind": "output",
+    "code": {
+      "lang": "javascript",
+      "source": "console.log('a' && 'b');\nconsole.log('' || 'c');"
+    },
+    "verify": {
+      "runner": "node"
+    },
+    "options": [
+      {
+        "text": "b then c",
+        "correct": true,
+        "why": "&& and || return one of the OPERANDS, not true or false. && gives the last one when all are truthy; || gives the first truthy one.",
+        "match": "b\nc"
+      },
+      {
+        "text": "true then true",
+        "correct": false,
+        "why": "These operators do not convert their answer to a boolean. They hand back the value itself.",
+        "match": "true\ntrue"
+      },
+      {
+        "text": "a then c",
+        "correct": false,
+        "why": "&& keeps going while things are truthy, so it ends on the LAST one, \"b\".",
+        "match": "a\nc"
+      },
+      {
+        "text": "b then true",
+        "correct": false,
+        "why": "|| behaves the same way as &&. It returns the value \"c\", not a boolean.",
+        "match": "b\ntrue"
+      }
+    ],
+    "hint": "These two do not return true or false."
   }
 ]

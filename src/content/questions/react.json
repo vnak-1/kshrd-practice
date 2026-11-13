@@ -1,0 +1,730 @@
+[
+  {
+    "section": "technical",
+    "topic": "react",
+    "verify": {
+      "runner": "review",
+      "reviewed": true
+    },
+    "id": "react-class-not-class-name",
+    "subtopic": "JSX rules",
+    "difficulty": 1,
+    "prompt": "Which attribute sets a CSS class in JSX?",
+    "options": [
+      {
+        "text": "className",
+        "correct": true,
+        "why": "\"class\" is a reserved word in JavaScript, and JSX is JavaScript, so React uses className instead."
+      },
+      {
+        "text": "class",
+        "correct": false,
+        "why": "This is the HTML name. In JSX it clashes with the JavaScript keyword, so React renamed it."
+      },
+      {
+        "text": "cssClass",
+        "correct": false,
+        "why": "No framework uses this name. It is not part of JSX."
+      },
+      {
+        "text": "styleClass",
+        "correct": false,
+        "why": "Not a React attribute. style in React takes an object of CSS properties, which is a different thing."
+      }
+    ],
+    "hint": "One HTML attribute name is already a JavaScript keyword.",
+    "kind": "concept"
+  },
+  {
+    "section": "technical",
+    "topic": "react",
+    "verify": {
+      "runner": "review",
+      "reviewed": true
+    },
+    "id": "react-one-parent-element",
+    "subtopic": "JSX rules",
+    "difficulty": 2,
+    "prompt": "Why does this component fail?",
+    "kind": "syntax",
+    "code": {
+      "lang": "jsx",
+      "source": "function A() {\n  return (\n    <h1>Hi</h1>\n    <p>There</p>\n  );\n}"
+    },
+    "options": [
+      {
+        "text": "A component must return one top level element",
+        "correct": true,
+        "why": "return can only hand back one value. Wrap the two in a <div>, or in an empty <> </> fragment if you do not want an extra tag."
+      },
+      {
+        "text": "<p> cannot follow <h1>",
+        "correct": false,
+        "why": "That order is perfectly normal HTML. The problem is that nothing wraps them."
+      },
+      {
+        "text": "The text needs to be in braces",
+        "correct": false,
+        "why": "Plain text inside a tag needs no braces. Braces are for JavaScript expressions."
+      },
+      {
+        "text": "The function name must be lowercase",
+        "correct": false,
+        "why": "The opposite. A component name must start with a CAPITAL, or React treats it as an HTML tag."
+      }
+    ],
+    "hint": "Count how many things the return gives back."
+  },
+  {
+    "section": "technical",
+    "topic": "react",
+    "verify": {
+      "runner": "review",
+      "reviewed": true
+    },
+    "id": "react-braces-for-js",
+    "subtopic": "JSX rules",
+    "difficulty": 1,
+    "prompt": "How do you show the value of a variable called name inside JSX?",
+    "options": [
+      {
+        "text": "{name}",
+        "correct": true,
+        "why": "Single curly braces drop a JavaScript expression into JSX. Anything inside them is evaluated and the result is shown."
+      },
+      {
+        "text": "{{name}}",
+        "correct": false,
+        "why": "Double braces are the Vue and Angular style. In JSX they mean an object inside an expression, which is how style={{color:\"red\"}} works."
+      },
+      {
+        "text": "${name}",
+        "correct": false,
+        "why": "That is template-string syntax, and it only works inside back ticks."
+      },
+      {
+        "text": "<%= name %>",
+        "correct": false,
+        "why": "That is an old server template style, not JSX."
+      }
+    ],
+    "hint": "How many braces?",
+    "kind": "concept"
+  },
+  {
+    "section": "technical",
+    "topic": "react",
+    "verify": {
+      "runner": "review",
+      "reviewed": true
+    },
+    "id": "react-component-capital-letter",
+    "subtopic": "Components",
+    "difficulty": 2,
+    "prompt": "Why must a React component name start with a capital letter?",
+    "options": [
+      {
+        "text": "A lowercase name is treated as a plain HTML tag",
+        "correct": true,
+        "why": "React decides by the first letter. <button> means the real HTML button; <Button> means your component."
+      },
+      {
+        "text": "It is only a style convention with no effect",
+        "correct": false,
+        "why": "It genuinely changes what React renders, so it is a rule, not a preference."
+      },
+      {
+        "text": "JavaScript requires capitals for functions",
+        "correct": false,
+        "why": "JavaScript has no such rule. This one comes from JSX."
+      },
+      {
+        "text": "It makes the component faster",
+        "correct": false,
+        "why": "Naming has no effect on speed."
+      }
+    ],
+    "hint": "How does React tell <button> from <Button>?",
+    "kind": "concept"
+  },
+  {
+    "section": "technical",
+    "topic": "react",
+    "verify": {
+      "runner": "review",
+      "reviewed": true
+    },
+    "id": "react-props-are-read-only",
+    "subtopic": "Props",
+    "difficulty": 2,
+    "prompt": "What is true about props?",
+    "options": [
+      {
+        "text": "A component must not change its own props",
+        "correct": true,
+        "why": "Props belong to the parent that passed them. A child that rewrote them would make the data flow impossible to follow, so React treats them as read only."
+      },
+      {
+        "text": "A component changes props to update the screen",
+        "correct": false,
+        "why": "That is what state is for. To change a prop, the PARENT has to pass a new value."
+      },
+      {
+        "text": "Props can only be strings",
+        "correct": false,
+        "why": "A prop can be any value: a number, an object, an array, even a function."
+      },
+      {
+        "text": "Props are shared by every component",
+        "correct": false,
+        "why": "They are passed from one parent to one child. Nothing is global about them."
+      }
+    ],
+    "hint": "Who owns the value, the parent or the child?",
+    "kind": "concept"
+  },
+  {
+    "section": "technical",
+    "topic": "react",
+    "verify": {
+      "runner": "review",
+      "reviewed": true
+    },
+    "id": "react-state-vs-props",
+    "subtopic": "State and props",
+    "difficulty": 2,
+    "prompt": "What is the difference between state and props?",
+    "options": [
+      {
+        "text": "State belongs to the component and can change; props come from the parent",
+        "correct": true,
+        "why": "State is the component’s own memory and it may update it. Props are handed in from outside and the component only reads them."
+      },
+      {
+        "text": "State comes from the parent and props are internal",
+        "correct": false,
+        "why": "The two are the wrong way round."
+      },
+      {
+        "text": "They are the same thing with different names",
+        "correct": false,
+        "why": "Who owns the value and who may change it are different for each, which is the whole distinction."
+      },
+      {
+        "text": "State is for text and props are for numbers",
+        "correct": false,
+        "why": "Both hold any kind of value. The difference is ownership, not type."
+      }
+    ],
+    "hint": "Which one can the component itself change?",
+    "kind": "concept"
+  },
+  {
+    "section": "technical",
+    "topic": "react",
+    "verify": {
+      "runner": "review",
+      "reviewed": true
+    },
+    "id": "react-usestate-returns-pair",
+    "subtopic": "useState",
+    "difficulty": 2,
+    "prompt": "What does useState return?",
+    "options": [
+      {
+        "text": "An array of the current value and a function to set it",
+        "correct": true,
+        "why": "That is why you write const [n, setN] = useState(0). The square brackets are array destructuring."
+      },
+      {
+        "text": "Just the current value",
+        "correct": false,
+        "why": "Then you would have no way to change it. The setter is the second half."
+      },
+      {
+        "text": "An object with value and setValue keys",
+        "correct": false,
+        "why": "It returns an array, which is why the brackets are square and you can name the two parts anything you like."
+      },
+      {
+        "text": "A function you call to read the value",
+        "correct": false,
+        "why": "The value is handed to you directly. Only the setter is a function."
+      }
+    ],
+    "hint": "Why are the brackets square and not curly?",
+    "kind": "concept"
+  },
+  {
+    "section": "technical",
+    "topic": "react",
+    "verify": {
+      "runner": "review",
+      "reviewed": true
+    },
+    "id": "react-setstate-is-not-immediate",
+    "subtopic": "useState",
+    "difficulty": 3,
+    "prompt": "After calling setN(5), what does n hold on the very next line?",
+    "options": [
+      {
+        "text": "The old value, because the new one only appears on the next render",
+        "correct": true,
+        "why": "n is a constant captured for THIS render. Setting state asks React to render again, and the new value only exists in that next run."
+      },
+      {
+        "text": "5, the value is updated at once",
+        "correct": false,
+        "why": "If it changed in place, n could not be a const. React re-renders instead of editing the variable."
+      },
+      {
+        "text": "undefined until the render finishes",
+        "correct": false,
+        "why": "n keeps its current value. Nothing is cleared."
+      },
+      {
+        "text": "It depends on whether the component is async",
+        "correct": false,
+        "why": "This behaviour is the same in every component. It is about rendering, not about async."
+      }
+    ],
+    "hint": "n is declared with const. Can a const change?",
+    "kind": "concept"
+  },
+  {
+    "section": "technical",
+    "topic": "react",
+    "verify": {
+      "runner": "review",
+      "reviewed": true
+    },
+    "id": "react-state-update-function",
+    "subtopic": "useState",
+    "difficulty": 3,
+    "prompt": "Why write setN((old) => old + 1) instead of setN(n + 1)?",
+    "options": [
+      {
+        "text": "It uses the latest value, so several updates in a row all count",
+        "correct": true,
+        "why": "n is frozen for this render, so calling setN(n + 1) twice adds one in total. The function form is handed the newest value each time, so it adds two."
+      },
+      {
+        "text": "It is faster",
+        "correct": false,
+        "why": "Speed is the same. The difference is correctness when updates stack up."
+      },
+      {
+        "text": "It is the only form React allows",
+        "correct": false,
+        "why": "Both forms are allowed. The plain one is fine when you are not building on the old value."
+      },
+      {
+        "text": "It avoids a re-render",
+        "correct": false,
+        "why": "Both forms cause a re-render. That is the point of setting state."
+      }
+    ],
+    "hint": "What happens if you call it twice in one handler?",
+    "kind": "concept"
+  },
+  {
+    "section": "technical",
+    "topic": "react",
+    "verify": {
+      "runner": "review",
+      "reviewed": true
+    },
+    "id": "react-key-purpose",
+    "subtopic": "Lists and keys",
+    "difficulty": 2,
+    "prompt": "What is the key prop for when rendering a list?",
+    "options": [
+      {
+        "text": "It lets React tell which item is which between renders",
+        "correct": true,
+        "why": "With a stable key React can move or keep a row instead of rebuilding it, so its DOM state, such as a half-typed input, survives."
+      },
+      {
+        "text": "It sets the order the items appear in",
+        "correct": false,
+        "why": "The order comes from the array. The key only identifies items."
+      },
+      {
+        "text": "It is the id used for CSS styling",
+        "correct": false,
+        "why": "The key never reaches the DOM. You cannot select it in CSS."
+      },
+      {
+        "text": "It is required by JavaScript for arrays",
+        "correct": false,
+        "why": "JavaScript has no such rule. The warning comes from React."
+      }
+    ],
+    "hint": "React needs to match old rows to new rows. How?",
+    "kind": "concept"
+  },
+  {
+    "section": "technical",
+    "topic": "react",
+    "verify": {
+      "runner": "review",
+      "reviewed": true
+    },
+    "id": "react-index-as-key-problem",
+    "subtopic": "Lists and keys",
+    "difficulty": 3,
+    "prompt": "Why is using the array index as a key a problem?",
+    "options": [
+      {
+        "text": "If the list is reordered or an item is removed, the index points at a different item",
+        "correct": true,
+        "why": "React thinks row 0 is still row 0, so it keeps the old DOM for new data. Typed input and focus end up attached to the wrong row."
+      },
+      {
+        "text": "Indexes are numbers and keys must be strings",
+        "correct": false,
+        "why": "A number is a fine key. React converts it."
+      },
+      {
+        "text": "It makes the list render twice",
+        "correct": false,
+        "why": "The number of renders does not change. What changes is which DOM node is reused."
+      },
+      {
+        "text": "Indexes are not unique",
+        "correct": false,
+        "why": "Within one list they are unique. The trouble is that they are not STABLE when the list changes."
+      }
+    ],
+    "hint": "What happens to index 0 when you delete the first item?",
+    "kind": "concept"
+  },
+  {
+    "section": "technical",
+    "topic": "react",
+    "verify": {
+      "runner": "review",
+      "reviewed": true
+    },
+    "id": "react-useeffect-empty-deps",
+    "subtopic": "useEffect",
+    "difficulty": 2,
+    "prompt": "When does an effect with an empty dependency array run?",
+    "kind": "syntax",
+    "code": {
+      "lang": "jsx",
+      "source": "useEffect(() => {\n  console.log(\"hi\");\n}, []);"
+    },
+    "options": [
+      {
+        "text": "Once, after the first render",
+        "correct": true,
+        "why": "The array lists what the effect depends on. An empty list means nothing can change, so there is never a reason to run it again."
+      },
+      {
+        "text": "After every render",
+        "correct": false,
+        "why": "That is what you get by leaving the array out ALTOGETHER. An empty array is different from no array."
+      },
+      {
+        "text": "Never",
+        "correct": false,
+        "why": "It still runs the first time. The array controls repeats, not the first run."
+      },
+      {
+        "text": "Before the first render",
+        "correct": false,
+        "why": "An effect always runs AFTER the screen is painted. That is why it is called an effect."
+      }
+    ],
+    "hint": "No array, empty array and a filled array are three different things."
+  },
+  {
+    "section": "technical",
+    "topic": "react",
+    "verify": {
+      "runner": "review",
+      "reviewed": true
+    },
+    "id": "react-useeffect-no-deps",
+    "subtopic": "useEffect",
+    "difficulty": 3,
+    "prompt": "What happens if you leave out the dependency array completely?",
+    "options": [
+      {
+        "text": "The effect runs after every render",
+        "correct": true,
+        "why": "With no list React cannot tell what matters, so it assumes everything does. If the effect also sets state, this is the classic infinite loop."
+      },
+      {
+        "text": "The effect runs once",
+        "correct": false,
+        "why": "That is an EMPTY array. Leaving it out is the opposite."
+      },
+      {
+        "text": "The effect never runs",
+        "correct": false,
+        "why": "It runs more often, not less."
+      },
+      {
+        "text": "React throws an error",
+        "correct": false,
+        "why": "It is valid code. React will not stop you, which is what makes the loop easy to write by accident."
+      }
+    ],
+    "hint": "Missing array and empty array are opposites.",
+    "kind": "concept"
+  },
+  {
+    "section": "technical",
+    "topic": "react",
+    "verify": {
+      "runner": "review",
+      "reviewed": true
+    },
+    "id": "react-useeffect-cleanup",
+    "subtopic": "useEffect",
+    "difficulty": 3,
+    "prompt": "What is the function you return from useEffect for?",
+    "options": [
+      {
+        "text": "Cleanup: it runs before the next effect and when the component is removed",
+        "correct": true,
+        "why": "It is where you clear a timer or remove a listener. Without it those pile up every render and leak."
+      },
+      {
+        "text": "It is the value the effect produces",
+        "correct": false,
+        "why": "An effect returns nothing useful to React except the cleanup. Use state if you need a value."
+      },
+      {
+        "text": "It runs before the effect does",
+        "correct": false,
+        "why": "On the FIRST run there is nothing to clean up, so it cannot run before."
+      },
+      {
+        "text": "It decides whether the effect runs again",
+        "correct": false,
+        "why": "The dependency array decides that."
+      }
+    ],
+    "hint": "What needs undoing when a component disappears?",
+    "kind": "concept"
+  },
+  {
+    "section": "technical",
+    "topic": "react",
+    "verify": {
+      "runner": "review",
+      "reviewed": true
+    },
+    "id": "react-conditional-render-and",
+    "subtopic": "Conditional rendering",
+    "difficulty": 3,
+    "prompt": "A list has 0 items. What does {items.length && <List />} render?",
+    "options": [
+      {
+        "text": "The number 0 on the page",
+        "correct": true,
+        "why": "&& returns its LEFT side when that side is falsy, and 0 is falsy. React then renders the number 0 as text. Write items.length > 0 && ... instead."
+      },
+      {
+        "text": "Nothing",
+        "correct": false,
+        "why": "That is what you expected, and the reason this trap catches people. React hides false and null, but it does NOT hide 0."
+      },
+      {
+        "text": "The List component",
+        "correct": false,
+        "why": "&& stops at the falsy left side and never reaches the right."
+      },
+      {
+        "text": "The word false",
+        "correct": false,
+        "why": "The left side is the number 0, not the boolean false, and React does print 0."
+      }
+    ],
+    "hint": "What value does && return when the left side is falsy?",
+    "kind": "concept"
+  },
+  {
+    "section": "technical",
+    "topic": "react",
+    "verify": {
+      "runner": "review",
+      "reviewed": true
+    },
+    "id": "react-onclick-call-vs-pass",
+    "subtopic": "Event handlers",
+    "difficulty": 3,
+    "prompt": "What is wrong with onClick={handle()}?",
+    "options": [
+      {
+        "text": "It calls handle during render instead of on click",
+        "correct": true,
+        "why": "The parentheses run it immediately and pass its RESULT as the handler. Write onClick={handle}, or onClick={() => handle(x)} if you need an argument."
+      },
+      {
+        "text": "Nothing, this is the normal way",
+        "correct": false,
+        "why": "The normal way has no parentheses. With them, the click handler is whatever handle returned, usually undefined."
+      },
+      {
+        "text": "onClick must be lowercase",
+        "correct": false,
+        "why": "In JSX it is camelCase, so onClick is right. The lowercase onclick is the plain HTML spelling."
+      },
+      {
+        "text": "Handlers must be arrow functions",
+        "correct": false,
+        "why": "A named function is fine. The problem is the parentheses, not the kind of function."
+      }
+    ],
+    "hint": "What do the brackets after a function name do?",
+    "kind": "concept"
+  },
+  {
+    "section": "technical",
+    "topic": "react",
+    "verify": {
+      "runner": "review",
+      "reviewed": true
+    },
+    "id": "react-controlled-input",
+    "subtopic": "Forms",
+    "difficulty": 3,
+    "prompt": "An input has value={text} but no onChange. What happens?",
+    "options": [
+      {
+        "text": "You cannot type in it, because React keeps resetting it to text",
+        "correct": true,
+        "why": "Setting value makes React the owner of the field. Without onChange nothing updates the state, so every keystroke is painted over."
+      },
+      {
+        "text": "It works normally",
+        "correct": false,
+        "why": "A value with no onChange is the classic frozen input. React even warns about it."
+      },
+      {
+        "text": "The input disappears",
+        "correct": false,
+        "why": "It renders fine. It just will not accept typing."
+      },
+      {
+        "text": "React throws an error",
+        "correct": false,
+        "why": "It is a console warning, not an error. The page keeps running."
+      }
+    ],
+    "hint": "If React sets the value every render, what happens to what you typed?",
+    "kind": "concept"
+  },
+  {
+    "section": "technical",
+    "topic": "react",
+    "verify": {
+      "runner": "review",
+      "reviewed": true
+    },
+    "id": "react-fragment-syntax",
+    "subtopic": "JSX rules",
+    "difficulty": 2,
+    "prompt": "What is <> </> in JSX?",
+    "options": [
+      {
+        "text": "A fragment: it groups elements without adding a real tag",
+        "correct": true,
+        "why": "It satisfies the one-root rule without putting an extra <div> in the DOM, which matters when a stray div would break a CSS grid or a table."
+      },
+      {
+        "text": "A comment",
+        "correct": false,
+        "why": "A JSX comment is {/* like this */}."
+      },
+      {
+        "text": "An empty div",
+        "correct": false,
+        "why": "A div WOULD appear in the HTML. The point of a fragment is that nothing appears."
+      },
+      {
+        "text": "A placeholder for a missing component",
+        "correct": false,
+        "why": "It is a real feature, not a placeholder."
+      }
+    ],
+    "hint": "What is in the HTML afterwards?",
+    "kind": "concept"
+  },
+  {
+    "section": "technical",
+    "topic": "react",
+    "verify": {
+      "runner": "review",
+      "reviewed": true
+    },
+    "id": "react-why-not-mutate-state",
+    "subtopic": "State",
+    "difficulty": 3,
+    "prompt": "Why is items.push(x) then setItems(items) wrong?",
+    "options": [
+      {
+        "text": "It is the same array, so React sees no change and may not re-render",
+        "correct": true,
+        "why": "React compares the old and new value by identity. Pushing edits the array in place, so both sides are the same object. Use setItems([...items, x])."
+      },
+      {
+        "text": "push is not allowed in JavaScript",
+        "correct": false,
+        "why": "push is ordinary JavaScript. The problem is only that React cannot notice it."
+      },
+      {
+        "text": "It adds the item twice",
+        "correct": false,
+        "why": "The item is added once. The trouble is that the screen may not show it."
+      },
+      {
+        "text": "setItems only takes a function",
+        "correct": false,
+        "why": "It takes a value or a function. Either is fine."
+      }
+    ],
+    "hint": "How does React decide whether something changed?",
+    "kind": "concept"
+  },
+  {
+    "section": "technical",
+    "topic": "react",
+    "verify": {
+      "runner": "review",
+      "reviewed": true
+    },
+    "id": "react-hooks-rules",
+    "subtopic": "Rules of hooks",
+    "difficulty": 3,
+    "prompt": "Which rule must you follow when calling hooks?",
+    "options": [
+      {
+        "text": "Call them at the top level, never inside a condition or a loop",
+        "correct": true,
+        "why": "React matches hooks to their state by call ORDER. A hook inside an if can change that order between renders, and the state lines up with the wrong hook."
+      },
+      {
+        "text": "Call them only inside useEffect",
+        "correct": false,
+        "why": "Hooks are called in the component body. useEffect is itself one of them."
+      },
+      {
+        "text": "Call each hook only once per file",
+        "correct": false,
+        "why": "A component may call useState many times. That is normal."
+      },
+      {
+        "text": "Call them after the return statement",
+        "correct": false,
+        "why": "Nothing runs after return. They go before it."
+      }
+    ],
+    "hint": "React identifies a hook by the order it was called in.",
+    "kind": "concept"
+  }
+]

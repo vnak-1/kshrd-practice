@@ -1,0 +1,830 @@
+[
+  {
+    "section": "technical",
+    "topic": "nextjs",
+    "kind": "concept",
+    "verify": {
+      "runner": "review",
+      "reviewed": true
+    },
+    "id": "next-ssr-meaning",
+    "subtopic": "Rendering strategies",
+    "difficulty": 1,
+    "prompt": "What does server side rendering (SSR) mean?",
+    "options": [
+      {
+        "text": "The page HTML is built on the server for every request",
+        "correct": true,
+        "why": "Each visitor causes the server to build the page again. That is how the page can show something different for each person, or data that changed a second ago."
+      },
+      {
+        "text": "The page HTML is built once when you deploy",
+        "correct": false,
+        "why": "That is static generation (SSG). It builds one copy and serves the same HTML to everyone."
+      },
+      {
+        "text": "The page is built in the browser by JavaScript",
+        "correct": false,
+        "why": "That is client side rendering (CSR). The server sends an almost empty page and JavaScript fills it in."
+      },
+      {
+        "text": "The page is rebuilt on a timer after it is deployed",
+        "correct": false,
+        "why": "That is incremental static regeneration (ISR), a static page that refreshes itself every so often."
+      }
+    ],
+    "hint": "The name says where the work happens. When does it happen?"
+  },
+  {
+    "section": "technical",
+    "topic": "nextjs",
+    "kind": "concept",
+    "verify": {
+      "runner": "review",
+      "reviewed": true
+    },
+    "id": "next-ssg-meaning",
+    "subtopic": "Rendering strategies",
+    "difficulty": 1,
+    "prompt": "What does static site generation (SSG) mean?",
+    "options": [
+      {
+        "text": "The HTML is built once at build time and reused",
+        "correct": true,
+        "why": "The work happens before anybody visits. Every visitor then gets the same ready-made file, which is why it is the fastest option."
+      },
+      {
+        "text": "The HTML is built fresh for every visitor",
+        "correct": false,
+        "why": "That is SSR. SSG does the work once, not once per request."
+      },
+      {
+        "text": "The page cannot use JavaScript at all",
+        "correct": false,
+        "why": "\"Static\" describes when the HTML was made, not whether the page is interactive. A static page can still run JavaScript."
+      },
+      {
+        "text": "The page is stored only in the browser cache",
+        "correct": false,
+        "why": "The built HTML lives on the server or a CDN. A browser cache is a separate thing on top."
+      }
+    ],
+    "hint": "How many times is the HTML built?"
+  },
+  {
+    "section": "technical",
+    "topic": "nextjs",
+    "kind": "concept",
+    "verify": {
+      "runner": "review",
+      "reviewed": true
+    },
+    "id": "next-isr-meaning",
+    "subtopic": "Rendering strategies",
+    "difficulty": 2,
+    "prompt": "What is incremental static regeneration (ISR)?",
+    "options": [
+      {
+        "text": "A static page that rebuilds itself after a set time",
+        "correct": true,
+        "why": "You get the speed of a static page, but it refreshes in the background every so often, so the data does not go stale forever."
+      },
+      {
+        "text": "A page rebuilt on every single request",
+        "correct": false,
+        "why": "That is SSR. ISR rebuilds on a timer, not per request, which is why it stays fast."
+      },
+      {
+        "text": "A page that is never rebuilt after deploy",
+        "correct": false,
+        "why": "That is plain SSG. The whole point of ISR is that it does rebuild."
+      },
+      {
+        "text": "A page rendered only in the browser",
+        "correct": false,
+        "why": "That is CSR. ISR produces real HTML on the server."
+      }
+    ],
+    "hint": "It is static, plus one extra ability."
+  },
+  {
+    "section": "technical",
+    "topic": "nextjs",
+    "kind": "concept",
+    "verify": {
+      "runner": "review",
+      "reviewed": true
+    },
+    "id": "next-which-for-dashboard",
+    "subtopic": "Choosing a strategy",
+    "difficulty": 3,
+    "prompt": "A page shows each user their own account balance, which must always be current. Which rendering strategy fits?",
+    "options": [
+      {
+        "text": "SSR",
+        "correct": true,
+        "why": "The content differs per user and must be fresh, so it has to be built per request. Nothing built ahead of time can know who is asking."
+      },
+      {
+        "text": "SSG",
+        "correct": false,
+        "why": "A page built once at deploy would show every user the same numbers, and they would be out of date."
+      },
+      {
+        "text": "ISR",
+        "correct": false,
+        "why": "ISR still serves one shared page, just refreshed on a timer. It cannot show a different balance per user."
+      },
+      {
+        "text": "It does not matter, they all give the same result",
+        "correct": false,
+        "why": "They differ in WHEN the HTML is built, and that decides whether it can be personal and fresh."
+      }
+    ],
+    "hint": "Can a page built before you arrived know who you are?"
+  },
+  {
+    "section": "technical",
+    "topic": "nextjs",
+    "kind": "concept",
+    "verify": {
+      "runner": "review",
+      "reviewed": true
+    },
+    "id": "next-which-for-blog",
+    "subtopic": "Choosing a strategy",
+    "difficulty": 2,
+    "prompt": "A blog post never changes once published and is the same for everybody. Which strategy is the best fit?",
+    "options": [
+      {
+        "text": "SSG",
+        "correct": true,
+        "why": "Same for everyone and rarely changing is exactly the case for building once. The page is then served as a plain file, which is the fastest thing a server can do."
+      },
+      {
+        "text": "SSR",
+        "correct": false,
+        "why": "Rebuilding identical HTML for every visitor is wasted work and makes the page slower for no gain."
+      },
+      {
+        "text": "CSR",
+        "correct": false,
+        "why": "Rendering in the browser delays the text and hides it from search engines, which is bad for a blog."
+      },
+      {
+        "text": "ISR",
+        "correct": false,
+        "why": "ISR is for content that changes sometimes. If the post never changes there is nothing to regenerate."
+      }
+    ],
+    "hint": "If the answer is the same for everyone forever, why build it twice?"
+  },
+  {
+    "section": "technical",
+    "topic": "nextjs",
+    "kind": "concept",
+    "verify": {
+      "runner": "review",
+      "reviewed": true
+    },
+    "id": "next-pages-router-ssr-function",
+    "subtopic": "Pages Router names",
+    "difficulty": 2,
+    "prompt": "In the older Pages Router, which function makes a page server side rendered?",
+    "options": [
+      {
+        "text": "getServerSideProps",
+        "correct": true,
+        "why": "The name says it: it fetches props on the server, for every request. Next.js sees the export and switches that page to SSR."
+      },
+      {
+        "text": "getStaticProps",
+        "correct": false,
+        "why": "That one runs at BUILD time and makes the page static, which is SSG."
+      },
+      {
+        "text": "getStaticPaths",
+        "correct": false,
+        "why": "That lists which dynamic pages to build ahead of time. It picks the addresses, not the rendering mode."
+      },
+      {
+        "text": "getInitialProps",
+        "correct": false,
+        "why": "That is the oldest API of the three and is no longer recommended. It can run in either place, which is part of why it was replaced."
+      }
+    ],
+    "hint": "Read the names literally. Which says \"server side\"?"
+  },
+  {
+    "section": "technical",
+    "topic": "nextjs",
+    "kind": "concept",
+    "verify": {
+      "runner": "review",
+      "reviewed": true
+    },
+    "id": "next-pages-router-ssg-function",
+    "subtopic": "Pages Router names",
+    "difficulty": 2,
+    "prompt": "In the older Pages Router, which function makes a page statically generated?",
+    "options": [
+      {
+        "text": "getStaticProps",
+        "correct": true,
+        "why": "It runs once at build time and hands the result to the page as props, so the HTML is made before anybody visits."
+      },
+      {
+        "text": "getServerSideProps",
+        "correct": false,
+        "why": "That runs on every request, which is SSR, the opposite of static."
+      },
+      {
+        "text": "useEffect",
+        "correct": false,
+        "why": "That is a React hook that runs in the BROWSER after the page shows. It cannot build HTML on the server."
+      },
+      {
+        "text": "generateStaticParams",
+        "correct": false,
+        "why": "That is the App Router name, and it lists which dynamic pages to build rather than fetching the data for one."
+      }
+    ],
+    "hint": "Static means built at build time."
+  },
+  {
+    "section": "technical",
+    "topic": "nextjs",
+    "kind": "concept",
+    "verify": {
+      "runner": "review",
+      "reviewed": true
+    },
+    "id": "next-app-router-default-component",
+    "subtopic": "Server and client components",
+    "difficulty": 2,
+    "prompt": "In the App Router, what is a component by default?",
+    "options": [
+      {
+        "text": "A server component",
+        "correct": true,
+        "why": "Server is the default, which is the big change from the old router. You have to opt OUT to get a client component."
+      },
+      {
+        "text": "A client component",
+        "correct": false,
+        "why": "That was effectively the old default. In the App Router you must ask for it with \"use client\"."
+      },
+      {
+        "text": "Both, Next.js decides automatically",
+        "correct": false,
+        "why": "Next.js does not guess. The boundary is set by you, with the \"use client\" directive."
+      },
+      {
+        "text": "Neither until you add a directive",
+        "correct": false,
+        "why": "A component with no directive still works. It is simply a server component."
+      }
+    ],
+    "hint": "Which one needs you to write something extra?"
+  },
+  {
+    "section": "technical",
+    "topic": "nextjs",
+    "kind": "concept",
+    "verify": {
+      "runner": "review",
+      "reviewed": true
+    },
+    "id": "next-use-client-directive",
+    "subtopic": "Server and client components",
+    "difficulty": 2,
+    "prompt": "What does putting \"use client\" at the top of a file do?",
+    "options": [
+      {
+        "text": "It marks the file and what it imports as client components",
+        "correct": true,
+        "why": "It sets the boundary where server rendering stops and the browser takes over. Everything imported below that point is bundled for the browser too."
+      },
+      {
+        "text": "It stops the component rendering on the server at all",
+        "correct": false,
+        "why": "A client component is still pre-rendered to HTML on the server. The directive decides where it becomes interactive, not whether it is rendered."
+      },
+      {
+        "text": "It makes the page client side rendered only",
+        "correct": false,
+        "why": "It applies to that component, not to the whole page. A page can mix server and client components."
+      },
+      {
+        "text": "It turns off JavaScript for that file",
+        "correct": false,
+        "why": "The opposite. It is how you get JavaScript shipped to the browser for that component."
+      }
+    ],
+    "hint": "It is a boundary marker, not an on/off switch."
+  },
+  {
+    "section": "technical",
+    "topic": "nextjs",
+    "kind": "concept",
+    "verify": {
+      "runner": "review",
+      "reviewed": true
+    },
+    "id": "next-when-you-need-use-client",
+    "subtopic": "Server and client components",
+    "difficulty": 3,
+    "prompt": "Which of these forces a component to be a client component?",
+    "options": [
+      {
+        "text": "Using useState or an onClick handler",
+        "correct": true,
+        "why": "State and event handlers only exist in the browser. A server component is rendered once and sent as HTML, so it has nowhere to keep state or receive a click."
+      },
+      {
+        "text": "Reading from a database",
+        "correct": false,
+        "why": "That is the opposite. Touching a database is a reason to STAY on the server, where the credentials are safe."
+      },
+      {
+        "text": "Using async and await",
+        "correct": false,
+        "why": "A server component can be an async function. That is one of the things the App Router added."
+      },
+      {
+        "text": "Importing a CSS file",
+        "correct": false,
+        "why": "Styles work in both. Importing CSS does not move a component to the browser."
+      }
+    ],
+    "hint": "What does a component need a live browser for?"
+  },
+  {
+    "section": "technical",
+    "topic": "nextjs",
+    "kind": "concept",
+    "verify": {
+      "runner": "review",
+      "reviewed": true
+    },
+    "id": "next-server-component-cannot",
+    "subtopic": "Server and client components",
+    "difficulty": 3,
+    "prompt": "Which of these can a server component NOT do?",
+    "options": [
+      {
+        "text": "Respond to a button click with useState",
+        "correct": true,
+        "why": "A server component runs once, on the server, and sends HTML. It is gone by the time the user clicks, so it has no state and no event handlers."
+      },
+      {
+        "text": "Fetch data with await before rendering",
+        "correct": false,
+        "why": "It can. A server component may be an async function and await its data directly, with no useEffect needed."
+      },
+      {
+        "text": "Read a secret API key from the environment",
+        "correct": false,
+        "why": "It can, and this is a main reason to use one. The key never reaches the browser."
+      },
+      {
+        "text": "Render another component",
+        "correct": false,
+        "why": "It can render both server and client components inside it."
+      }
+    ],
+    "hint": "What has already finished by the time the user sees the page?"
+  },
+  {
+    "section": "technical",
+    "topic": "nextjs",
+    "kind": "concept",
+    "verify": {
+      "runner": "review",
+      "reviewed": true
+    },
+    "id": "next-why-server-components-help",
+    "subtopic": "Server and client components",
+    "difficulty": 2,
+    "prompt": "What is a main benefit of a server component?",
+    "options": [
+      {
+        "text": "Its code is never sent to the browser, so less is downloaded",
+        "correct": true,
+        "why": "The component runs on the server and only the finished HTML travels. A heavy library used there adds nothing to what the user downloads."
+      },
+      {
+        "text": "It makes the page interactive without JavaScript",
+        "correct": false,
+        "why": "Interactivity is exactly what it cannot do. That is what client components are for."
+      },
+      {
+        "text": "It removes the need for a server",
+        "correct": false,
+        "why": "The name says the opposite. It needs a server to run on."
+      },
+      {
+        "text": "It makes CSS load faster",
+        "correct": false,
+        "why": "Styles are handled the same way either side of the boundary."
+      }
+    ],
+    "hint": "Think about what is NOT downloaded."
+  },
+  {
+    "section": "technical",
+    "topic": "nextjs",
+    "kind": "concept",
+    "verify": {
+      "runner": "review",
+      "reviewed": true
+    },
+    "id": "next-app-router-page-file",
+    "subtopic": "File conventions",
+    "difficulty": 1,
+    "prompt": "In the App Router, which file name makes a route show a page?",
+    "options": [
+      {
+        "text": "page.tsx",
+        "correct": true,
+        "why": "A folder only becomes a visitable route when it holds a page file. The folder name is the address and page.tsx is what is shown."
+      },
+      {
+        "text": "index.tsx",
+        "correct": false,
+        "why": "That is the Pages Router convention. The App Router replaced it with page.tsx."
+      },
+      {
+        "text": "route.tsx",
+        "correct": false,
+        "why": "route.ts is for an API endpoint that returns data, not a page for a person to look at."
+      },
+      {
+        "text": "layout.tsx",
+        "correct": false,
+        "why": "A layout wraps pages with shared chrome such as a nav bar. On its own it shows no route."
+      }
+    ],
+    "hint": "The App Router names files after what they are."
+  },
+  {
+    "section": "technical",
+    "topic": "nextjs",
+    "kind": "concept",
+    "verify": {
+      "runner": "review",
+      "reviewed": true
+    },
+    "id": "next-layout-purpose",
+    "subtopic": "File conventions",
+    "difficulty": 2,
+    "prompt": "What is layout.tsx for in the App Router?",
+    "options": [
+      {
+        "text": "Shared UI that wraps every page below it and keeps its state when you navigate",
+        "correct": true,
+        "why": "A layout holds the parts that should not flash or reset, such as a sidebar or a nav bar. Moving between pages inside it does not rebuild it."
+      },
+      {
+        "text": "The page shown at that address",
+        "correct": false,
+        "why": "That is page.tsx. A layout only wraps."
+      },
+      {
+        "text": "The loading spinner shown while a page fetches",
+        "correct": false,
+        "why": "That is loading.tsx, a separate convention."
+      },
+      {
+        "text": "The 404 page for that folder",
+        "correct": false,
+        "why": "That is not-found.tsx."
+      }
+    ],
+    "hint": "What should NOT reset when you move between pages?"
+  },
+  {
+    "section": "technical",
+    "topic": "nextjs",
+    "kind": "concept",
+    "verify": {
+      "runner": "review",
+      "reviewed": true
+    },
+    "id": "next-dynamic-route-folder",
+    "subtopic": "Routing",
+    "difficulty": 2,
+    "prompt": "In the App Router, how do you make a route that matches /blog/anything?",
+    "options": [
+      {
+        "text": "A folder named [slug] inside blog",
+        "correct": true,
+        "why": "Square brackets mark a part of the address that varies. The name inside the brackets becomes the parameter you read in the page."
+      },
+      {
+        "text": "A folder named {slug} inside blog",
+        "correct": false,
+        "why": "Curly braces are JavaScript syntax. Next.js routing uses square brackets."
+      },
+      {
+        "text": "A folder named :slug inside blog",
+        "correct": false,
+        "why": "A leading colon is the Express and React Router style. Next.js uses the folder name itself."
+      },
+      {
+        "text": "A file named blog/*.tsx",
+        "correct": false,
+        "why": "A star is not a routing convention in Next.js, and a route needs a folder with page.tsx."
+      }
+    ],
+    "hint": "Look at the brackets, not the name."
+  },
+  {
+    "section": "technical",
+    "topic": "nextjs",
+    "kind": "concept",
+    "verify": {
+      "runner": "review",
+      "reviewed": true
+    },
+    "id": "next-loading-file",
+    "subtopic": "File conventions",
+    "difficulty": 2,
+    "prompt": "What does adding loading.tsx to a folder do?",
+    "options": [
+      {
+        "text": "Shows that UI automatically while the page is fetching",
+        "correct": true,
+        "why": "Next.js wraps the page so the fallback appears straight away and the real content swaps in when it is ready. You write no state for it."
+      },
+      {
+        "text": "Makes the page load faster",
+        "correct": false,
+        "why": "It changes what the user SEES while waiting. The data takes just as long."
+      },
+      {
+        "text": "Runs code before the page loads",
+        "correct": false,
+        "why": "That is closer to middleware. loading.tsx is only what is displayed."
+      },
+      {
+        "text": "Preloads the next page",
+        "correct": false,
+        "why": "Next.js prefetches links on its own. That is not what this file does."
+      }
+    ],
+    "hint": "The file name is what the user sees, not what the code does."
+  },
+  {
+    "section": "technical",
+    "topic": "nextjs",
+    "kind": "concept",
+    "verify": {
+      "runner": "review",
+      "reviewed": true
+    },
+    "id": "next-link-vs-anchor",
+    "subtopic": "Navigation",
+    "difficulty": 2,
+    "prompt": "Why use the Link component instead of a plain <a> tag in Next.js?",
+    "options": [
+      {
+        "text": "It moves between pages without a full reload, and prefetches them",
+        "correct": true,
+        "why": "Only the changed part of the page is replaced, so state is kept and the move feels instant. Next.js also fetches the target ahead of time."
+      },
+      {
+        "text": "A plain <a> tag does not work at all in Next.js",
+        "correct": false,
+        "why": "It works and still navigates. You just lose the speed and the kept state."
+      },
+      {
+        "text": "Link is required for external websites",
+        "correct": false,
+        "why": "The opposite. For another site a plain <a> is the right choice, since there is nothing to prefetch."
+      },
+      {
+        "text": "Link adds styling to the link",
+        "correct": false,
+        "why": "It adds no styles. You style it yourself."
+      }
+    ],
+    "hint": "What happens to the rest of the page when you click?"
+  },
+  {
+    "section": "technical",
+    "topic": "nextjs",
+    "kind": "concept",
+    "verify": {
+      "runner": "review",
+      "reviewed": true
+    },
+    "id": "next-fetch-revalidate",
+    "subtopic": "Data fetching and caching",
+    "difficulty": 3,
+    "prompt": "What does { next: { revalidate: 60 } } on a fetch mean?",
+    "options": [
+      {
+        "text": "The cached result may be reused for 60 seconds, then refreshed",
+        "correct": true,
+        "why": "This is ISR at the level of one fetch. Within the window everyone gets the stored copy; after it, the next request triggers a refresh."
+      },
+      {
+        "text": "The fetch times out after 60 seconds",
+        "correct": false,
+        "why": "revalidate is about how long the ANSWER stays usable, not how long to wait for it."
+      },
+      {
+        "text": "The fetch is retried every 60 seconds forever",
+        "correct": false,
+        "why": "Nothing refetches on its own in the background with no traffic. A request after the window is what triggers it."
+      },
+      {
+        "text": "The page is rebuilt 60 times",
+        "correct": false,
+        "why": "60 is a number of seconds, not a count."
+      }
+    ],
+    "hint": "Sixty what, and of what?"
+  },
+  {
+    "section": "technical",
+    "topic": "nextjs",
+    "kind": "concept",
+    "verify": {
+      "runner": "review",
+      "reviewed": true
+    },
+    "id": "next-fetch-no-store",
+    "subtopic": "Data fetching and caching",
+    "difficulty": 3,
+    "prompt": "What does { cache: \"no-store\" } on a fetch do?",
+    "options": [
+      {
+        "text": "Fetches fresh data on every request, never reusing a cached copy",
+        "correct": true,
+        "why": "This is how you opt a server component into true SSR behaviour: the data, and so the page, is rebuilt for each visitor."
+      },
+      {
+        "text": "Stores the result in the browser instead of the server",
+        "correct": false,
+        "why": "\"no-store\" means do not store anywhere. It is not a choice of where."
+      },
+      {
+        "text": "Clears the whole cache",
+        "correct": false,
+        "why": "It affects this one fetch, not everything cached elsewhere."
+      },
+      {
+        "text": "Makes the fetch run in the browser",
+        "correct": false,
+        "why": "It changes caching only. Where the fetch runs is decided by whether the component is a server or client one."
+      }
+    ],
+    "hint": "Read it literally: do not store."
+  },
+  {
+    "section": "technical",
+    "topic": "nextjs",
+    "kind": "concept",
+    "verify": {
+      "runner": "review",
+      "reviewed": true
+    },
+    "id": "next-server-action-purpose",
+    "subtopic": "Server Actions",
+    "difficulty": 3,
+    "prompt": "What is a Server Action in Next.js?",
+    "options": [
+      {
+        "text": "A function marked \"use server\" that the browser can call, but which runs on the server",
+        "correct": true,
+        "why": "It lets a form or a button trigger server code directly, so you do not have to hand-write an API endpoint and a fetch to reach it."
+      },
+      {
+        "text": "A component that renders only on the server",
+        "correct": false,
+        "why": "That is a server component. An action is a function you call, not something that renders."
+      },
+      {
+        "text": "A background job that runs on a schedule",
+        "correct": false,
+        "why": "Nothing in Next.js schedules it. It runs because something in the browser called it."
+      },
+      {
+        "text": "Middleware that runs before every request",
+        "correct": false,
+        "why": "That is middleware.ts, a separate feature."
+      }
+    ],
+    "hint": "\"use client\" marks a boundary one way. What does \"use server\" mark?"
+  },
+  {
+    "section": "technical",
+    "topic": "nextjs",
+    "kind": "concept",
+    "verify": {
+      "runner": "review",
+      "reviewed": true
+    },
+    "id": "next-env-var-public",
+    "subtopic": "Environment variables",
+    "difficulty": 3,
+    "prompt": "Which environment variable is sent to the browser in a Next.js app?",
+    "options": [
+      {
+        "text": "One whose name starts with NEXT_PUBLIC_",
+        "correct": true,
+        "why": "The prefix is the opt-in. Anything without it stays on the server, which is what keeps secret keys out of the bundle."
+      },
+      {
+        "text": "Every variable in .env",
+        "correct": false,
+        "why": "That would leak every secret you own into the browser. The prefix exists precisely to stop it."
+      },
+      {
+        "text": "Only ones used inside a client component",
+        "correct": false,
+        "why": "Where you use it does not matter. A variable without the prefix is simply undefined in the browser."
+      },
+      {
+        "text": "None, they are always server only",
+        "correct": false,
+        "why": "Some values do need to reach the browser, such as a public API address. The prefix is how you allow it."
+      }
+    ],
+    "hint": "The rule is in the NAME of the variable."
+  },
+  {
+    "section": "technical",
+    "topic": "nextjs",
+    "kind": "concept",
+    "verify": {
+      "runner": "review",
+      "reviewed": true
+    },
+    "id": "next-metadata-export",
+    "subtopic": "Metadata",
+    "difficulty": 2,
+    "prompt": "In the App Router, how do you set a page title?",
+    "options": [
+      {
+        "text": "Export a metadata object from the page or layout",
+        "correct": true,
+        "why": "Next.js reads the exported object and writes the head tags for you, so you never touch <head> yourself."
+      },
+      {
+        "text": "Put a <title> tag in your JSX",
+        "correct": false,
+        "why": "The App Router manages the head. Writing the tag by hand is the old way and can be overwritten."
+      },
+      {
+        "text": "Use the next/head component",
+        "correct": false,
+        "why": "next/head is the Pages Router tool. The App Router replaced it with the metadata export."
+      },
+      {
+        "text": "Set it in next.config.js",
+        "correct": false,
+        "why": "That file configures the build, not the content of one page."
+      }
+    ],
+    "hint": "The App Router prefers exports over tags."
+  },
+  {
+    "section": "technical",
+    "topic": "nextjs",
+    "kind": "concept",
+    "verify": {
+      "runner": "review",
+      "reviewed": true
+    },
+    "id": "next-csr-drawback",
+    "subtopic": "Rendering strategies",
+    "difficulty": 2,
+    "prompt": "What is the main drawback of rendering a page entirely in the browser (CSR)?",
+    "options": [
+      {
+        "text": "The user and search engines see an empty page until the JavaScript runs",
+        "correct": true,
+        "why": "The server sends almost nothing, so there is a blank gap while the bundle downloads and runs. That hurts both the first impression and search ranking."
+      },
+      {
+        "text": "It cannot fetch data",
+        "correct": false,
+        "why": "It fetches fine. The problem is WHEN, not whether."
+      },
+      {
+        "text": "It does not work on mobile",
+        "correct": false,
+        "why": "It works everywhere. It is just slower to first paint, which is felt most on a slow phone."
+      },
+      {
+        "text": "It needs a more powerful server",
+        "correct": false,
+        "why": "The opposite. The server does less work, because the browser does it all."
+      }
+    ],
+    "hint": "What is on screen during the wait?"
+  }
+]

@@ -1,0 +1,314 @@
+[
+  {
+    "section": "technical",
+    "topic": "html",
+    "kind": "output",
+    "id": "html-table-gets-tbody",
+    "subtopic": "How the parser changes your markup",
+    "difficulty": 3,
+    "prompt": "The markup has no <tbody>. How many <tbody> elements are in the DOM after the browser parses it?",
+    "code": {
+      "lang": "html",
+      "source": "<table>\n  <tr><td>a</td></tr>\n</table>"
+    },
+    "verify": {
+      "runner": "node",
+      "program": "import { JSDOM } from 'jsdom'\nconst dom = new JSDOM(`<table>\n  <tr><td>a</td></tr>\n</table>`)\nconst { document } = dom.window\nconsole.log(document.querySelectorAll('tbody').length)\n"
+    },
+    "options": [
+      {
+        "text": "1",
+        "correct": true,
+        "why": "The parser INSERTS a tbody around any rows that are not in a thead or tfoot. This is why a CSS rule like table > tr never matches anything."
+      },
+      {
+        "text": "0",
+        "correct": false,
+        "why": "This assumes the DOM matches what you typed. For tables the parser adds elements you did not write."
+      },
+      {
+        "text": "2",
+        "correct": false,
+        "why": "One tbody is added, not one per row."
+      },
+      {
+        "text": "An error, tbody is required",
+        "correct": false,
+        "why": "Leaving out tbody is valid HTML. The parser quietly fills it in."
+      }
+    ],
+    "hint": "The DOM is not always what you typed."
+  },
+  {
+    "section": "technical",
+    "topic": "html",
+    "kind": "output",
+    "id": "html-input-is-void",
+    "subtopic": "Void elements",
+    "difficulty": 2,
+    "prompt": "How many child elements does the <input> have?",
+    "code": {
+      "lang": "html",
+      "source": "<p>\n  <input><b>hi</b>\n</p>"
+    },
+    "verify": {
+      "runner": "node",
+      "program": "import { JSDOM } from 'jsdom'\nconst dom = new JSDOM(`<p>\n  <input><b>hi</b>\n</p>`)\nconst { document } = dom.window\nconsole.log(document.querySelector('input').children.length)\n"
+    },
+    "options": [
+      {
+        "text": "0",
+        "correct": true,
+        "why": "input is a void element: it can never contain anything. The <b> becomes its SIBLING, not its child, even though it is written after it."
+      },
+      {
+        "text": "1",
+        "correct": false,
+        "why": "This reads <input> as an opening tag that wraps what follows. A void element has no closing tag and no contents."
+      },
+      {
+        "text": "2",
+        "correct": false,
+        "why": "There is only one element after it in any case, and it is not inside."
+      },
+      {
+        "text": "An error, input needs a closing tag",
+        "correct": false,
+        "why": "It must NOT have one. Writing </input> is the mistake."
+      }
+    ],
+    "hint": "Can an input ever contain anything?"
+  },
+  {
+    "section": "technical",
+    "topic": "html",
+    "kind": "output",
+    "id": "html-p-cannot-contain-div",
+    "subtopic": "Nesting rules",
+    "difficulty": 3,
+    "prompt": "A <div> is written inside a <p>. How many <p> elements end up in the DOM?",
+    "code": {
+      "lang": "html",
+      "source": "<p>one<div>two</div>three</p>"
+    },
+    "verify": {
+      "runner": "node",
+      "program": "import { JSDOM } from 'jsdom'\nconst dom = new JSDOM(`<p>one<div>two</div>three</p>`)\nconst { document } = dom.window\nconsole.log(document.querySelectorAll('p').length)\n"
+    },
+    "options": [
+      {
+        "text": "2",
+        "correct": true,
+        "why": "A p cannot contain a div, so the parser CLOSES the p before the div, then the stray </p> at the end opens and closes an empty second one."
+      },
+      {
+        "text": "1",
+        "correct": false,
+        "why": "This assumes the nesting survives. The parser breaks the p apart instead, which is why text can jump out of its paragraph."
+      },
+      {
+        "text": "0",
+        "correct": false,
+        "why": "The p is not thrown away. It is split."
+      },
+      {
+        "text": "3",
+        "correct": false,
+        "why": "Only two p elements result: the one that was cut short and the empty one from the leftover closing tag."
+      }
+    ],
+    "hint": "What must the parser do when a div appears inside a p?"
+  },
+  {
+    "section": "technical",
+    "topic": "html",
+    "kind": "output",
+    "id": "html-label-for-matches-id",
+    "subtopic": "Forms and labels",
+    "difficulty": 2,
+    "prompt": "Which attribute joins a <label> to its input?",
+    "code": {
+      "lang": "html",
+      "source": "<label for=\"n\">Name</label>\n<input id=\"n\">"
+    },
+    "verify": {
+      "runner": "node",
+      "program": "import { JSDOM } from 'jsdom'\nconst dom = new JSDOM(`<label for=\"n\">Name</label>\n<input id=\"n\">`)\nconst { document } = dom.window\nconsole.log(document.querySelector('label').control.id)\n"
+    },
+    "options": [
+      {
+        "text": "n",
+        "correct": true,
+        "why": "The label’s for attribute must hold the input’s id. Then tapping the label focuses the field, which matters a lot on a phone."
+      },
+      {
+        "text": "name",
+        "correct": false,
+        "why": "The name attribute is what gets submitted with the form. It does not join a label to a field."
+      },
+      {
+        "text": "label",
+        "correct": false,
+        "why": "There is no attribute by that name here."
+      },
+      {
+        "text": "An empty string",
+        "correct": false,
+        "why": "The pair really is joined, so the control is found and it has an id."
+      }
+    ],
+    "hint": "for points at something. At what?"
+  },
+  {
+    "section": "technical",
+    "topic": "html",
+    "kind": "concept",
+    "id": "html-img-alt-required",
+    "subtopic": "Accessibility",
+    "difficulty": 1,
+    "prompt": "What is the alt attribute on an <img> for?",
+    "options": [
+      {
+        "text": "Text read aloud or shown when the image cannot be seen",
+        "correct": true,
+        "why": "A screen reader reads it, and a browser shows it when the file fails to load. An image that carries meaning needs one."
+      },
+      {
+        "text": "The tooltip shown when you hover",
+        "correct": false,
+        "why": "That is the title attribute, and it is not a replacement, because it is not read by default."
+      },
+      {
+        "text": "The file name of the image",
+        "correct": false,
+        "why": "The file is named by src. alt describes what the image SHOWS."
+      },
+      {
+        "text": "The size of the image",
+        "correct": false,
+        "why": "Size comes from width and height, or from CSS."
+      }
+    ],
+    "hint": "Alt is short for alternative. Alternative to what?",
+    "verify": {
+      "runner": "review",
+      "reviewed": true
+    }
+  },
+  {
+    "section": "technical",
+    "topic": "html",
+    "kind": "concept",
+    "id": "html-semantic-tags",
+    "subtopic": "Semantic HTML",
+    "difficulty": 2,
+    "prompt": "Why use <nav> and <main> instead of <div> everywhere?",
+    "options": [
+      {
+        "text": "They tell screen readers and search engines what each part is",
+        "correct": true,
+        "why": "A div says nothing. A nav lets a screen reader offer \"skip to navigation\", and search engines use the structure too."
+      },
+      {
+        "text": "They come with built-in styling",
+        "correct": false,
+        "why": "They look the same as a div. Semantics and appearance are separate."
+      },
+      {
+        "text": "They load faster",
+        "correct": false,
+        "why": "The speed is identical. The difference is meaning."
+      },
+      {
+        "text": "A div is no longer valid HTML",
+        "correct": false,
+        "why": "div is still fine and still needed where there is no meaning to express."
+      }
+    ],
+    "hint": "Who else reads your HTML apart from the browser?",
+    "verify": {
+      "runner": "review",
+      "reviewed": true
+    }
+  },
+  {
+    "section": "technical",
+    "topic": "html",
+    "kind": "output",
+    "id": "html-id-must-be-unique",
+    "subtopic": "id and class",
+    "difficulty": 2,
+    "prompt": "Two elements share id=\"x\". What does getElementById return?",
+    "code": {
+      "lang": "html",
+      "source": "<p id=\"x\">first</p>\n<p id=\"x\">second</p>"
+    },
+    "verify": {
+      "runner": "node",
+      "program": "import { JSDOM } from 'jsdom'\nconst dom = new JSDOM(`<p id=\"x\">first</p>\n<p id=\"x\">second</p>`)\nconst { document } = dom.window\nconsole.log(document.getElementById('x').textContent)\n"
+    },
+    "options": [
+      {
+        "text": "first",
+        "correct": true,
+        "why": "An id is supposed to be unique. When it is not, the browser does not complain, it just hands back the FIRST match and the second becomes unreachable this way."
+      },
+      {
+        "text": "second",
+        "correct": false,
+        "why": "The search stops at the first match in document order."
+      },
+      {
+        "text": "An error about the duplicate id",
+        "correct": false,
+        "why": "Nothing errors. That silence is what makes duplicate ids a hard bug to find."
+      },
+      {
+        "text": "Both, as a list",
+        "correct": false,
+        "why": "getElementById returns one element or null. querySelectorAll is the one that returns a list."
+      }
+    ],
+    "hint": "The browser will not warn you. What does it do instead?"
+  },
+  {
+    "section": "technical",
+    "topic": "html",
+    "kind": "output",
+    "id": "html-button-default-type",
+    "subtopic": "Forms",
+    "difficulty": 3,
+    "prompt": "A <button> inside a form has no type attribute. What type is it?",
+    "code": {
+      "lang": "html",
+      "source": "<form>\n  <button>Go</button>\n</form>"
+    },
+    "verify": {
+      "runner": "node",
+      "program": "import { JSDOM } from 'jsdom'\nconst dom = new JSDOM(`<form>\n  <button>Go</button>\n</form>`)\nconst { document } = dom.window\nconsole.log(document.querySelector('button').type)\n"
+    },
+    "options": [
+      {
+        "text": "submit",
+        "correct": true,
+        "why": "A button with no type defaults to submit, so it reloads the page. This is why a plain button in a form seems to \"refresh\" unexpectedly. Write type=\"button\" to stop it."
+      },
+      {
+        "text": "button",
+        "correct": false,
+        "why": "That is what most people expect and it is why this catches them out. You have to ask for it."
+      },
+      {
+        "text": "reset",
+        "correct": false,
+        "why": "Reset is never a default. You must write it."
+      },
+      {
+        "text": "It has no type",
+        "correct": false,
+        "why": "Every button has an effective type. Leaving the attribute out picks the default, it does not remove it."
+      }
+    ],
+    "hint": "Why does a form seem to reload when you click a plain button?"
+  }
+]

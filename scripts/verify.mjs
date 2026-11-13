@@ -15,7 +15,7 @@
 // instead. No wrong option may match the real output either.
 
 import { execFile } from 'node:child_process'
-import { mkdtempSync, readdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
+import { mkdirSync, mkdtempSync, readdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { fileURLToPath } from 'node:url'
@@ -359,11 +359,25 @@ async function checkJavaBlank(q, dir, program) {
   return null
 }
 
+/**
+ * Node programs run from a scratch folder INSIDE the project, not from the
+ * system temp dir. Node resolves an import by walking up from the file, so a
+ * program in /tmp can never find this project's node_modules. Running from
+ * here lets an HTML or CSS question import jsdom and prove its answer against
+ * a real DOM, instead of being taken on trust.
+ */
+const NODE_SCRATCH = join(ROOT, 'node_modules', '.cache', 'kshrd-verify')
+
 async function checkNode(q, dir, program) {
-  const file = join(dir, 'main.mjs')
+  mkdirSync(NODE_SCRATCH, { recursive: true })
+  const file = join(NODE_SCRATCH, `${q.id.replace(/[^a-z0-9-]/gi, '_')}.mjs`)
   writeFileSync(file, program)
-  const out = await run(process.execPath, [file], { cwd: dir })
-  return checkRunResult(q, out)
+  try {
+    const out = await run(process.execPath, [file], { cwd: NODE_SCRATCH })
+    return checkRunResult(q, out)
+  } finally {
+    rmSync(file, { force: true })
+  }
 }
 
 function checkRunResult(q, out) {

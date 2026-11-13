@@ -1,0 +1,514 @@
+[
+  {
+    "section": "technical",
+    "topic": "css",
+    "kind": "output",
+    "id": "css-child-vs-descendant",
+    "subtopic": "Selectors",
+    "difficulty": 2,
+    "prompt": "How many elements does the selector .card > p match?",
+    "code": {
+      "lang": "html",
+      "source": "<div class=\"card\">\n  <p>one</p>\n  <div><p>two</p></div>\n</div>"
+    },
+    "verify": {
+      "runner": "node",
+      "program": "import { JSDOM } from 'jsdom'\nconst dom = new JSDOM(`<div class=\"card\">\n  <p>one</p>\n  <div><p>two</p></div>\n</div>`)\nconst { document } = dom.window\nconsole.log(document.querySelectorAll('.card > p').length)\n"
+    },
+    "options": [
+      {
+        "text": "1",
+        "correct": true,
+        "why": "> means DIRECT child only. The second p is wrapped in another div, so it is a grandchild and does not match."
+      },
+      {
+        "text": "2",
+        "correct": false,
+        "why": "That is what .card p would match, with a space, which reaches any depth."
+      },
+      {
+        "text": "0",
+        "correct": false,
+        "why": "The first p really is a direct child of .card."
+      },
+      {
+        "text": "3",
+        "correct": false,
+        "why": "There are only two p elements in total."
+      }
+    ],
+    "hint": "A space and a > mean different things."
+  },
+  {
+    "section": "technical",
+    "topic": "css",
+    "kind": "output",
+    "id": "css-descendant-any-depth",
+    "subtopic": "Selectors",
+    "difficulty": 2,
+    "prompt": "How many elements does the selector .card p match?",
+    "code": {
+      "lang": "html",
+      "source": "<div class=\"card\">\n  <p>one</p>\n  <div><p>two</p></div>\n</div>"
+    },
+    "verify": {
+      "runner": "node",
+      "program": "import { JSDOM } from 'jsdom'\nconst dom = new JSDOM(`<div class=\"card\">\n  <p>one</p>\n  <div><p>two</p></div>\n</div>`)\nconst { document } = dom.window\nconsole.log(document.querySelectorAll('.card p').length)\n"
+    },
+    "options": [
+      {
+        "text": "2",
+        "correct": true,
+        "why": "A space means a descendant at ANY depth, so both the child and the grandchild match."
+      },
+      {
+        "text": "1",
+        "correct": false,
+        "why": "That is .card > p, which only takes direct children."
+      },
+      {
+        "text": "0",
+        "correct": false,
+        "why": "Both p elements are inside .card."
+      },
+      {
+        "text": "3",
+        "correct": false,
+        "why": "There are two p elements, not three."
+      }
+    ],
+    "hint": "How deep does a space reach?"
+  },
+  {
+    "section": "technical",
+    "topic": "css",
+    "kind": "output",
+    "id": "css-adjacent-sibling",
+    "subtopic": "Selectors",
+    "difficulty": 3,
+    "prompt": "How many elements does the selector h2 + p match?",
+    "code": {
+      "lang": "html",
+      "source": "<h2>A</h2>\n<p>one</p>\n<p>two</p>\n<h2>B</h2>\n<p>three</p>"
+    },
+    "verify": {
+      "runner": "node",
+      "program": "import { JSDOM } from 'jsdom'\nconst dom = new JSDOM(`<h2>A</h2>\n<p>one</p>\n<p>two</p>\n<h2>B</h2>\n<p>three</p>`)\nconst { document } = dom.window\nconsole.log(document.querySelectorAll('h2 + p').length)\n"
+    },
+    "options": [
+      {
+        "text": "2",
+        "correct": true,
+        "why": "+ matches only the element IMMEDIATELY after. That is the first p after each h2, so two in all. The \"two\" paragraph has a p before it, not an h2."
+      },
+      {
+        "text": "3",
+        "correct": false,
+        "why": "That is h2 ~ p, the general sibling, which takes every later sibling."
+      },
+      {
+        "text": "1",
+        "correct": false,
+        "why": "There are two h2 elements and each is followed by a p."
+      },
+      {
+        "text": "5",
+        "correct": false,
+        "why": "That is every element on the page."
+      }
+    ],
+    "hint": "Immediately after, or any time after?"
+  },
+  {
+    "section": "technical",
+    "topic": "css",
+    "kind": "output",
+    "id": "css-general-sibling",
+    "subtopic": "Selectors",
+    "difficulty": 3,
+    "prompt": "How many elements does the selector h2 ~ p match?",
+    "code": {
+      "lang": "html",
+      "source": "<h2>A</h2>\n<p>one</p>\n<p>two</p>\n<h2>B</h2>\n<p>three</p>"
+    },
+    "verify": {
+      "runner": "node",
+      "program": "import { JSDOM } from 'jsdom'\nconst dom = new JSDOM(`<h2>A</h2>\n<p>one</p>\n<p>two</p>\n<h2>B</h2>\n<p>three</p>`)\nconst { document } = dom.window\nconsole.log(document.querySelectorAll('h2 ~ p').length)\n"
+    },
+    "options": [
+      {
+        "text": "3",
+        "correct": true,
+        "why": "~ matches EVERY later sibling, not just the next one. All three paragraphs come after an h2 at the same level."
+      },
+      {
+        "text": "2",
+        "correct": false,
+        "why": "That is h2 + p, which stops at the one immediately after."
+      },
+      {
+        "text": "1",
+        "correct": false,
+        "why": "~ does not stop after the first match."
+      },
+      {
+        "text": "0",
+        "correct": false,
+        "why": "The paragraphs are siblings of the headings, so they do match."
+      }
+    ],
+    "hint": "The squiggle is the greedy one."
+  },
+  {
+    "section": "technical",
+    "topic": "css",
+    "kind": "output",
+    "id": "css-first-child-vs-first-of-type",
+    "subtopic": "Pseudo-classes",
+    "difficulty": 3,
+    "prompt": "How many elements does p:first-child match?",
+    "code": {
+      "lang": "html",
+      "source": "<div>\n  <h2>A</h2>\n  <p>one</p>\n</div>"
+    },
+    "verify": {
+      "runner": "node",
+      "program": "import { JSDOM } from 'jsdom'\nconst dom = new JSDOM(`<div>\n  <h2>A</h2>\n  <p>one</p>\n</div>`)\nconst { document } = dom.window\nconsole.log(document.querySelectorAll('p:first-child').length)\n"
+    },
+    "options": [
+      {
+        "text": "0",
+        "correct": true,
+        "why": ":first-child means \"is the first child AND is a p\". The first child here is the h2, so nothing matches. p:first-of-type would match the paragraph."
+      },
+      {
+        "text": "1",
+        "correct": false,
+        "why": "That is p:first-of-type, which means the first p among its siblings. :first-child is stricter."
+      },
+      {
+        "text": "2",
+        "correct": false,
+        "why": "There is only one p in the markup."
+      },
+      {
+        "text": "An error, the selector is invalid",
+        "correct": false,
+        "why": "It is perfectly valid. It simply matches nothing here."
+      }
+    ],
+    "hint": "Read it as two conditions that must BOTH hold."
+  },
+  {
+    "section": "technical",
+    "topic": "css",
+    "kind": "output",
+    "id": "css-id-beats-class",
+    "subtopic": "Specificity",
+    "difficulty": 2,
+    "prompt": "What colour is the paragraph?",
+    "code": {
+      "lang": "html",
+      "source": "<style>\n.a { color: green; }\n#x { color: blue; }\n</style>\n<p id=\"x\" class=\"a\">hi</p>"
+    },
+    "verify": {
+      "runner": "node",
+      "program": "import { JSDOM } from 'jsdom'\nconst dom = new JSDOM(`<style>\n.a { color: green; }\n#x { color: blue; }\n</style>\n<p id=\"x\" class=\"a\">hi</p>`)\nconst { document } = dom.window\nconst NAMES = {\n  'rgb(255, 0, 0)': 'red',\n  'rgb(0, 128, 0)': 'green',\n  'rgb(0, 0, 255)': 'blue',\n  'rgb(255, 165, 0)': 'orange',\n}\nconst colourOf = (sel) => {\n  const c = dom.window.getComputedStyle(\n    document.querySelector(sel)).color\n  return NAMES[c] ?? c\n}\nconsole.log(colourOf('p'))\n"
+    },
+    "options": [
+      {
+        "text": "blue",
+        "correct": true,
+        "why": "An id selector is more specific than a class, so it wins however the rules are ordered in the file."
+      },
+      {
+        "text": "green",
+        "correct": false,
+        "why": "This picks the rule written last. Order only decides a tie, and these two are not tied."
+      },
+      {
+        "text": "black",
+        "correct": false,
+        "why": "One of the rules definitely applies, so the default is overridden."
+      },
+      {
+        "text": "Neither, the rules cancel out",
+        "correct": false,
+        "why": "CSS never cancels. One declaration always wins."
+      }
+    ],
+    "hint": "Which selector is more specific?"
+  },
+  {
+    "section": "technical",
+    "topic": "css",
+    "kind": "output",
+    "id": "css-class-beats-tag",
+    "subtopic": "Specificity",
+    "difficulty": 2,
+    "prompt": "What colour is the paragraph?",
+    "code": {
+      "lang": "html",
+      "source": "<style>\n.a { color: green; }\np { color: red; }\n</style>\n<p class=\"a\">hi</p>"
+    },
+    "verify": {
+      "runner": "node",
+      "program": "import { JSDOM } from 'jsdom'\nconst dom = new JSDOM(`<style>\n.a { color: green; }\np { color: red; }\n</style>\n<p class=\"a\">hi</p>`)\nconst { document } = dom.window\nconst NAMES = {\n  'rgb(255, 0, 0)': 'red',\n  'rgb(0, 128, 0)': 'green',\n  'rgb(0, 0, 255)': 'blue',\n  'rgb(255, 165, 0)': 'orange',\n}\nconst colourOf = (sel) => {\n  const c = dom.window.getComputedStyle(\n    document.querySelector(sel)).color\n  return NAMES[c] ?? c\n}\nconsole.log(colourOf('p'))\n"
+    },
+    "options": [
+      {
+        "text": "green",
+        "correct": true,
+        "why": "A class is more specific than a tag name, so it wins even though the tag rule is written AFTER it."
+      },
+      {
+        "text": "red",
+        "correct": false,
+        "why": "This assumes the last rule wins. Specificity is checked first, and only a tie falls back to order."
+      },
+      {
+        "text": "black",
+        "correct": false,
+        "why": "Both rules match the element, so the colour is certainly set."
+      },
+      {
+        "text": "It depends on the browser",
+        "correct": false,
+        "why": "The cascade is a precise rule and every browser follows it."
+      }
+    ],
+    "hint": "Which beats which: the class or the tag?"
+  },
+  {
+    "section": "technical",
+    "topic": "css",
+    "kind": "output",
+    "id": "css-same-specificity-last-wins",
+    "subtopic": "The cascade",
+    "difficulty": 2,
+    "prompt": "What colour is the paragraph?",
+    "code": {
+      "lang": "html",
+      "source": "<style>\n.a { color: red; }\n.b { color: green; }\n</style>\n<p class=\"a b\">hi</p>"
+    },
+    "verify": {
+      "runner": "node",
+      "program": "import { JSDOM } from 'jsdom'\nconst dom = new JSDOM(`<style>\n.a { color: red; }\n.b { color: green; }\n</style>\n<p class=\"a b\">hi</p>`)\nconst { document } = dom.window\nconst NAMES = {\n  'rgb(255, 0, 0)': 'red',\n  'rgb(0, 128, 0)': 'green',\n  'rgb(0, 0, 255)': 'blue',\n  'rgb(255, 165, 0)': 'orange',\n}\nconst colourOf = (sel) => {\n  const c = dom.window.getComputedStyle(\n    document.querySelector(sel)).color\n  return NAMES[c] ?? c\n}\nconsole.log(colourOf('p'))\n"
+    },
+    "options": [
+      {
+        "text": "green",
+        "correct": true,
+        "why": "Both selectors are one class, so they are equally specific. Only then does order decide, and the later rule wins."
+      },
+      {
+        "text": "red",
+        "correct": false,
+        "why": "This takes the first rule. In a tie it is the LAST one that wins."
+      },
+      {
+        "text": "It depends on the order in the class attribute",
+        "correct": false,
+        "why": "The order you write classes on the element makes no difference at all. Only the stylesheet order counts."
+      },
+      {
+        "text": "black",
+        "correct": false,
+        "why": "Both rules match, so a colour is applied."
+      }
+    ],
+    "hint": "The two selectors are equally specific. What breaks the tie?"
+  },
+  {
+    "section": "technical",
+    "topic": "css",
+    "kind": "output",
+    "id": "css-inheritance-of-color",
+    "subtopic": "Inheritance",
+    "difficulty": 2,
+    "prompt": "What colour is the span?",
+    "code": {
+      "lang": "html",
+      "source": "<style>\ndiv { color: blue; }\n</style>\n<div><span>hi</span></div>"
+    },
+    "verify": {
+      "runner": "node",
+      "program": "import { JSDOM } from 'jsdom'\nconst dom = new JSDOM(`<style>\ndiv { color: blue; }\n</style>\n<div><span>hi</span></div>`)\nconst { document } = dom.window\nconst NAMES = {\n  'rgb(255, 0, 0)': 'red',\n  'rgb(0, 128, 0)': 'green',\n  'rgb(0, 0, 255)': 'blue',\n  'rgb(255, 165, 0)': 'orange',\n}\nconst colourOf = (sel) => {\n  const c = dom.window.getComputedStyle(\n    document.querySelector(sel)).color\n  return NAMES[c] ?? c\n}\nconsole.log(colourOf('span'))\n"
+    },
+    "options": [
+      {
+        "text": "blue",
+        "correct": true,
+        "why": "color is an inherited property, so a child with no colour of its own takes the parent’s. Not every property works this way: border and padding do not."
+      },
+      {
+        "text": "black",
+        "correct": false,
+        "why": "This assumes no rule reaches the span. Some properties pass down even without a matching selector."
+      },
+      {
+        "text": "An error, no rule matches the span",
+        "correct": false,
+        "why": "A missing rule is never an error. The property simply falls back, and here it inherits."
+      },
+      {
+        "text": "It depends on the browser",
+        "correct": false,
+        "why": "Which properties inherit is fixed by the CSS spec."
+      }
+    ],
+    "hint": "Some properties flow downhill on their own."
+  },
+  {
+    "section": "technical",
+    "topic": "css",
+    "kind": "output",
+    "id": "css-not-selector",
+    "subtopic": "Selectors",
+    "difficulty": 3,
+    "prompt": "How many elements does p:not(.skip) match?",
+    "code": {
+      "lang": "html",
+      "source": "<p>one</p>\n<p class=\"skip\">two</p>\n<p class=\"skip\">three</p>"
+    },
+    "verify": {
+      "runner": "node",
+      "program": "import { JSDOM } from 'jsdom'\nconst dom = new JSDOM(`<p>one</p>\n<p class=\"skip\">two</p>\n<p class=\"skip\">three</p>`)\nconst { document } = dom.window\nconsole.log(document.querySelectorAll('p:not(.skip)').length)\n"
+    },
+    "options": [
+      {
+        "text": "1",
+        "correct": true,
+        "why": ":not() removes anything matching what is inside it. Two paragraphs carry the class, so only the one without it is left."
+      },
+      {
+        "text": "2",
+        "correct": false,
+        "why": "This counts the ones WITH the class. :not inverts the test."
+      },
+      {
+        "text": "3",
+        "correct": false,
+        "why": "That is every p, ignoring the :not entirely."
+      },
+      {
+        "text": "0",
+        "correct": false,
+        "why": "One paragraph has no class at all, so it matches."
+      }
+    ],
+    "hint": "It is a filter that removes."
+  },
+  {
+    "section": "technical",
+    "topic": "css",
+    "kind": "output",
+    "id": "css-comma-is-or",
+    "subtopic": "Selectors",
+    "difficulty": 2,
+    "prompt": "How many elements does h2, p match?",
+    "code": {
+      "lang": "html",
+      "source": "<h2>A</h2>\n<p>one</p>\n<span>s</span>"
+    },
+    "verify": {
+      "runner": "node",
+      "program": "import { JSDOM } from 'jsdom'\nconst dom = new JSDOM(`<h2>A</h2>\n<p>one</p>\n<span>s</span>`)\nconst { document } = dom.window\nconsole.log(document.querySelectorAll('h2, p').length)\n"
+    },
+    "options": [
+      {
+        "text": "2",
+        "correct": true,
+        "why": "A comma means OR: apply this rule to anything matching EITHER selector. The span matches neither."
+      },
+      {
+        "text": "1",
+        "correct": false,
+        "why": "This reads the comma as \"and\", looking for one element that is both an h2 and a p. Nothing can be both."
+      },
+      {
+        "text": "3",
+        "correct": false,
+        "why": "The span is not named in the selector."
+      },
+      {
+        "text": "0",
+        "correct": false,
+        "why": "Both an h2 and a p are present."
+      }
+    ],
+    "hint": "Does a comma narrow the selector or widen it?"
+  },
+  {
+    "section": "technical",
+    "topic": "css",
+    "kind": "concept",
+    "id": "css-flexbox-main-axis",
+    "subtopic": "Flexbox",
+    "difficulty": 2,
+    "prompt": "In a flex container with the default direction, what does justify-content control?",
+    "options": [
+      {
+        "text": "Spacing along the main axis, which is the row",
+        "correct": true,
+        "why": "The default direction is row, so justify-content spreads the items left to right. align-items handles the other axis."
+      },
+      {
+        "text": "Spacing from top to bottom",
+        "correct": false,
+        "why": "That is align-items while the direction is row. The two swap if you set flex-direction: column."
+      },
+      {
+        "text": "The width of each item",
+        "correct": false,
+        "why": "That is flex-grow, flex-basis or width. justify-content only positions them."
+      },
+      {
+        "text": "Whether items wrap onto a new line",
+        "correct": false,
+        "why": "That is flex-wrap."
+      }
+    ],
+    "hint": "Which way do flex items sit by default?",
+    "verify": {
+      "runner": "review",
+      "reviewed": true
+    }
+  },
+  {
+    "section": "technical",
+    "topic": "css",
+    "kind": "concept",
+    "id": "css-box-sizing-border-box",
+    "subtopic": "The box model",
+    "difficulty": 3,
+    "prompt": "What does box-sizing: border-box do?",
+    "options": [
+      {
+        "text": "Padding and border count INSIDE the width you set",
+        "correct": true,
+        "why": "With the default, content-box, a width of 100px plus 10px padding each side takes 120px. With border-box it stays 100px, which is why most projects set it on everything."
+      },
+      {
+        "text": "It adds a border to the element",
+        "correct": false,
+        "why": "It only changes how width is MEASURED. It draws nothing."
+      },
+      {
+        "text": "It removes the padding",
+        "correct": false,
+        "why": "The padding is still there. It is just counted inside the stated width."
+      },
+      {
+        "text": "It makes the element a flex container",
+        "correct": false,
+        "why": "That is display: flex."
+      }
+    ],
+    "hint": "Does the number you set include the padding, or not?",
+    "verify": {
+      "runner": "review",
+      "reviewed": true
+    }
+  }
+]
