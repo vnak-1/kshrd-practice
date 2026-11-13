@@ -73,9 +73,15 @@ body {
   margin: 0;
   padding: 0;
   max-width: 100%;
-  /* stops any one wide element from scrolling the whole page sideways */
-  overflow-x: hidden;
-  overscroll-behavior-y: none;
+  /* `contain` stops a downward swipe from pulling the page to refresh, but
+     it still lets the page bounce at the top and the bottom. `none` killed
+     that bounce as well, and a short page then felt frozen: you drag it and
+     nothing moves at all, so the page looks like it cannot scroll.
+
+     Sideways overflow is clipped on .app instead. `overflow-x: hidden` here
+     turns <html> into the scroll box, which is a known way to stop an
+     iPhone scrolling up and down. */
+  overscroll-behavior-y: contain;
 }
 
 body {
@@ -122,6 +128,10 @@ select {
   min-height: 100dvh;
   display: flex;
   flex-direction: column;
+  /* Stops any one wide element from scrolling the whole page sideways.
+     `clip` does that without making this a scroll box, so the page itself
+     goes on scrolling as usual. Fixed bars are not clipped by it. */
+  overflow-x: clip;
 }
 
 .page {
@@ -356,9 +366,11 @@ p.sub {
   color: var(--code-text);
   border-radius: 12px;
   padding: 12px 14px;
-  /* sideways scroll stays inside this box */
+  /* Sideways scroll stays inside this box. Lines wrap (see .code pre), so
+     this almost never happens. `-webkit-overflow-scrolling: touch` used to
+     be here; it is dead on iOS 13 and later, and on older iOS it swallowed
+     up-and-down drags that started on the code. */
   overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
   max-width: 100%;
 }
 .code pre {
