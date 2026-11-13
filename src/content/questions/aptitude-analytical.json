@@ -1,0 +1,350 @@
+[
+  {
+    "id": "apt-table-share-of-total",
+    "section": "aptitude",
+    "topic": "analytical",
+    "subtopic": "Data interpretation",
+    "difficulty": 2,
+    "kind": "concept",
+    "prompt": "Shop B sold these units. Its Tuesday sales are what percent of its three-day total? Round to a whole number.",
+    "code": {
+      "lang": "table",
+      "source": "Shop  Mon  Tue  Wed\nA      12   18   15\nB      20   14   16\nC      18   22   11"
+    },
+    "options": [
+      {
+        "text": "28%",
+        "correct": true,
+        "why": "Shop B sold 20 + 14 + 16 = 50 units in all. Tuesday was 14. 14 / 50 = 0.28, which is 28%."
+      },
+      {
+        "text": "14%",
+        "correct": false,
+        "why": "This mistakes the raw Tuesday figure for a percent. 14 is a count of units, not a share."
+      },
+      {
+        "text": "35%",
+        "correct": false,
+        "why": "This is 14 out of 40, so it drops one of the three days from the total."
+      },
+      {
+        "text": "47%",
+        "correct": false,
+        "why": "This is 14 out of 30, the Tuesday total of all three shops. The question asks about shop B only."
+      }
+    ],
+    "hint": "First find the total for row B. Then divide Tuesday by that total.",
+    "verify": {
+      "runner": "python",
+      "program": "rows = {\n    \"A\": [12, 18, 15],\n    \"B\": [20, 14, 16],\n    \"C\": [18, 22, 11],\n}\nb = rows[\"B\"]\nprint(f\"{round(b[1] / sum(b) * 100)}%\")\n"
+    }
+  },
+  {
+    "section": "aptitude",
+    "topic": "analytical",
+    "kind": "concept",
+    "id": "apt-table-highest-total",
+    "subtopic": "Data interpretation",
+    "difficulty": 1,
+    "prompt": "The table shows marks in three subjects. Who has the highest total?",
+    "code": {
+      "lang": "table",
+      "source": "Name  Mat  Eng  Sci\nDara   72   65   80\nSok    68   74   77\nVuth   90   58   61"
+    },
+    "options": [
+      {
+        "text": "Sok",
+        "correct": true,
+        "why": "Sok has 68 + 74 + 77 = 219. Dara has 217 and Vuth has 209, so Sok is highest."
+      },
+      {
+        "text": "Vuth",
+        "correct": false,
+        "why": "Vuth has the single best mark, 90 in Maths, but his other two are low. His total is 209."
+      },
+      {
+        "text": "Dara",
+        "correct": false,
+        "why": "Dara is close with 217, but that is 2 behind Sok."
+      },
+      {
+        "text": "All three are equal",
+        "correct": false,
+        "why": "The three totals are 217, 219 and 209, which are all different."
+      }
+    ],
+    "hint": "Add each row. Do not judge by the biggest single mark.",
+    "verify": {
+      "runner": "python",
+      "program": "marks = {\n    \"Dara\": [72, 65, 80],\n    \"Sok\": [68, 74, 77],\n    \"Vuth\": [90, 58, 61],\n}\nprint(max(marks, key=lambda n: sum(marks[n])))\n"
+    }
+  },
+  {
+    "section": "aptitude",
+    "topic": "analytical",
+    "kind": "concept",
+    "id": "apt-table-row-average",
+    "subtopic": "Data interpretation",
+    "difficulty": 1,
+    "prompt": "What is Dara’s average mark over the three subjects, rounded to the nearest whole number?",
+    "code": {
+      "lang": "table",
+      "source": "Name  Mat  Eng  Sci\nDara   72   65   80\nSok    68   74   77\nVuth   90   58   61"
+    },
+    "options": [
+      {
+        "text": "72",
+        "correct": true,
+        "why": "Dara has 72 + 65 + 80 = 217. Divided by 3 subjects that is 72.33, which rounds to 72."
+      },
+      {
+        "text": "217",
+        "correct": false,
+        "why": "That is the total, not the average. You still have to divide by 3."
+      },
+      {
+        "text": "73",
+        "correct": false,
+        "why": "72.33 rounds down, because the part after the dot is below 0.5."
+      },
+      {
+        "text": "65",
+        "correct": false,
+        "why": "That is one of the three marks, the lowest one."
+      }
+    ],
+    "hint": "Total first, then divide by how many subjects.",
+    "verify": {
+      "runner": "python",
+      "program": "marks = {\n    \"Dara\": [72, 65, 80],\n    \"Sok\": [68, 74, 77],\n    \"Vuth\": [90, 58, 61],\n}\nprint(round(sum(marks[\"Dara\"]) / 3))\n"
+    }
+  },
+  {
+    "section": "aptitude",
+    "topic": "analytical",
+    "kind": "concept",
+    "id": "apt-table-share-of-row",
+    "subtopic": "Data interpretation",
+    "difficulty": 2,
+    "prompt": "Vuth’s Maths mark is what percent of his own three-subject total? Round to a whole number.",
+    "code": {
+      "lang": "table",
+      "source": "Name  Mat  Eng  Sci\nDara   72   65   80\nSok    68   74   77\nVuth   90   58   61"
+    },
+    "options": [
+      {
+        "text": "43%",
+        "correct": true,
+        "why": "Vuth totals 90 + 58 + 61 = 209. His Maths share is 90 / 209 = 0.4306, which is 43%."
+      },
+      {
+        "text": "90%",
+        "correct": false,
+        "why": "This reads the mark as being out of 100. The question asks for its share of HIS total."
+      },
+      {
+        "text": "30%",
+        "correct": false,
+        "why": "This divides by 300, the highest possible total, not by the total he really scored."
+      },
+      {
+        "text": "45%",
+        "correct": false,
+        "why": "This divides by 200. His real total is 209, which makes the share a little smaller."
+      }
+    ],
+    "hint": "Which total does the question ask you to compare with?",
+    "verify": {
+      "runner": "python",
+      "program": "marks = {\n    \"Dara\": [72, 65, 80],\n    \"Sok\": [68, 74, 77],\n    \"Vuth\": [90, 58, 61],\n}\nv = marks[\"Vuth\"]\nprint(f\"{round(v[0] / sum(v) * 100)}%\")\n"
+    }
+  },
+  {
+    "section": "aptitude",
+    "topic": "analytical",
+    "kind": "concept",
+    "id": "apt-table-total-visitors",
+    "subtopic": "Data interpretation",
+    "difficulty": 1,
+    "prompt": "The table shows visitors each day. How many visitors came over the four days in all?",
+    "code": {
+      "lang": "table",
+      "source": "Day  Mon  Tue  Wed  Thu\nCount   40   55   45   30"
+    },
+    "options": [
+      {
+        "text": "170",
+        "correct": true,
+        "why": "40 + 55 + 45 + 30 = 170."
+      },
+      {
+        "text": "130",
+        "correct": false,
+        "why": "This leaves one day out. Check that all four numbers are added."
+      },
+      {
+        "text": "160",
+        "correct": false,
+        "why": "Add again carefully: 40 + 55 is 95, plus 45 is 140, plus 30 is 170."
+      },
+      {
+        "text": "180",
+        "correct": false,
+        "why": "This is 10 too many. 40 + 55 + 45 + 30 is 170."
+      }
+    ],
+    "hint": "Just add the row.",
+    "verify": {
+      "runner": "python",
+      "program": "count = {\"Mon\": 40, \"Tue\": 55, \"Wed\": 45, \"Thu\": 30}\nprint(sum(count.values()))\n"
+    }
+  },
+  {
+    "section": "aptitude",
+    "topic": "analytical",
+    "kind": "concept",
+    "id": "apt-table-biggest-drop",
+    "subtopic": "Data interpretation",
+    "difficulty": 2,
+    "prompt": "Between which two days in a row did the number of visitors fall the most?",
+    "code": {
+      "lang": "table",
+      "source": "Day  Mon  Tue  Wed  Thu\nCount   40   55   45   30"
+    },
+    "options": [
+      {
+        "text": "Wed to Thu",
+        "correct": true,
+        "why": "Wed is 45 and Thu is 30, a fall of 15. Tue to Wed falls only 10, and Mon to Tue does not fall at all."
+      },
+      {
+        "text": "Tue to Wed",
+        "correct": false,
+        "why": "That is a fall of 10, from 55 to 45. It is a fall, but a smaller one."
+      },
+      {
+        "text": "Mon to Tue",
+        "correct": false,
+        "why": "That is a RISE, from 40 up to 55. A rise is not a fall."
+      },
+      {
+        "text": "Mon to Thu",
+        "correct": false,
+        "why": "Those two days are not next to each other. The question asks about days in a row."
+      }
+    ],
+    "hint": "Compare each day with the day right after it. A rise does not count.",
+    "verify": {
+      "runner": "python",
+      "program": "count = {\"Mon\": 40, \"Tue\": 55, \"Wed\": 45, \"Thu\": 30}\ndays = list(count)\nfalls = [(count[a] - count[b], f\"{a} to {b}\") for a, b in zip(days, days[1:])]\nprint(max(falls)[1])\n"
+    }
+  },
+  {
+    "section": "aptitude",
+    "topic": "analytical",
+    "kind": "concept",
+    "id": "apt-puzzle-father-son-ages",
+    "subtopic": "Age puzzle",
+    "difficulty": 2,
+    "prompt": "A father is 3 times as old as his son. In 10 years the father will be twice as old as his son. How old is the son now?",
+    "options": [
+      {
+        "text": "10",
+        "correct": true,
+        "why": "Let the son be s. Then 3s + 10 = 2(s + 10). That gives 3s + 10 = 2s + 20, so s = 10. Check: 30 and 10 now, 40 and 20 later."
+      },
+      {
+        "text": "20",
+        "correct": false,
+        "why": "That is the son’s age in 10 years, not now."
+      },
+      {
+        "text": "30",
+        "correct": false,
+        "why": "That is the father’s age now."
+      },
+      {
+        "text": "15",
+        "correct": false,
+        "why": "Then the father is 45. In 10 years they are 55 and 25, and 55 is not twice 25."
+      }
+    ],
+    "hint": "Give the son one letter. Write both sentences as sums with that letter.",
+    "verify": {
+      "runner": "python",
+      "program": "fits = [s for s in range(1, 100) if 3 * s + 10 == 2 * (s + 10)]\nprint(fits[0] if len(fits) == 1 else f\"not unique: {fits}\")\n"
+    }
+  },
+  {
+    "section": "aptitude",
+    "topic": "analytical",
+    "kind": "concept",
+    "id": "apt-puzzle-coin-mix",
+    "subtopic": "Mixture puzzle",
+    "difficulty": 2,
+    "prompt": "A box holds 12 coins. Each coin is worth either 500 riel or 100 riel. Together they are worth 3200 riel. How many 500 riel coins are in the box?",
+    "options": [
+      {
+        "text": "5",
+        "correct": true,
+        "why": "5 coins of 500 is 2500, and the other 7 coins of 100 is 700. 2500 + 700 = 3200."
+      },
+      {
+        "text": "7",
+        "correct": false,
+        "why": "That is the number of 100 riel coins. 7 big coins would come to 4000 riel with the rest."
+      },
+      {
+        "text": "6",
+        "correct": false,
+        "why": "6 and 6 gives 3000 + 600 = 3600 riel, which is too much."
+      },
+      {
+        "text": "4",
+        "correct": false,
+        "why": "4 and 8 gives 2000 + 800 = 2800 riel, which is too little."
+      }
+    ],
+    "hint": "If every coin were 100 riel the box would hold 1200. Each swap to a 500 adds 400.",
+    "verify": {
+      "runner": "python",
+      "program": "fits = [a for a in range(13) if 500 * a + 100 * (12 - a) == 3200]\nprint(fits[0] if len(fits) == 1 else f\"not unique: {fits}\")\n"
+    }
+  },
+  {
+    "section": "aptitude",
+    "topic": "analytical",
+    "kind": "concept",
+    "id": "apt-puzzle-handshakes",
+    "subtopic": "Counting pairs",
+    "difficulty": 3,
+    "prompt": "Six people meet. Each person shakes hands exactly once with every other person. How many handshakes happen in all?",
+    "options": [
+      {
+        "text": "15",
+        "correct": true,
+        "why": "Each of the 6 people shakes 5 hands, which is 30. But every handshake was counted twice, once for each person, so the answer is 30 / 2 = 15."
+      },
+      {
+        "text": "30",
+        "correct": false,
+        "why": "This counts each handshake twice. A handshake needs two people, so divide by 2."
+      },
+      {
+        "text": "36",
+        "correct": false,
+        "why": "That is 6 x 6. It counts people shaking their own hand as well."
+      },
+      {
+        "text": "12",
+        "correct": false,
+        "why": "That is 6 x 2. It does not count every pair."
+      }
+    ],
+    "hint": "Count once per PAIR, not once per person.",
+    "verify": {
+      "runner": "python",
+      "program": "from itertools import combinations\nprint(len(list(combinations(range(6), 2))))\n"
+    }
+  }
+]

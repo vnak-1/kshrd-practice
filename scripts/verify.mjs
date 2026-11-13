@@ -127,6 +127,29 @@ function codeMatchesProgram(q, program) {
   return null
 }
 
+/**
+ * For an aptitude question the block on screen is a table or a puzzle, not a
+ * program, so `codeMatchesProgram` cannot apply. The check instead is: every
+ * number the reader can see must appear in the working that proves the answer.
+ * That catches the worst drift of all — the table shows 12 and the sum used 13.
+ *
+ * So do not show a derived number (a total row) in the table. Either leave it
+ * out, or make the working compute it from the same figures.
+ */
+function numbersMatchWorking(q, working) {
+  if (!q.code || !working) return null
+  const used = new Set(String(working).match(/\d+(?:\.\d+)?/g) ?? [])
+  for (const n of String(q.code.source).match(/\d+(?:\.\d+)?/g) ?? []) {
+    if (!used.has(n)) {
+      return (
+        `the block on screen shows the number ${n}, but the working that proves ` +
+        'the answer never uses it. The reader and the checker must see the same figures.'
+      )
+    }
+  }
+  return null
+}
+
 const BLANK_ON_SCREEN = '____'
 const BLANK_IN_PROGRAM = '{{BLANK}}'
 const MAIN_MARKER = /^[ \t]*\/\/[ \t]*inside main:[ \t]*\n?/m
@@ -400,14 +423,22 @@ async function checkSqlite(q) {
 async function checkOne(q) {
   counts[q.verify.runner] += 1
   if (q.verify.runner === 'review') return null
-  if (q.verify.runner === 'sqlite') return checkSqlite(q)
+  if (q.verify.runner === 'sqlite') {
+    const working = `${q.verify.setup ?? ''}\n${q.verify.query ?? ''}`
+    return numbersMatchWorking(q, working) ?? (await checkSqlite(q))
+  }
 
   const program = programFor(q)
   // Debugging a generated program: SHOW_PROGRAM=<question id> npm run verify
   if (process.env.SHOW_PROGRAM === q.id) {
     console.log(`\n----- program for ${q.id} -----\n${program}-----\n`)
   }
-  const mismatch = codeMatchesProgram(q, program)
+  // The block on screen is the program itself for java and node. For python
+  // (an aptitude table or puzzle) it is data, and a different check applies.
+  const mismatch =
+    q.verify.runner === 'python'
+      ? numbersMatchWorking(q, q.verify.program ?? q.verify.check)
+      : codeMatchesProgram(q, program)
   if (mismatch) return mismatch
 
   const dir = mkdtempSync(join(tmpdir(), 'kshrd-verify-'))

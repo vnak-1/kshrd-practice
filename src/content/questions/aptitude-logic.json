@@ -1,0 +1,506 @@
+[
+  {
+    "section": "aptitude",
+    "topic": "logic",
+    "kind": "concept",
+    "id": "logic-series-n-times-n-plus-one",
+    "subtopic": "Number series",
+    "difficulty": 1,
+    "prompt": "What number comes next?  2, 6, 12, 20, 30, ?",
+    "options": [
+      {
+        "text": "42",
+        "correct": true,
+        "why": "Each term is n x (n + 1): 1x2, 2x3, 3x4, 4x5, 5x6. The next is 6x7 = 42. The gaps also grow 4, 6, 8, 10, so the next gap is 12."
+      },
+      {
+        "text": "40",
+        "correct": false,
+        "why": "This repeats the last gap of 10. But every gap grows by 2, so the next gap is 12."
+      },
+      {
+        "text": "36",
+        "correct": false,
+        "why": "This adds 6. The gaps are getting bigger, not smaller."
+      },
+      {
+        "text": "44",
+        "correct": false,
+        "why": "This adds 14, which skips a step. The gaps go 4, 6, 8, 10, 12."
+      }
+    ],
+    "hint": "Look at the gaps between the numbers. Then look at the gaps between the gaps.",
+    "verify": {
+      "runner": "python",
+      "program": "seq = [n * (n + 1) for n in range(1, 7)]\nassert seq[:5] == [2, 6, 12, 20, 30]\nprint(seq[5])\n"
+    }
+  },
+  {
+    "section": "aptitude",
+    "topic": "logic",
+    "kind": "concept",
+    "id": "logic-series-sum-of-two-before",
+    "subtopic": "Number series",
+    "difficulty": 2,
+    "prompt": "What number comes next?  2, 3, 5, 8, 13, ?",
+    "options": [
+      {
+        "text": "21",
+        "correct": true,
+        "why": "Each term is the sum of the two before it: 2+3=5, 3+5=8, 5+8=13, so 8+13=21."
+      },
+      {
+        "text": "18",
+        "correct": false,
+        "why": "This adds 5, repeating the gap before last. The gaps themselves grow."
+      },
+      {
+        "text": "26",
+        "correct": false,
+        "why": "This doubles 13. The rule is adding, not doubling."
+      },
+      {
+        "text": "20",
+        "correct": false,
+        "why": "No rule here gives 20. Check 8 + 13."
+      }
+    ],
+    "hint": "Try adding two neighbours together.",
+    "verify": {
+      "runner": "python",
+      "program": "seq = [2, 3]\nwhile len(seq) < 6:\n    seq.append(seq[-1] + seq[-2])\nassert seq[:5] == [2, 3, 5, 8, 13]\nprint(seq[5])\n"
+    }
+  },
+  {
+    "section": "aptitude",
+    "topic": "logic",
+    "kind": "concept",
+    "id": "logic-series-alternating-steps",
+    "subtopic": "Alternating series",
+    "difficulty": 3,
+    "prompt": "What number comes next?  7, 10, 8, 11, 9, 12, ?",
+    "options": [
+      {
+        "text": "10",
+        "correct": true,
+        "why": "Two rules take turns: add 3, then take away 2. After 12 it is the turn of \"take away 2\", so 12 - 2 = 10."
+      },
+      {
+        "text": "15",
+        "correct": false,
+        "why": "This adds 3, but the last step was already an add. The two rules take turns."
+      },
+      {
+        "text": "13",
+        "correct": false,
+        "why": "This adds 1. No step in the series adds 1."
+      },
+      {
+        "text": "14",
+        "correct": false,
+        "why": "This adds 2. The two steps used are +3 and -2."
+      }
+    ],
+    "hint": "One rule is not enough here. Try two rules taking turns.",
+    "verify": {
+      "runner": "python",
+      "program": "seq = [7]\nfor i in range(6):\n    seq.append(seq[-1] + (3 if i % 2 == 0 else -2))\nassert seq[:6] == [7, 10, 8, 11, 9, 12]\nprint(seq[6])\n"
+    }
+  },
+  {
+    "section": "aptitude",
+    "topic": "logic",
+    "kind": "concept",
+    "id": "logic-letter-series-plus-three",
+    "subtopic": "Letter series",
+    "difficulty": 1,
+    "prompt": "Which letter comes next?  C, F, I, L, ?",
+    "options": [
+      {
+        "text": "O",
+        "correct": true,
+        "why": "Each letter jumps 3 places forward in the alphabet: C to F to I to L. Three more after L gives O."
+      },
+      {
+        "text": "M",
+        "correct": false,
+        "why": "M is only one place after L. The jump is 3."
+      },
+      {
+        "text": "N",
+        "correct": false,
+        "why": "N is two places after L."
+      },
+      {
+        "text": "P",
+        "correct": false,
+        "why": "P is four places after L, one too many."
+      }
+    ],
+    "hint": "Count the places between each pair of letters.",
+    "verify": {
+      "runner": "python",
+      "program": "letters = [chr(ord('C') + 3 * i) for i in range(5)]\nassert letters[:4] == ['C', 'F', 'I', 'L']\nprint(letters[4])\n"
+    }
+  },
+  {
+    "section": "aptitude",
+    "topic": "logic",
+    "kind": "concept",
+    "id": "logic-letter-series-backwards",
+    "subtopic": "Letter series going back",
+    "difficulty": 2,
+    "prompt": "Which letter comes next?  Z, W, T, Q, ?",
+    "options": [
+      {
+        "text": "N",
+        "correct": true,
+        "why": "Each letter moves 3 places BACK: Z to W to T to Q. Three back from Q gives N."
+      },
+      {
+        "text": "P",
+        "correct": false,
+        "why": "P is only one place back from Q."
+      },
+      {
+        "text": "O",
+        "correct": false,
+        "why": "O is two places back from Q."
+      },
+      {
+        "text": "M",
+        "correct": false,
+        "why": "M is four places back, one too many."
+      }
+    ],
+    "hint": "The alphabet is running backwards here.",
+    "verify": {
+      "runner": "python",
+      "program": "letters = [chr(ord('Z') - 3 * i) for i in range(5)]\nassert letters[:4] == ['Z', 'W', 'T', 'Q']\nprint(letters[4])\n"
+    }
+  },
+  {
+    "section": "aptitude",
+    "topic": "logic",
+    "kind": "concept",
+    "id": "logic-coding-shift-by-one",
+    "subtopic": "Coding and decoding",
+    "difficulty": 1,
+    "prompt": "In a code language CAT is written as DBU. How is DOG written in that code?",
+    "options": [
+      {
+        "text": "EPH",
+        "correct": true,
+        "why": "Every letter moves one place forward: C to D, A to B, T to U. Do the same to DOG: D to E, O to P, G to H."
+      },
+      {
+        "text": "EPG",
+        "correct": false,
+        "why": "The last letter was not moved. Every letter must shift."
+      },
+      {
+        "text": "CNF",
+        "correct": false,
+        "why": "This moves backwards. CAT to DBU moves forwards."
+      },
+      {
+        "text": "DPH",
+        "correct": false,
+        "why": "The first letter was not moved."
+      }
+    ],
+    "hint": "Compare each letter of CAT with the matching letter of DBU.",
+    "verify": {
+      "runner": "python",
+      "program": "shift = lambda w: \"\".join(chr(ord(c) + 1) for c in w)\nassert shift(\"CAT\") == \"DBU\"\nprint(shift(\"DOG\"))\n"
+    }
+  },
+  {
+    "section": "aptitude",
+    "topic": "logic",
+    "kind": "concept",
+    "id": "logic-coding-shared-word",
+    "subtopic": "Word code puzzle",
+    "difficulty": 2,
+    "prompt": "In a code, \"sky is blue\" is \"ma pa ta\" and \"blue sea\" is \"ta na\". What is the code for \"blue\"?",
+    "options": [
+      {
+        "text": "ta",
+        "correct": true,
+        "why": "Only \"blue\" appears in both sentences, and only \"ta\" appears in both codes. So they must be a pair."
+      },
+      {
+        "text": "ma",
+        "correct": false,
+        "why": "ma is in the first code only, so it cannot stand for the shared word."
+      },
+      {
+        "text": "na",
+        "correct": false,
+        "why": "na is in the second code only, so it must be \"sea\"."
+      },
+      {
+        "text": "pa",
+        "correct": false,
+        "why": "pa is in the first code only, so it stands for \"sky\" or \"is\"."
+      }
+    ],
+    "hint": "Which word is in both sentences? Which code word is in both codes?",
+    "verify": {
+      "runner": "python",
+      "program": "from itertools import permutations\ns1, c1 = [\"sky\", \"is\", \"blue\"], [\"ma\", \"pa\", \"ta\"]\ns2, c2 = [\"blue\", \"sea\"], [\"ta\", \"na\"]\nfits = set()\nfor p1 in permutations(c1):\n    m1 = dict(zip(s1, p1))\n    for p2 in permutations(c2):\n        m2 = dict(zip(s2, p2))\n        if m1[\"blue\"] == m2[\"blue\"]:\n            fits.add(m1[\"blue\"])\nprint(sorted(fits)[0] if len(fits) == 1 else f\"not unique: {sorted(fits)}\")\n"
+    }
+  },
+  {
+    "section": "aptitude",
+    "topic": "logic",
+    "kind": "concept",
+    "id": "logic-directions-walk",
+    "subtopic": "Directions",
+    "difficulty": 2,
+    "prompt": "A man walks 5 km north, then 3 km east, then 5 km south. How far is he from his starting point, and in which direction?",
+    "options": [
+      {
+        "text": "3 km east",
+        "correct": true,
+        "why": "The 5 km north and the 5 km south cancel out. Only the 3 km east is left."
+      },
+      {
+        "text": "3 km west",
+        "correct": false,
+        "why": "He walked east, not west. The direction does not flip."
+      },
+      {
+        "text": "8 km east",
+        "correct": false,
+        "why": "This adds 5 and 3. The north and south legs are on a different line and they cancel."
+      },
+      {
+        "text": "13 km north",
+        "correct": false,
+        "why": "This adds every leg together. Walking back the way you came undoes the distance."
+      }
+    ],
+    "hint": "Draw it. Which two legs undo each other?",
+    "verify": {
+      "runner": "python",
+      "program": "x, y = 0, 0\ny += 5   # north\nx += 3   # east\ny -= 5   # south\nassert y == 0\nprint(f\"{abs(x)} km \" + (\"east\" if x > 0 else \"west\"))\n"
+    }
+  },
+  {
+    "section": "aptitude",
+    "topic": "logic",
+    "kind": "concept",
+    "id": "logic-directions-turning",
+    "subtopic": "Turning",
+    "difficulty": 3,
+    "prompt": "A person faces north. He turns 90 degrees clockwise, then turns 180 degrees anticlockwise. Which way is he facing now?",
+    "options": [
+      {
+        "text": "West",
+        "correct": true,
+        "why": "90 clockwise from north is east. 180 anticlockwise from east is west, because half a turn always points you the opposite way."
+      },
+      {
+        "text": "East",
+        "correct": false,
+        "why": "That is after the first turn only. The second turn still has to happen."
+      },
+      {
+        "text": "South",
+        "correct": false,
+        "why": "This is 180 from north, which forgets the first 90 degree turn."
+      },
+      {
+        "text": "North",
+        "correct": false,
+        "why": "The two turns are 90 and 180, which do not cancel. They add up to a quarter turn the other way."
+      }
+    ],
+    "hint": "Do one turn at a time. Half a turn always points the opposite way.",
+    "verify": {
+      "runner": "python",
+      "program": "dirs = [\"North\", \"East\", \"South\", \"West\"]\ni = 0                      # facing north\ni = (i + 90 // 90) % 4     # 90 degrees clockwise\ni = (i - 180 // 90) % 4    # 180 degrees anticlockwise\nprint(dirs[i])\n"
+    }
+  },
+  {
+    "section": "aptitude",
+    "topic": "logic",
+    "kind": "concept",
+    "id": "logic-ranking-tallest",
+    "subtopic": "Ranking",
+    "difficulty": 2,
+    "prompt": "A is taller than B. C is shorter than B. D is taller than A. Who is the tallest of the four?",
+    "options": [
+      {
+        "text": "D",
+        "correct": true,
+        "why": "D is above A, A is above B, and B is above C. So the order from tallest is D, A, B, C."
+      },
+      {
+        "text": "A",
+        "correct": false,
+        "why": "A is above B and C, but D is above A."
+      },
+      {
+        "text": "B",
+        "correct": false,
+        "why": "B is below A, so B cannot be the tallest."
+      },
+      {
+        "text": "C",
+        "correct": false,
+        "why": "C is below B, which makes C the shortest."
+      }
+    ],
+    "hint": "Put them in a line, one clue at a time.",
+    "verify": {
+      "runner": "python",
+      "program": "from itertools import permutations\nfits = set()\nfor order in permutations(\"ABCD\"):      # tallest first\n    r = {p: i for i, p in enumerate(order)}\n    if r[\"A\"] < r[\"B\"] and r[\"C\"] > r[\"B\"] and r[\"D\"] < r[\"A\"]:\n        fits.add(order[0])\nprint(sorted(fits)[0] if len(fits) == 1 else f\"not unique: {sorted(fits)}\")\n"
+    }
+  },
+  {
+    "section": "aptitude",
+    "topic": "logic",
+    "kind": "concept",
+    "id": "logic-seating-other-end",
+    "subtopic": "Seating",
+    "difficulty": 3,
+    "prompt": "P, Q, R, S and T sit in a row of five seats. Q sits at one end. R sits next to Q. S sits exactly in the middle. P does not sit next to S. Who sits at the other end?",
+    "options": [
+      {
+        "text": "P",
+        "correct": true,
+        "why": "S must take the middle seat. R must be beside Q at the end. P cannot touch S, so the only seat left for P is the far end."
+      },
+      {
+        "text": "R",
+        "correct": false,
+        "why": "R must sit next to Q, and Q is already at an end. So R is second from that end, never at the other end."
+      },
+      {
+        "text": "T",
+        "correct": false,
+        "why": "T takes the seat P cannot use, which is beside S. That is not an end seat."
+      },
+      {
+        "text": "S",
+        "correct": false,
+        "why": "S is told to sit in the middle, so S is never at an end."
+      }
+    ],
+    "hint": "Place the fixed people first: the middle one, then the end one.",
+    "verify": {
+      "runner": "python",
+      "program": "from itertools import permutations\nfits = set()\nfor seat in permutations(\"PQRST\"):\n    at = {p: i for i, p in enumerate(seat)}\n    if at[\"Q\"] not in (0, 4):\n        continue\n    if abs(at[\"R\"] - at[\"Q\"]) != 1:\n        continue\n    if at[\"S\"] != 2:\n        continue\n    if abs(at[\"P\"] - at[\"S\"]) == 1:\n        continue\n    fits.add(seat[4] if at[\"Q\"] == 0 else seat[0])\nprint(sorted(fits)[0] if len(fits) == 1 else f\"not unique: {sorted(fits)}\")\n"
+    }
+  },
+  {
+    "section": "aptitude",
+    "topic": "logic",
+    "kind": "concept",
+    "id": "logic-syllogism-some-pets",
+    "subtopic": "Syllogisms",
+    "difficulty": 2,
+    "prompt": "All cats are animals. Some animals are pets. Which conclusion MUST be true?",
+    "options": [
+      {
+        "text": "Some pets are animals",
+        "correct": true,
+        "why": "\"Some animals are pets\" already names a thing that is both. The same thing read the other way is a pet that is an animal, so this is always true."
+      },
+      {
+        "text": "Some cats are pets",
+        "correct": false,
+        "why": "The pets could all be dogs. Nothing links cats to pets."
+      },
+      {
+        "text": "All pets are animals",
+        "correct": false,
+        "why": "Only SOME animals are said to be pets. A pet that is not an animal is not ruled out."
+      },
+      {
+        "text": "No cat is a pet",
+        "correct": false,
+        "why": "Nothing rules it out either. \"Must be true\" means true in every case, and this is not."
+      }
+    ],
+    "hint": "\"Must be true\" means true in EVERY picture you can draw, not just the likely one.",
+    "verify": {
+      "runner": "python",
+      "program": "from itertools import product\nlabels = [\"cat\", \"animal\", \"pet\"]\nmodels = []\nfor combo in product([False, True], repeat=12):\n    cre = [dict(zip(labels, combo[i * 3:i * 3 + 3])) for i in range(4)]\n    if not any(c[\"cat\"] for c in cre):\n        continue\n    if not any(c[\"pet\"] for c in cre):\n        continue\n    if any(not c[\"animal\"] for c in cre if c[\"cat\"]):\n        continue\n    if not any(c[\"animal\"] and c[\"pet\"] for c in cre):\n        continue\n    models.append(cre)\ntests = {\n    \"Some pets are animals\": lambda m: any(c[\"pet\"] and c[\"animal\"] for c in m),\n    \"Some cats are pets\": lambda m: any(c[\"cat\"] and c[\"pet\"] for c in m),\n    \"All pets are animals\": lambda m: all(c[\"animal\"] for c in m if c[\"pet\"]),\n    \"No cat is a pet\": lambda m: not any(c[\"cat\"] and c[\"pet\"] for c in m),\n}\ngood = [k for k, f in tests.items() if all(f(m) for m in models)]\nprint(good[0] if len(good) == 1 else f\"not unique: {good}\")\n"
+    }
+  },
+  {
+    "section": "aptitude",
+    "topic": "logic",
+    "kind": "concept",
+    "id": "logic-calendar-days-ahead",
+    "subtopic": "Days of the week",
+    "difficulty": 1,
+    "prompt": "Today is Tuesday. What day of the week will it be 100 days from today?",
+    "options": [
+      {
+        "text": "Thursday",
+        "correct": true,
+        "why": "Weeks repeat every 7 days. 100 divided by 7 leaves 2 over, so count 2 days on from Tuesday: Wednesday, Thursday."
+      },
+      {
+        "text": "Tuesday",
+        "correct": false,
+        "why": "That needs a whole number of weeks. 100 is not a multiple of 7."
+      },
+      {
+        "text": "Friday",
+        "correct": false,
+        "why": "That is 3 days on. The remainder of 100 divided by 7 is 2, not 3."
+      },
+      {
+        "text": "Wednesday",
+        "correct": false,
+        "why": "That is 1 day on. Count again: 7 x 14 = 98, leaving 2 days."
+      }
+    ],
+    "hint": "Only the remainder after dividing by 7 matters.",
+    "verify": {
+      "runner": "python",
+      "program": "days = [\"Monday\", \"Tuesday\", \"Wednesday\", \"Thursday\",\n        \"Friday\", \"Saturday\", \"Sunday\"]\nprint(days[(days.index(\"Tuesday\") + 100) % 7])\n"
+    }
+  },
+  {
+    "section": "aptitude",
+    "topic": "logic",
+    "kind": "concept",
+    "id": "logic-odd-one-out-square",
+    "subtopic": "Odd one out",
+    "difficulty": 2,
+    "prompt": "Which number does not belong with the others?  16, 25, 36, 40, 49",
+    "options": [
+      {
+        "text": "40",
+        "correct": true,
+        "why": "Every other number is a square: 4x4, 5x5, 6x6, 7x7. No whole number times itself gives 40."
+      },
+      {
+        "text": "16",
+        "correct": false,
+        "why": "16 is 4 x 4, so it fits the pattern."
+      },
+      {
+        "text": "25",
+        "correct": false,
+        "why": "25 is 5 x 5, so it fits the pattern."
+      },
+      {
+        "text": "49",
+        "correct": false,
+        "why": "49 is 7 x 7, so it fits the pattern."
+      }
+    ],
+    "hint": "Try to make each number by multiplying a whole number by itself.",
+    "verify": {
+      "runner": "python",
+      "program": "nums = [16, 25, 36, 40, 49]\nodd = [n for n in nums if int(n ** 0.5) ** 2 != n]\nprint(odd[0] if len(odd) == 1 else f\"not unique: {odd}\")\n"
+    }
+  }
+]
