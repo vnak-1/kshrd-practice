@@ -35,5 +35,1035 @@
       "setup": "CREATE TABLE sales (city TEXT, amount INT);\nINSERT INTO sales VALUES ('PP', 10), ('PP', 30), ('SR', 25);",
       "query": "SELECT COUNT(*) FROM (SELECT city FROM sales GROUP BY city HAVING SUM(amount) > 20);"
     }
+  },
+  {
+    "section": "technical",
+    "topic": "sql",
+    "id": "sql-select-where-greater",
+    "subtopic": "SELECT and WHERE",
+    "difficulty": 1,
+    "kind": "output",
+    "prompt": "What does this query return?",
+    "code": {
+      "lang": "sql",
+      "source": "-- items\n-- id | name | price\n--  1 | pen  |    10\n--  2 | book |    20\n--  3 | bag  |    50\n\nSELECT name FROM items\nWHERE price > 15;"
+    },
+    "verify": {
+      "runner": "sqlite",
+      "setup": "CREATE TABLE items (id INT, name TEXT, price INT);\nINSERT INTO items VALUES (1,'pen',10),(2,'book',20),(3,'bag',50);",
+      "query": "SELECT name FROM items WHERE price > 15;"
+    },
+    "options": [
+      {
+        "text": "book then bag",
+        "match": "book\nbag",
+        "correct": true,
+        "why": "WHERE keeps only the rows whose price is above 15. That is book at 20 and bag at 50."
+      },
+      {
+        "text": "pen then book",
+        "correct": false,
+        "why": "This picks the two cheapest. WHERE keeps the rows ABOVE 15, not below it."
+      },
+      {
+        "text": "bag only",
+        "correct": false,
+        "why": "This treats 15 as if it meant \"the most expensive\". Both 20 and 50 are above 15."
+      },
+      {
+        "text": "pen, book and bag",
+        "correct": false,
+        "why": "This ignores WHERE. Pen costs 10, which is not above 15, so it is dropped."
+      }
+    ],
+    "hint": "Check each price against 15, one row at a time."
+  },
+  {
+    "section": "technical",
+    "topic": "sql",
+    "id": "sql-count-star-counts-rows",
+    "subtopic": "COUNT(*)",
+    "difficulty": 1,
+    "kind": "output",
+    "prompt": "What does this query return?",
+    "code": {
+      "lang": "sql",
+      "source": "-- items\n-- id | name | price\n--  1 | pen  |    10\n--  2 | book |    20\n--  3 | bag  |  NULL\n\nSELECT COUNT(*) FROM items;"
+    },
+    "verify": {
+      "runner": "sqlite",
+      "setup": "CREATE TABLE items (id INT, name TEXT, price INT);\nINSERT INTO items VALUES (1,'pen',10),(2,'book',20),(3,'bag',NULL);",
+      "query": "SELECT COUNT(*) FROM items;"
+    },
+    "options": [
+      {
+        "text": "3",
+        "correct": true,
+        "why": "COUNT(*) counts ROWS. It never looks inside the columns, so the empty price changes nothing."
+      },
+      {
+        "text": "2",
+        "correct": false,
+        "why": "This skips the row with no price. COUNT(price) would do that. COUNT(*) does not."
+      },
+      {
+        "text": "1",
+        "correct": false,
+        "why": "Only one row has an empty price. The other two are still rows as well."
+      },
+      {
+        "text": "0",
+        "correct": false,
+        "why": "The table holds three rows. COUNT(*) on an empty table would give 0."
+      }
+    ],
+    "hint": "Does the star look at any column at all?"
+  },
+  {
+    "section": "technical",
+    "topic": "sql",
+    "id": "sql-count-column-skips-null",
+    "subtopic": "COUNT of a column",
+    "difficulty": 2,
+    "kind": "output",
+    "prompt": "What does this query return?",
+    "code": {
+      "lang": "sql",
+      "source": "-- items\n-- id | name | price\n--  1 | pen  |    10\n--  2 | book |    20\n--  3 | bag  |  NULL\n\nSELECT COUNT(price) FROM items;"
+    },
+    "verify": {
+      "runner": "sqlite",
+      "setup": "CREATE TABLE items (id INT, name TEXT, price INT);\nINSERT INTO items VALUES (1,'pen',10),(2,'book',20),(3,'bag',NULL);",
+      "query": "SELECT COUNT(price) FROM items;"
+    },
+    "options": [
+      {
+        "text": "2",
+        "correct": true,
+        "why": "COUNT of a COLUMN counts only the values that are there. The empty price is skipped, leaving 10 and 20."
+      },
+      {
+        "text": "3",
+        "correct": false,
+        "why": "That is COUNT(*), which counts rows. Naming a column makes the empty one drop out."
+      },
+      {
+        "text": "1",
+        "correct": false,
+        "why": "Two prices are filled in, not one."
+      },
+      {
+        "text": "0",
+        "correct": false,
+        "why": "One empty value does not empty the whole count."
+      }
+    ],
+    "hint": "COUNT(*) counts rows. COUNT(column) counts values. One empty price is in the table."
+  },
+  {
+    "section": "technical",
+    "topic": "sql",
+    "id": "sql-equals-null-matches-nothing",
+    "subtopic": "Comparing with NULL",
+    "difficulty": 2,
+    "kind": "output",
+    "prompt": "What does this query return?",
+    "code": {
+      "lang": "sql",
+      "source": "-- items\n-- id | name | price\n--  1 | pen  |    10\n--  2 | book |    20\n--  3 | bag  |  NULL\n\nSELECT COUNT(*) FROM items\nWHERE price = NULL;"
+    },
+    "verify": {
+      "runner": "sqlite",
+      "setup": "CREATE TABLE items (id INT, name TEXT, price INT);\nINSERT INTO items VALUES (1,'pen',10),(2,'book',20),(3,'bag',NULL);",
+      "query": "SELECT COUNT(*) FROM items WHERE price = NULL;"
+    },
+    "options": [
+      {
+        "text": "0",
+        "correct": true,
+        "why": "NULL means \"unknown\". Asking if something equals an unknown is never true, not even for another NULL. You must write WHERE price IS NULL."
+      },
+      {
+        "text": "1",
+        "correct": false,
+        "why": "One row does have an empty price, but = NULL cannot find it. IS NULL would return 1."
+      },
+      {
+        "text": "3",
+        "correct": false,
+        "why": "The WHERE clause matches nothing, so no rows get through at all."
+      },
+      {
+        "text": "An error",
+        "correct": false,
+        "why": "= NULL is valid SQL and runs happily. That is what makes it dangerous: it fails silently."
+      }
+    ],
+    "hint": "Can one unknown value ever be proved equal to another unknown value?"
+  },
+  {
+    "section": "technical",
+    "topic": "sql",
+    "id": "sql-is-null-finds-the-row",
+    "subtopic": "IS NULL",
+    "difficulty": 1,
+    "kind": "output",
+    "prompt": "What does this query return?",
+    "code": {
+      "lang": "sql",
+      "source": "-- items\n-- id | name | price\n--  1 | pen  |    10\n--  2 | book |    20\n--  3 | bag  |  NULL\n\nSELECT name FROM items\nWHERE price IS NULL;"
+    },
+    "verify": {
+      "runner": "sqlite",
+      "setup": "CREATE TABLE items (id INT, name TEXT, price INT);\nINSERT INTO items VALUES (1,'pen',10),(2,'book',20),(3,'bag',NULL);",
+      "query": "SELECT name FROM items WHERE price IS NULL;"
+    },
+    "options": [
+      {
+        "text": "bag",
+        "correct": true,
+        "why": "IS NULL is the only way to test for an empty value. Bag is the row whose price was never filled in."
+      },
+      {
+        "text": "pen",
+        "correct": false,
+        "why": "Pen has a price of 10. An empty value and a small value are not the same thing."
+      },
+      {
+        "text": "No rows at all",
+        "correct": false,
+        "why": "That is what WHERE price = NULL would give. IS NULL really does find the row."
+      },
+      {
+        "text": "pen then book",
+        "correct": false,
+        "why": "Those are the two rows that DO have a price. IS NULL asks for the opposite."
+      }
+    ],
+    "hint": "There is a special keyword for empty values. = does not work."
+  },
+  {
+    "section": "technical",
+    "topic": "sql",
+    "id": "sql-count-distinct",
+    "subtopic": "DISTINCT",
+    "difficulty": 1,
+    "kind": "output",
+    "prompt": "What does this query return?",
+    "code": {
+      "lang": "sql",
+      "source": "-- visits\n-- city\n-- PP\n-- SR\n-- PP\n-- BB\n\nSELECT COUNT(DISTINCT city)\nFROM visits;"
+    },
+    "verify": {
+      "runner": "sqlite",
+      "setup": "CREATE TABLE visits (city TEXT);\nINSERT INTO visits VALUES ('PP'),('SR'),('PP'),('BB');",
+      "query": "SELECT COUNT(DISTINCT city) FROM visits;"
+    },
+    "options": [
+      {
+        "text": "3",
+        "correct": true,
+        "why": "DISTINCT throws away repeats first. The different cities are PP, SR and BB, so three are counted."
+      },
+      {
+        "text": "4",
+        "correct": false,
+        "why": "That is COUNT(city), which counts every row. DISTINCT drops the second PP."
+      },
+      {
+        "text": "2",
+        "correct": false,
+        "why": "Only PP repeats. SR and BB are each written once and both still count."
+      },
+      {
+        "text": "1",
+        "correct": false,
+        "why": "DISTINCT removes repeats, it does not fold everything into one."
+      }
+    ],
+    "hint": "Count the different names, not the rows."
+  },
+  {
+    "section": "technical",
+    "topic": "sql",
+    "id": "sql-order-by-is-ascending",
+    "subtopic": "ORDER BY",
+    "difficulty": 2,
+    "kind": "output",
+    "prompt": "What does this query return?",
+    "code": {
+      "lang": "sql",
+      "source": "-- items\n-- id | name | price\n--  1 | pen  |    10\n--  2 | book |    20\n--  3 | bag  |    50\n\nSELECT name FROM items\nORDER BY price;"
+    },
+    "verify": {
+      "runner": "sqlite",
+      "setup": "CREATE TABLE items (id INT, name TEXT, price INT);\nINSERT INTO items VALUES (1,'pen',10),(2,'book',20),(3,'bag',50);",
+      "query": "SELECT name FROM items ORDER BY price;"
+    },
+    "options": [
+      {
+        "text": "pen then book then bag",
+        "match": "pen\nbook\nbag",
+        "correct": true,
+        "why": "ORDER BY sorts smallest first unless you write DESC. The prices 10, 20 and 50 come out in that order."
+      },
+      {
+        "text": "bag then book then pen",
+        "correct": false,
+        "why": "That is ORDER BY price DESC. Biggest first is never the default."
+      },
+      {
+        "text": "bag then pen then book",
+        "correct": false,
+        "why": "This is sorted by name, not by price."
+      },
+      {
+        "text": "pen then bag then book",
+        "correct": false,
+        "why": "No sort gives this. By price it is 10, 20, 50; by name it is bag, book, pen."
+      }
+    ],
+    "hint": "Which way does ORDER BY sort when you do not say?"
+  },
+  {
+    "section": "technical",
+    "topic": "sql",
+    "id": "sql-order-by-desc-limit",
+    "subtopic": "LIMIT",
+    "difficulty": 1,
+    "kind": "output",
+    "prompt": "What does this query return?",
+    "code": {
+      "lang": "sql",
+      "source": "-- items\n-- id | name | price\n--  1 | pen  |    10\n--  2 | book |    20\n--  3 | bag  |    50\n\nSELECT name FROM items\nORDER BY price DESC\nLIMIT 1;"
+    },
+    "verify": {
+      "runner": "sqlite",
+      "setup": "CREATE TABLE items (id INT, name TEXT, price INT);\nINSERT INTO items VALUES (1,'pen',10),(2,'book',20),(3,'bag',50);",
+      "query": "SELECT name FROM items ORDER BY price DESC LIMIT 1;"
+    },
+    "options": [
+      {
+        "text": "bag",
+        "correct": true,
+        "why": "DESC puts the biggest price first, which is bag at 50. LIMIT 1 then keeps only that first row."
+      },
+      {
+        "text": "pen",
+        "correct": false,
+        "why": "Pen is first only without DESC. DESC turns the order round."
+      },
+      {
+        "text": "book",
+        "correct": false,
+        "why": "Book is in the middle at 20. It is never first."
+      },
+      {
+        "text": "All three names",
+        "correct": false,
+        "why": "LIMIT 1 stops after one row. Without LIMIT you would get all three."
+      }
+    ],
+    "hint": "Sort first, then cut."
+  },
+  {
+    "section": "technical",
+    "topic": "sql",
+    "id": "sql-where-runs-before-having",
+    "subtopic": "WHERE and HAVING",
+    "difficulty": 2,
+    "kind": "output",
+    "prompt": "What does this query return?",
+    "code": {
+      "lang": "sql",
+      "source": "-- sales\n-- city | amount\n-- PP   |     10\n-- PP   |     30\n-- SR   |     25\n-- SR   |      5\n\nSELECT city FROM sales\nWHERE amount > 8\nGROUP BY city\nHAVING SUM(amount) > 35;"
+    },
+    "verify": {
+      "runner": "sqlite",
+      "setup": "CREATE TABLE sales (city TEXT, amount INT);\nINSERT INTO sales VALUES ('PP',10),('PP',30),('SR',25),('SR',5);",
+      "query": "SELECT city FROM sales WHERE amount > 8 GROUP BY city HAVING SUM(amount) > 35;"
+    },
+    "options": [
+      {
+        "text": "PP",
+        "correct": true,
+        "why": "WHERE runs FIRST and drops the SR row of 5. The groups left are PP = 40 and SR = 25. HAVING then keeps only groups above 35."
+      },
+      {
+        "text": "PP then SR",
+        "correct": false,
+        "why": "SR adds up to 25 after WHERE, which is not above 35, so HAVING drops it."
+      },
+      {
+        "text": "SR",
+        "correct": false,
+        "why": "PP has the larger total. SR never reaches 35."
+      },
+      {
+        "text": "No rows at all",
+        "correct": false,
+        "why": "PP totals 40, which is above 35, so one group does get through."
+      }
+    ],
+    "hint": "WHERE filters single rows. HAVING filters whole groups, after the sum."
+  },
+  {
+    "section": "technical",
+    "topic": "sql",
+    "id": "sql-group-by-one-row-per-group",
+    "subtopic": "GROUP BY",
+    "difficulty": 2,
+    "kind": "output",
+    "prompt": "What does this query return?",
+    "code": {
+      "lang": "sql",
+      "source": "-- sales\n-- city | amount\n-- PP   |     10\n-- PP   |     30\n-- SR   |     25\n-- SR   |      5\n\nSELECT SUM(amount) FROM sales\nGROUP BY city\nORDER BY city;"
+    },
+    "verify": {
+      "runner": "sqlite",
+      "setup": "CREATE TABLE sales (city TEXT, amount INT);\nINSERT INTO sales VALUES ('PP',10),('PP',30),('SR',25),('SR',5);",
+      "query": "SELECT SUM(amount) FROM sales GROUP BY city ORDER BY city;"
+    },
+    "options": [
+      {
+        "text": "40 then 30",
+        "match": "40\n30",
+        "correct": true,
+        "why": "GROUP BY gives one row per city. PP is 10 + 30 = 40 and SR is 25 + 5 = 30. ORDER BY city puts PP first."
+      },
+      {
+        "text": "70",
+        "correct": false,
+        "why": "That is the total with no GROUP BY at all. Grouping splits it into one sum per city."
+      },
+      {
+        "text": "10, 30, 25 then 5",
+        "correct": false,
+        "why": "These are the raw rows. SUM adds each group into a single number."
+      },
+      {
+        "text": "30 then 40",
+        "correct": false,
+        "why": "The right sums, the wrong way round. ORDER BY city puts PP before SR."
+      }
+    ],
+    "hint": "One row comes out per group, not per original row."
+  },
+  {
+    "section": "technical",
+    "topic": "sql",
+    "id": "sql-having-count-groups",
+    "subtopic": "HAVING with COUNT",
+    "difficulty": 3,
+    "kind": "output",
+    "prompt": "What does this query return?",
+    "code": {
+      "lang": "sql",
+      "source": "-- sales\n-- city | amount\n-- PP   |     10\n-- PP   |     30\n-- SR   |     25\n-- BB   |     50\n\nSELECT city FROM sales\nGROUP BY city\nHAVING COUNT(*) > 1;"
+    },
+    "verify": {
+      "runner": "sqlite",
+      "setup": "CREATE TABLE sales (city TEXT, amount INT);\nINSERT INTO sales VALUES ('PP',10),('PP',30),('SR',25),('BB',50);",
+      "query": "SELECT city FROM sales GROUP BY city HAVING COUNT(*) > 1;"
+    },
+    "options": [
+      {
+        "text": "PP",
+        "correct": true,
+        "why": "COUNT(*) inside HAVING counts the rows in each group. Only PP has more than one row, with two."
+      },
+      {
+        "text": "PP then BB",
+        "correct": false,
+        "why": "BB has the biggest amount, 50, but only one row. HAVING here counts rows, not money."
+      },
+      {
+        "text": "BB",
+        "correct": false,
+        "why": "This sorts by amount. COUNT(*) has nothing to do with how large the amounts are."
+      },
+      {
+        "text": "PP, SR then BB",
+        "correct": false,
+        "why": "SR and BB have one row each, so COUNT(*) > 1 is false for both."
+      }
+    ],
+    "hint": "COUNT(*) here means \"how many rows are in this group\"."
+  },
+  {
+    "section": "technical",
+    "topic": "sql",
+    "id": "sql-inner-join-drops-unmatched",
+    "subtopic": "INNER JOIN",
+    "difficulty": 2,
+    "kind": "output",
+    "prompt": "What does this query return?",
+    "code": {
+      "lang": "sql",
+      "source": "-- users            orders\n-- id | name      user_id | item\n--  1 | Dara            1 | pen\n--  2 | Sok             1 | book\n--                      2 | bag\n--                      3 | hat\n\nSELECT COUNT(*) FROM users\nJOIN orders\nON users.id = orders.user_id;"
+    },
+    "verify": {
+      "runner": "sqlite",
+      "setup": "CREATE TABLE users (id INT, name TEXT);\nINSERT INTO users VALUES (1,'Dara'),(2,'Sok');\nCREATE TABLE orders (user_id INT, item TEXT);\nINSERT INTO orders VALUES (1,'pen'),(1,'book'),(2,'bag'),(3,'hat');",
+      "query": "SELECT COUNT(*) FROM users JOIN orders ON users.id = orders.user_id;"
+    },
+    "options": [
+      {
+        "text": "3",
+        "correct": true,
+        "why": "A plain JOIN keeps only rows that match on BOTH sides. Dara matches pen and book, Sok matches bag. The hat belongs to user 3, who is not in users, so it is dropped."
+      },
+      {
+        "text": "4",
+        "correct": false,
+        "why": "That counts every order. The hat has no matching user, so an inner join throws it away."
+      },
+      {
+        "text": "2",
+        "correct": false,
+        "why": "That is the number of users. Dara has two orders, so Dara appears twice in the result."
+      },
+      {
+        "text": "8",
+        "correct": false,
+        "why": "That is 2 x 4, every pair. The ON clause stops that from happening."
+      }
+    ],
+    "hint": "A plain JOIN keeps a row only when both sides match."
+  },
+  {
+    "section": "technical",
+    "topic": "sql",
+    "id": "sql-left-join-keeps-left-rows",
+    "subtopic": "LEFT JOIN",
+    "difficulty": 3,
+    "kind": "output",
+    "prompt": "What does this query return?",
+    "code": {
+      "lang": "sql",
+      "source": "-- users            orders\n-- id | name      user_id | item\n--  1 | Dara            1 | pen\n--  2 | Sok             1 | book\n--  3 | Vuth            2 | bag\n\nSELECT COUNT(*) FROM users\nLEFT JOIN orders\nON users.id = orders.user_id;"
+    },
+    "verify": {
+      "runner": "sqlite",
+      "setup": "CREATE TABLE users (id INT, name TEXT);\nINSERT INTO users VALUES (1,'Dara'),(2,'Sok'),(3,'Vuth');\nCREATE TABLE orders (user_id INT, item TEXT);\nINSERT INTO orders VALUES (1,'pen'),(1,'book'),(2,'bag');",
+      "query": "SELECT COUNT(*) FROM users LEFT JOIN orders ON users.id = orders.user_id;"
+    },
+    "options": [
+      {
+        "text": "4",
+        "correct": true,
+        "why": "A LEFT JOIN keeps every row on the left. Dara matches twice, Sok once, and Vuth has no order but is still kept once, with empty order columns. 2 + 1 + 1 = 4."
+      },
+      {
+        "text": "3",
+        "correct": false,
+        "why": "That is a plain inner JOIN, which would drop Vuth. LEFT keeps him."
+      },
+      {
+        "text": "6",
+        "correct": false,
+        "why": "That is 3 x 2, every pair. The ON clause prevents it."
+      },
+      {
+        "text": "2",
+        "correct": false,
+        "why": "That is how many users actually HAVE an order. A LEFT JOIN counts the joined rows, and it also keeps Vuth, who has none."
+      }
+    ],
+    "hint": "Which side is guaranteed to keep all of its rows?"
+  },
+  {
+    "section": "technical",
+    "topic": "sql",
+    "id": "sql-sum-ignores-null",
+    "subtopic": "SUM and NULL",
+    "difficulty": 2,
+    "kind": "output",
+    "prompt": "What does this query return?",
+    "code": {
+      "lang": "sql",
+      "source": "-- items\n-- id | name | price\n--  1 | pen  |    10\n--  2 | book |    20\n--  3 | bag  |  NULL\n\nSELECT SUM(price) FROM items;"
+    },
+    "verify": {
+      "runner": "sqlite",
+      "setup": "CREATE TABLE items (id INT, name TEXT, price INT);\nINSERT INTO items VALUES (1,'pen',10),(2,'book',20),(3,'bag',NULL);",
+      "query": "SELECT SUM(price) FROM items;"
+    },
+    "options": [
+      {
+        "text": "30",
+        "correct": true,
+        "why": "SUM steps over empty values instead of breaking on them. 10 + 20 = 30, and the empty price adds nothing."
+      },
+      {
+        "text": "An empty result",
+        "correct": false,
+        "why": "Plain arithmetic does work that way: 10 + 20 + NULL is NULL. But SUM is built to skip empties."
+      },
+      {
+        "text": "80",
+        "correct": false,
+        "why": "The third price is empty, not 50. There is nothing to add there."
+      },
+      {
+        "text": "0",
+        "correct": false,
+        "why": "Two real prices are present, so the sum cannot be zero."
+      }
+    ],
+    "hint": "Does an aggregate break on an empty value, or step over it?"
+  },
+  {
+    "section": "technical",
+    "topic": "sql",
+    "id": "sql-avg-skips-null-and-returns-decimal",
+    "subtopic": "AVG and NULL",
+    "difficulty": 2,
+    "kind": "output",
+    "prompt": "What does this query return?",
+    "code": {
+      "lang": "sql",
+      "source": "-- items\n-- id | name | price\n--  1 | pen  |    10\n--  2 | book |    20\n--  3 | bag  |  NULL\n\nSELECT AVG(price) FROM items;"
+    },
+    "verify": {
+      "runner": "sqlite",
+      "setup": "CREATE TABLE items (id INT, name TEXT, price INT);\nINSERT INTO items VALUES (1,'pen',10),(2,'book',20),(3,'bag',NULL);",
+      "query": "SELECT AVG(price) FROM items;"
+    },
+    "options": [
+      {
+        "text": "15.0",
+        "correct": true,
+        "why": "AVG skips the empty price, so it divides by 2, not by 3: (10 + 20) / 2 = 15. It returns a decimal, so it prints 15.0."
+      },
+      {
+        "text": "10.0",
+        "correct": false,
+        "why": "This divides 30 by 3 rows. AVG only counts the rows that really have a value, which is 2."
+      },
+      {
+        "text": "30",
+        "correct": false,
+        "why": "That is the SUM. The average still has to be divided."
+      },
+      {
+        "text": "15",
+        "correct": false,
+        "why": "The number is right but AVG always hands back a decimal, so the database prints 15.0."
+      }
+    ],
+    "hint": "How many rows does AVG actually divide by here?"
+  },
+  {
+    "section": "technical",
+    "topic": "sql",
+    "id": "sql-like-starts-with",
+    "subtopic": "LIKE",
+    "difficulty": 1,
+    "kind": "output",
+    "prompt": "What does this query return?",
+    "code": {
+      "lang": "sql",
+      "source": "-- items\n-- id | name | price\n--  1 | pen  |    10\n--  2 | book |    20\n--  3 | bag  |    50\n\nSELECT COUNT(*) FROM items\nWHERE name LIKE 'b%';"
+    },
+    "verify": {
+      "runner": "sqlite",
+      "setup": "CREATE TABLE items (id INT, name TEXT, price INT);\nINSERT INTO items VALUES (1,'pen',10),(2,'book',20),(3,'bag',50);",
+      "query": "SELECT COUNT(*) FROM items WHERE name LIKE 'b%';"
+    },
+    "options": [
+      {
+        "text": "2",
+        "correct": true,
+        "why": "The % stands for \"anything after this\". So b% means \"starts with b\", which matches book and bag."
+      },
+      {
+        "text": "1",
+        "correct": false,
+        "why": "Two names start with b. Both book and bag match."
+      },
+      {
+        "text": "3",
+        "correct": false,
+        "why": "Pen does not start with b, so it is left out."
+      },
+      {
+        "text": "0",
+        "correct": false,
+        "why": "LIKE with % really does match. Without the % it would be an exact match and give 0."
+      }
+    ],
+    "hint": "What does the % sign stand for?"
+  },
+  {
+    "section": "technical",
+    "topic": "sql",
+    "id": "sql-in-list-of-values",
+    "subtopic": "IN",
+    "difficulty": 2,
+    "kind": "output",
+    "prompt": "What does this query return?",
+    "code": {
+      "lang": "sql",
+      "source": "-- items\n-- id | name | price\n--  1 | pen  |    10\n--  2 | book |    20\n--  3 | bag  |    50\n\nSELECT COUNT(*) FROM items\nWHERE price IN (10, 99);"
+    },
+    "verify": {
+      "runner": "sqlite",
+      "setup": "CREATE TABLE items (id INT, name TEXT, price INT);\nINSERT INTO items VALUES (1,'pen',10),(2,'book',20),(3,'bag',50);",
+      "query": "SELECT COUNT(*) FROM items WHERE price IN (10, 99);"
+    },
+    "options": [
+      {
+        "text": "1",
+        "correct": true,
+        "why": "IN is a short way of writing \"= 10 OR = 99\". Only pen costs 10, and nothing costs 99."
+      },
+      {
+        "text": "2",
+        "correct": false,
+        "why": "This counts one row per number in the list. A number with no matching row simply finds nothing."
+      },
+      {
+        "text": "0",
+        "correct": false,
+        "why": "Pen really does cost 10, so one row matches."
+      },
+      {
+        "text": "3",
+        "correct": false,
+        "why": "IN is a filter. It does not let every row through."
+      }
+    ],
+    "hint": "IN is just a shorter way of writing several ORs."
+  },
+  {
+    "section": "technical",
+    "topic": "sql",
+    "id": "sql-between-is-inclusive",
+    "subtopic": "BETWEEN",
+    "difficulty": 2,
+    "kind": "output",
+    "prompt": "What does this query return?",
+    "code": {
+      "lang": "sql",
+      "source": "-- items\n-- id | name | price\n--  1 | pen  |    10\n--  2 | book |    20\n--  3 | bag  |    50\n\nSELECT COUNT(*) FROM items\nWHERE price BETWEEN 10 AND 20;"
+    },
+    "verify": {
+      "runner": "sqlite",
+      "setup": "CREATE TABLE items (id INT, name TEXT, price INT);\nINSERT INTO items VALUES (1,'pen',10),(2,'book',20),(3,'bag',50);",
+      "query": "SELECT COUNT(*) FROM items WHERE price BETWEEN 10 AND 20;"
+    },
+    "options": [
+      {
+        "text": "2",
+        "correct": true,
+        "why": "BETWEEN includes both ends. 10 and 20 are both inside the range, so pen and book both match."
+      },
+      {
+        "text": "0",
+        "correct": false,
+        "why": "This treats both ends as excluded. BETWEEN always includes them."
+      },
+      {
+        "text": "1",
+        "correct": false,
+        "why": "This keeps one end and drops the other. BETWEEN treats both the same way."
+      },
+      {
+        "text": "3",
+        "correct": false,
+        "why": "Bag costs 50, which is outside the range."
+      }
+    ],
+    "hint": "Are the two end numbers inside the range or outside it?"
+  },
+  {
+    "section": "technical",
+    "topic": "sql",
+    "id": "sql-insert-adds-a-row",
+    "subtopic": "INSERT",
+    "difficulty": 1,
+    "kind": "output",
+    "prompt": "The items table starts with 3 rows. What does this print?",
+    "code": {
+      "lang": "sql",
+      "source": "-- items\n-- id | name | price\n--  1 | pen  |    10\n--  2 | book |    20\n--  3 | bag  |    50\n\nINSERT INTO items\nVALUES (4, 'cup', 5);\nSELECT COUNT(*) FROM items;"
+    },
+    "verify": {
+      "runner": "sqlite",
+      "setup": "CREATE TABLE items (id INT, name TEXT, price INT);\nINSERT INTO items VALUES (1,'pen',10),(2,'book',20),(3,'bag',50);",
+      "query": "INSERT INTO items VALUES (4,'cup',5);\nSELECT COUNT(*) FROM items;"
+    },
+    "options": [
+      {
+        "text": "4",
+        "correct": true,
+        "why": "INSERT adds one new row on top of the three already there, so the table now holds four."
+      },
+      {
+        "text": "3",
+        "correct": false,
+        "why": "This is the count before the INSERT. The row really is added."
+      },
+      {
+        "text": "1",
+        "correct": false,
+        "why": "That is how many rows were added, not how many the table holds."
+      },
+      {
+        "text": "5",
+        "correct": false,
+        "why": "5 is the price of the new cup, not a row count."
+      }
+    ],
+    "hint": "How many rows were there, and how many were added?"
+  },
+  {
+    "section": "technical",
+    "topic": "sql",
+    "id": "sql-update-without-where-hits-everything",
+    "subtopic": "UPDATE without WHERE",
+    "difficulty": 2,
+    "kind": "output",
+    "prompt": "What does this print?",
+    "code": {
+      "lang": "sql",
+      "source": "-- items\n-- id | name | price\n--  1 | pen  |    10\n--  2 | book |    20\n--  3 | bag  |    50\n\nUPDATE items SET price = 0;\nSELECT COUNT(*) FROM items\nWHERE price = 0;"
+    },
+    "verify": {
+      "runner": "sqlite",
+      "setup": "CREATE TABLE items (id INT, name TEXT, price INT);\nINSERT INTO items VALUES (1,'pen',10),(2,'book',20),(3,'bag',50);",
+      "query": "UPDATE items SET price = 0;\nSELECT COUNT(*) FROM items WHERE price = 0;"
+    },
+    "options": [
+      {
+        "text": "3",
+        "correct": true,
+        "why": "An UPDATE with no WHERE changes EVERY row. All three prices become 0. This is the classic way to wreck a real table."
+      },
+      {
+        "text": "1",
+        "correct": false,
+        "why": "Nothing in this UPDATE picks out a single row. With no WHERE there is nothing to narrow it down."
+      },
+      {
+        "text": "0",
+        "correct": false,
+        "why": "The update does run and it does set the prices, so afterwards every row matches."
+      },
+      {
+        "text": "An error",
+        "correct": false,
+        "why": "UPDATE without WHERE is perfectly valid SQL. The database will not warn you, which is exactly the danger."
+      }
+    ],
+    "hint": "What does UPDATE do when you never say WHICH rows?"
+  },
+  {
+    "section": "technical",
+    "topic": "sql",
+    "id": "sql-delete-empties-but-keeps-table",
+    "subtopic": "DELETE and DROP",
+    "difficulty": 3,
+    "kind": "output",
+    "prompt": "What does this print?",
+    "code": {
+      "lang": "sql",
+      "source": "-- items\n-- id | name | price\n--  1 | pen  |    10\n--  2 | book |    20\n--  3 | bag  |    50\n\nDELETE FROM items;\nSELECT COUNT(*) FROM items;"
+    },
+    "verify": {
+      "runner": "sqlite",
+      "setup": "CREATE TABLE items (id INT, name TEXT, price INT);\nINSERT INTO items VALUES (1,'pen',10),(2,'book',20),(3,'bag',50);",
+      "query": "DELETE FROM items;\nSELECT COUNT(*) FROM items;"
+    },
+    "options": [
+      {
+        "text": "0",
+        "correct": true,
+        "why": "DELETE takes the rows out but leaves the table itself in place. So the SELECT still works, and it finds nothing."
+      },
+      {
+        "text": "An error, because the table is gone",
+        "correct": false,
+        "why": "That is DROP TABLE items. DELETE only empties, it never removes the table."
+      },
+      {
+        "text": "3",
+        "correct": false,
+        "why": "The rows really are deleted. Nothing puts them back."
+      },
+      {
+        "text": "An empty line, not a number",
+        "correct": false,
+        "why": "COUNT always returns a number. On an empty table that number is 0."
+      }
+    ],
+    "hint": "One command empties the table. A different one removes it."
+  },
+  {
+    "section": "technical",
+    "topic": "sql",
+    "id": "sql-order-by-an-alias",
+    "subtopic": "Aliases with AS",
+    "difficulty": 2,
+    "kind": "output",
+    "prompt": "What does this query return?",
+    "code": {
+      "lang": "sql",
+      "source": "-- items\n-- id | name | price\n--  1 | pen  |    10\n--  2 | book |    20\n--  3 | bag  |    50\n\nSELECT price * 2 AS total\nFROM items\nORDER BY total DESC;"
+    },
+    "verify": {
+      "runner": "sqlite",
+      "setup": "CREATE TABLE items (id INT, name TEXT, price INT);\nINSERT INTO items VALUES (1,'pen',10),(2,'book',20),(3,'bag',50);",
+      "query": "SELECT price * 2 AS total FROM items ORDER BY total DESC;"
+    },
+    "options": [
+      {
+        "text": "100 then 40 then 20",
+        "match": "100\n40\n20",
+        "correct": true,
+        "why": "AS gives the new column a name, and ORDER BY may use that name. DESC puts the biggest first: 50x2, 20x2, 10x2."
+      },
+      {
+        "text": "20 then 40 then 100",
+        "correct": false,
+        "why": "That is ascending. DESC turns the order round."
+      },
+      {
+        "text": "10 then 20 then 50",
+        "correct": false,
+        "why": "These are the original prices. The query doubles each one."
+      },
+      {
+        "text": "An error, ORDER BY cannot use an alias",
+        "correct": false,
+        "why": "ORDER BY runs last, after the names are known, so it CAN use an alias. WHERE runs earlier and cannot."
+      }
+    ],
+    "hint": "ORDER BY is the last clause to run. Does it know the new name by then?"
+  },
+  {
+    "section": "technical",
+    "topic": "sql",
+    "id": "sql-subquery-in-where",
+    "subtopic": "Subqueries",
+    "difficulty": 3,
+    "kind": "output",
+    "prompt": "What does this query return?",
+    "code": {
+      "lang": "sql",
+      "source": "-- items\n-- id | name | price\n--  1 | pen  |    10\n--  2 | book |    20\n--  3 | bag  |    50\n\nSELECT name FROM items\nWHERE price > (\n  SELECT AVG(price) FROM items\n);"
+    },
+    "verify": {
+      "runner": "sqlite",
+      "setup": "CREATE TABLE items (id INT, name TEXT, price INT);\nINSERT INTO items VALUES (1,'pen',10),(2,'book',20),(3,'bag',50);",
+      "query": "SELECT name FROM items WHERE price > (SELECT AVG(price) FROM items);"
+    },
+    "options": [
+      {
+        "text": "bag",
+        "correct": true,
+        "why": "The inner query works out the average first: (10 + 20 + 50) / 3 = about 26.7. Only bag at 50 is above that."
+      },
+      {
+        "text": "book then bag",
+        "correct": false,
+        "why": "Book costs 20, which is below the average of about 26.7."
+      },
+      {
+        "text": "pen",
+        "correct": false,
+        "why": "Pen is the cheapest. The test is ABOVE the average."
+      },
+      {
+        "text": "pen, book and bag",
+        "correct": false,
+        "why": "No value can be above its own average unless they are all equal. At least one must be below."
+      }
+    ],
+    "hint": "Work out the inner query first. What is the average of 10, 20 and 50?"
+  },
+  {
+    "section": "technical",
+    "topic": "sql",
+    "id": "sql-null-fails-every-comparison",
+    "subtopic": "NULL in arithmetic",
+    "difficulty": 2,
+    "kind": "output",
+    "prompt": "What does this query return?",
+    "code": {
+      "lang": "sql",
+      "source": "-- items\n-- id | name | price\n--  1 | pen  |    10\n--  2 | book |    20\n--  3 | bag  |  NULL\n\nSELECT COUNT(*) FROM items\nWHERE price + 5 > 0;"
+    },
+    "verify": {
+      "runner": "sqlite",
+      "setup": "CREATE TABLE items (id INT, name TEXT, price INT);\nINSERT INTO items VALUES (1,'pen',10),(2,'book',20),(3,'bag',NULL);",
+      "query": "SELECT COUNT(*) FROM items WHERE price + 5 > 0;"
+    },
+    "options": [
+      {
+        "text": "2",
+        "correct": true,
+        "why": "An empty price plus 5 is still unknown, and an unknown is never greater than 0. So the bag row fails the test and only pen and book are counted."
+      },
+      {
+        "text": "3",
+        "correct": false,
+        "why": "This treats the empty price as 0, giving 5 > 0. SQL does not fill empties in with zero."
+      },
+      {
+        "text": "1",
+        "correct": false,
+        "why": "Both pen and book have real prices, and 15 and 25 are both above 0."
+      },
+      {
+        "text": "0",
+        "correct": false,
+        "why": "Only the one empty row drops out. The other two pass."
+      }
+    ],
+    "hint": "What is an unknown value plus 5? And is that bigger than 0?"
+  },
+  {
+    "section": "technical",
+    "topic": "sql",
+    "id": "sql-order-by-two-columns",
+    "subtopic": "Sorting on two columns",
+    "difficulty": 3,
+    "kind": "output",
+    "prompt": "What does this query return?",
+    "code": {
+      "lang": "sql",
+      "source": "-- students\n-- name | grade | age\n-- Dara  |   B   |  20\n-- Sok   |   A   |  22\n-- Vuth  |   A   |  19\n\nSELECT name FROM students\nORDER BY grade, age;"
+    },
+    "verify": {
+      "runner": "sqlite",
+      "setup": "CREATE TABLE students (name TEXT, grade TEXT, age INT);\nINSERT INTO students VALUES ('Dara','B',20),('Sok','A',22),('Vuth','A',19);",
+      "query": "SELECT name FROM students ORDER BY grade, age;"
+    },
+    "options": [
+      {
+        "text": "Vuth then Sok then Dara",
+        "match": "Vuth\nSok\nDara",
+        "correct": true,
+        "why": "Grade sorts first, so both A students come before the B. Age then breaks the tie inside the A group: Vuth is 19 and Sok is 22."
+      },
+      {
+        "text": "Sok then Vuth then Dara",
+        "correct": false,
+        "why": "The two A students are in the wrong order. Age sorts smallest first, and 19 comes before 22."
+      },
+      {
+        "text": "Dara then Sok then Vuth",
+        "correct": false,
+        "why": "This sorts by name. The query sorts by grade first."
+      },
+      {
+        "text": "Vuth then Dara then Sok",
+        "correct": false,
+        "why": "This breaks the grades apart. Every A must come before the B."
+      }
+    ],
+    "hint": "The first column decides. The second one is only used for ties."
   }
 ]

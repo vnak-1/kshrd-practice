@@ -1,0 +1,902 @@
+[
+  {
+    "section": "technical",
+    "topic": "networking",
+    "kind": "concept",
+    "id": "net-slash-24-mask",
+    "subtopic": "CIDR and subnet masks",
+    "difficulty": 1,
+    "prompt": "What subnet mask does /24 mean?",
+    "options": [
+      {
+        "text": "255.255.255.0",
+        "correct": true,
+        "why": "The number after the slash is how many bits are fixed for the network. 24 ones then 8 zeros, written as four bytes, is 255.255.255.0."
+      },
+      {
+        "text": "255.255.0.0",
+        "correct": false,
+        "why": "That is /16, which fixes only 16 bits."
+      },
+      {
+        "text": "255.0.0.0",
+        "correct": false,
+        "why": "That is /8, which fixes only the first byte."
+      },
+      {
+        "text": "255.255.255.255",
+        "correct": false,
+        "why": "That is /32, a single address with no room for a network at all."
+      }
+    ],
+    "hint": "Count the bits: how many 1s before the 0s start?",
+    "verify": {
+      "runner": "python",
+      "program": "import ipaddress\nprint(ipaddress.ip_network(\"10.0.0.0/24\").netmask)\n"
+    }
+  },
+  {
+    "section": "technical",
+    "topic": "networking",
+    "kind": "concept",
+    "id": "net-slash-26-usable-hosts",
+    "subtopic": "Usable hosts in a subnet",
+    "difficulty": 2,
+    "prompt": "How many usable host addresses does a /26 subnet have?",
+    "options": [
+      {
+        "text": "62",
+        "correct": true,
+        "why": "/26 leaves 6 host bits, so 2 to the power 6 = 64 addresses. Two are reserved, the network address and the broadcast address, leaving 62."
+      },
+      {
+        "text": "64",
+        "correct": false,
+        "why": "That is the total number of addresses. Two of them can never be given to a device."
+      },
+      {
+        "text": "63",
+        "correct": false,
+        "why": "This takes away only one reserved address. Both the network and the broadcast address are reserved."
+      },
+      {
+        "text": "26",
+        "correct": false,
+        "why": "26 is the number of network bits, not a count of hosts."
+      }
+    ],
+    "hint": "32 bits in all. How many are left for hosts, and how many of those are reserved?",
+    "verify": {
+      "runner": "python",
+      "program": "import ipaddress\nprint(ipaddress.ip_network(\"192.168.1.0/26\").num_addresses - 2)\n"
+    }
+  },
+  {
+    "section": "technical",
+    "topic": "networking",
+    "kind": "concept",
+    "id": "net-network-address-of-host",
+    "subtopic": "Finding the network address",
+    "difficulty": 2,
+    "prompt": "A device has the address 192.168.1.70 with a /26 mask. What is the network address of its subnet?",
+    "options": [
+      {
+        "text": "192.168.1.64",
+        "correct": true,
+        "why": "A /26 splits the last byte into blocks of 64: 0, 64, 128, 192. The address 70 falls in the block that starts at 64."
+      },
+      {
+        "text": "192.168.1.0",
+        "correct": false,
+        "why": "That is the first block. 70 is past 63, so it is in the second one."
+      },
+      {
+        "text": "192.168.1.70",
+        "correct": false,
+        "why": "That is the device itself. A network address is the first address of its block."
+      },
+      {
+        "text": "192.168.1.128",
+        "correct": false,
+        "why": "That is the third block, which starts above 70."
+      }
+    ],
+    "hint": "A /26 cuts the last number into steps of 64. Which step does 70 land in?",
+    "verify": {
+      "runner": "python",
+      "program": "import ipaddress\nprint(ipaddress.ip_interface(\"192.168.1.70/26\").network.network_address)\n"
+    }
+  },
+  {
+    "section": "technical",
+    "topic": "networking",
+    "kind": "concept",
+    "id": "net-broadcast-address-of-host",
+    "subtopic": "Finding the broadcast address",
+    "difficulty": 3,
+    "prompt": "A device has the address 192.168.1.70 with a /26 mask. What is the broadcast address of its subnet?",
+    "options": [
+      {
+        "text": "192.168.1.127",
+        "correct": true,
+        "why": "The block runs from 64 to 127. The broadcast address is always the LAST address of the block, so 127."
+      },
+      {
+        "text": "192.168.1.63",
+        "correct": false,
+        "why": "That is the broadcast of the block BELOW, which runs 0 to 63."
+      },
+      {
+        "text": "192.168.1.255",
+        "correct": false,
+        "why": "That would be the broadcast for a /24. A /26 is four times smaller."
+      },
+      {
+        "text": "192.168.1.126",
+        "correct": false,
+        "why": "That is the last USABLE host. The broadcast sits one above it."
+      }
+    ],
+    "hint": "The block starts at 64 and holds 64 addresses. Where does it end?",
+    "verify": {
+      "runner": "python",
+      "program": "import ipaddress\nprint(ipaddress.ip_interface(\"192.168.1.70/26\").network.broadcast_address)\n"
+    }
+  },
+  {
+    "section": "technical",
+    "topic": "networking",
+    "kind": "concept",
+    "id": "net-first-usable-host",
+    "subtopic": "First usable host",
+    "difficulty": 2,
+    "prompt": "In the network 10.1.1.0/24, what is the first address you can give to a device?",
+    "options": [
+      {
+        "text": "10.1.1.1",
+        "correct": true,
+        "why": "10.1.1.0 is the network address and cannot be used by a device. The next one up, .1, is the first that can."
+      },
+      {
+        "text": "10.1.1.0",
+        "correct": false,
+        "why": "That is the network address itself. It names the network, not a device."
+      },
+      {
+        "text": "10.1.1.2",
+        "correct": false,
+        "why": "Only ONE address is reserved at the start. .1 is free."
+      },
+      {
+        "text": "10.1.1.255",
+        "correct": false,
+        "why": "That is the broadcast address, which is reserved and sits at the end."
+      }
+    ],
+    "hint": "The very first address of a network has a job already.",
+    "verify": {
+      "runner": "python",
+      "program": "import ipaddress\nprint(next(ipaddress.ip_network(\"10.1.1.0/24\").hosts()))\n"
+    }
+  },
+  {
+    "section": "technical",
+    "topic": "networking",
+    "kind": "concept",
+    "id": "net-slash-30-point-to-point",
+    "subtopic": "Small subnets",
+    "difficulty": 2,
+    "prompt": "How many usable host addresses does a /30 subnet have?",
+    "options": [
+      {
+        "text": "2",
+        "correct": true,
+        "why": "/30 leaves 2 host bits, so 4 addresses. Take away the network and broadcast addresses and 2 are left. That is why /30 is used for a link between two routers."
+      },
+      {
+        "text": "4",
+        "correct": false,
+        "why": "That is the total. Two of the four are always reserved."
+      },
+      {
+        "text": "1",
+        "correct": false,
+        "why": "A link needs an address at each end, and /30 does give two."
+      },
+      {
+        "text": "30",
+        "correct": false,
+        "why": "30 counts network bits, not hosts."
+      }
+    ],
+    "hint": "Only 2 bits are left for hosts. Then take 2 away.",
+    "verify": {
+      "runner": "python",
+      "program": "import ipaddress\nprint(ipaddress.ip_network(\"192.168.1.0/30\").num_addresses - 2)\n"
+    }
+  },
+  {
+    "section": "technical",
+    "topic": "networking",
+    "kind": "concept",
+    "id": "net-how-many-subnets-fit",
+    "subtopic": "Splitting a network",
+    "difficulty": 3,
+    "prompt": "How many /27 subnets fit inside one /24 network?",
+    "options": [
+      {
+        "text": "8",
+        "correct": true,
+        "why": "Going from /24 to /27 borrows 3 bits, and 2 to the power 3 is 8. Each /27 holds 32 addresses, and 8 x 32 = 256."
+      },
+      {
+        "text": "4",
+        "correct": false,
+        "why": "That is how many /26 subnets fit. /27 is one step smaller again."
+      },
+      {
+        "text": "3",
+        "correct": false,
+        "why": "3 is the number of bits borrowed, not the number of subnets. You must raise 2 to that power."
+      },
+      {
+        "text": "32",
+        "correct": false,
+        "why": "32 is how many ADDRESSES each /27 holds, not how many subnets there are."
+      }
+    ],
+    "hint": "How many bits do you borrow going from 24 to 27? Then 2 to that power.",
+    "verify": {
+      "runner": "python",
+      "program": "import ipaddress\nprint(len(list(ipaddress.ip_network(\"192.168.1.0/24\").subnets(new_prefix=27))))\n"
+    }
+  },
+  {
+    "section": "technical",
+    "topic": "networking",
+    "kind": "concept",
+    "id": "net-ipv4-bit-length",
+    "subtopic": "IPv4 basics",
+    "difficulty": 1,
+    "prompt": "How many bits long is an IPv4 address?",
+    "options": [
+      {
+        "text": "32",
+        "correct": true,
+        "why": "An IPv4 address is four bytes, and each byte is 8 bits. 4 x 8 = 32."
+      },
+      {
+        "text": "4",
+        "correct": false,
+        "why": "4 is the number of parts separated by dots. Each part is a whole byte."
+      },
+      {
+        "text": "64",
+        "correct": false,
+        "why": "No version of IP uses 64 bits. IPv4 is 32 and IPv6 is 128."
+      },
+      {
+        "text": "128",
+        "correct": false,
+        "why": "That is IPv6, which was made much longer because IPv4 addresses ran out."
+      }
+    ],
+    "hint": "Four numbers, one byte each. How many bits in a byte?",
+    "verify": {
+      "runner": "python",
+      "program": "import ipaddress\nprint(ipaddress.ip_address(\"192.168.1.1\").max_prefixlen)\n"
+    }
+  },
+  {
+    "section": "technical",
+    "topic": "networking",
+    "kind": "concept",
+    "id": "net-is-this-private",
+    "subtopic": "Private addresses",
+    "difficulty": 1,
+    "prompt": "Is the address 10.0.0.5 a private address or a public one?",
+    "options": [
+      {
+        "text": "Private",
+        "correct": true,
+        "why": "Everything starting 10. is private. The three private ranges are 10.x.x.x, 172.16-31.x.x and 192.168.x.x. They are used inside homes and offices and are never routed on the internet."
+      },
+      {
+        "text": "Public",
+        "correct": false,
+        "why": "A public address can be reached from the internet. No 10.x.x.x address ever can."
+      },
+      {
+        "text": "It depends on the subnet mask",
+        "correct": false,
+        "why": "The mask decides how the network is split. Whether an address is private is decided by the address itself."
+      },
+      {
+        "text": "It is a broadcast address",
+        "correct": false,
+        "why": "A broadcast address is the last one in its block. .5 is an ordinary host address."
+      }
+    ],
+    "hint": "There are three ranges kept back for use inside a building.",
+    "verify": {
+      "runner": "python",
+      "program": "import ipaddress\na = ipaddress.ip_address(\"10.0.0.5\")\nprint(\"Private\" if a.is_private else \"Public\")\n"
+    }
+  },
+  {
+    "section": "technical",
+    "topic": "networking",
+    "kind": "concept",
+    "id": "net-which-is-not-private",
+    "subtopic": "Private address ranges",
+    "difficulty": 3,
+    "prompt": "Which one of these is NOT a private address?",
+    "options": [
+      {
+        "text": "172.32.5.1",
+        "correct": true,
+        "why": "The private block in the 172 range is only 172.16 to 172.31. 172.32 is just past the end of it, so it is public."
+      },
+      {
+        "text": "172.16.5.1",
+        "correct": false,
+        "why": "This is the FIRST address of the 172 private block, so it is private."
+      },
+      {
+        "text": "192.168.0.1",
+        "correct": false,
+        "why": "The whole of 192.168.x.x is private. This is the usual address of a home router."
+      },
+      {
+        "text": "10.255.255.254",
+        "correct": false,
+        "why": "Every 10.x.x.x address is private, right up to the end of the range."
+      }
+    ],
+    "hint": "The 172 private block does not cover every 172. Where does it stop?",
+    "verify": {
+      "runner": "python",
+      "program": "import ipaddress\ncandidates = [\"172.32.5.1\", \"172.16.5.1\", \"192.168.0.1\", \"10.255.255.254\"]\npublic = [c for c in candidates if not ipaddress.ip_address(c).is_private]\nprint(public[0] if len(public) == 1 else f\"not unique: {public}\")\n"
+    }
+  },
+  {
+    "section": "technical",
+    "topic": "networking",
+    "kind": "concept",
+    "id": "net-port-https",
+    "subtopic": "Well known ports",
+    "difficulty": 1,
+    "prompt": "Which port does HTTPS use by default?",
+    "options": [
+      {
+        "text": "443",
+        "correct": true,
+        "why": "HTTPS is HTTP wrapped in TLS, and it was given its own port, 443."
+      },
+      {
+        "text": "80",
+        "correct": false,
+        "why": "That is plain HTTP, with no encryption."
+      },
+      {
+        "text": "22",
+        "correct": false,
+        "why": "That is SSH, for logging in to a machine remotely."
+      },
+      {
+        "text": "8080",
+        "correct": false,
+        "why": "That is a common port for a test web server, but it is not the default for HTTPS."
+      }
+    ],
+    "hint": "HTTP is 80. The secure one is a different number.",
+    "verify": {
+      "runner": "python",
+      "program": "import socket\nprint(socket.getservbyname(\"https\", \"tcp\"))\n"
+    }
+  },
+  {
+    "section": "technical",
+    "topic": "networking",
+    "kind": "concept",
+    "id": "net-port-ssh",
+    "subtopic": "Well known ports",
+    "difficulty": 1,
+    "prompt": "Which port does SSH use by default?",
+    "options": [
+      {
+        "text": "22",
+        "correct": true,
+        "why": "SSH, the secure way to log in to a machine over a network, is port 22."
+      },
+      {
+        "text": "21",
+        "correct": false,
+        "why": "That is FTP, the old file transfer protocol, which sends passwords in plain text."
+      },
+      {
+        "text": "23",
+        "correct": false,
+        "why": "That is Telnet. SSH replaced Telnet because Telnet is not encrypted."
+      },
+      {
+        "text": "25",
+        "correct": false,
+        "why": "That is SMTP, for sending email."
+      }
+    ],
+    "hint": "It sits right between FTP and Telnet.",
+    "verify": {
+      "runner": "python",
+      "program": "import socket\nprint(socket.getservbyname(\"ssh\", \"tcp\"))\n"
+    }
+  },
+  {
+    "section": "technical",
+    "topic": "networking",
+    "kind": "concept",
+    "id": "net-port-dns",
+    "subtopic": "Well known ports",
+    "difficulty": 2,
+    "prompt": "Which port does DNS normally use?",
+    "options": [
+      {
+        "text": "53",
+        "correct": true,
+        "why": "DNS uses port 53. It usually runs over UDP because a lookup is one small question and one small answer."
+      },
+      {
+        "text": "80",
+        "correct": false,
+        "why": "That is HTTP. DNS runs before the web request, to find the address first."
+      },
+      {
+        "text": "67",
+        "correct": false,
+        "why": "That is DHCP, which hands out addresses. DNS looks names up."
+      },
+      {
+        "text": "443",
+        "correct": false,
+        "why": "That is HTTPS, the port a browser uses for a secure page. DNS runs before that request, to find the address to connect to."
+      }
+    ],
+    "hint": "It is a low number, below 60.",
+    "verify": {
+      "runner": "python",
+      "program": "import socket\nprint(socket.getservbyname(\"domain\", \"udp\"))\n"
+    }
+  },
+  {
+    "section": "technical",
+    "topic": "networking",
+    "kind": "concept",
+    "id": "net-which-service-on-21",
+    "subtopic": "Well known ports",
+    "difficulty": 2,
+    "prompt": "A server is listening on TCP port 21. Which service is that, by default?",
+    "options": [
+      {
+        "text": "FTP",
+        "correct": true,
+        "why": "Port 21 is FTP, the old file transfer protocol. It sends the username and password in plain text, which is why it is avoided today."
+      },
+      {
+        "text": "SSH",
+        "correct": false,
+        "why": "SSH is port 22, one higher."
+      },
+      {
+        "text": "SMTP",
+        "correct": false,
+        "why": "SMTP, for sending mail, is port 25."
+      },
+      {
+        "text": "HTTP",
+        "correct": false,
+        "why": "HTTP is port 80."
+      }
+    ],
+    "hint": "It is the one just below SSH, and it moves files.",
+    "verify": {
+      "runner": "python",
+      "program": "import socket\nprint(socket.getservbyport(21, \"tcp\").upper())\n"
+    }
+  },
+  {
+    "section": "technical",
+    "topic": "networking",
+    "kind": "concept",
+    "id": "net-status-404",
+    "subtopic": "HTTP status codes",
+    "difficulty": 1,
+    "prompt": "What does the HTTP status code 404 mean?",
+    "options": [
+      {
+        "text": "Not Found",
+        "correct": true,
+        "why": "The server was reached and it understood the request, but there is nothing at that address."
+      },
+      {
+        "text": "Forbidden",
+        "correct": false,
+        "why": "That is 403. The page exists but you are not allowed to see it."
+      },
+      {
+        "text": "Internal Server Error",
+        "correct": false,
+        "why": "That is 500, where the server itself broke."
+      },
+      {
+        "text": "Bad Request",
+        "correct": false,
+        "why": "That is 400, where the request was malformed."
+      }
+    ],
+    "hint": "The most famous error on the web.",
+    "verify": {
+      "runner": "python",
+      "program": "from http import HTTPStatus\nprint(HTTPStatus(404).phrase)\n"
+    }
+  },
+  {
+    "section": "technical",
+    "topic": "networking",
+    "kind": "concept",
+    "id": "net-status-500",
+    "subtopic": "HTTP status codes",
+    "difficulty": 2,
+    "prompt": "What does the HTTP status code 500 mean?",
+    "options": [
+      {
+        "text": "Internal Server Error",
+        "correct": true,
+        "why": "Something broke on the SERVER side. The request was fine, so sending it again usually changes nothing."
+      },
+      {
+        "text": "Not Found",
+        "correct": false,
+        "why": "That is 404, and it is a 4xx, which means the problem is on the client side."
+      },
+      {
+        "text": "Service Unavailable",
+        "correct": false,
+        "why": "That is 503, which usually means the server is overloaded or down for maintenance."
+      },
+      {
+        "text": "Unauthorized",
+        "correct": false,
+        "why": "That is 401, where you need to log in first."
+      }
+    ],
+    "hint": "Codes starting with 5 point the finger at one side. Which one?",
+    "verify": {
+      "runner": "python",
+      "program": "from http import HTTPStatus\nprint(HTTPStatus(500).phrase)\n"
+    }
+  },
+  {
+    "section": "technical",
+    "topic": "networking",
+    "kind": "concept",
+    "id": "net-status-301",
+    "subtopic": "HTTP status codes",
+    "difficulty": 2,
+    "prompt": "What does the HTTP status code 301 mean?",
+    "options": [
+      {
+        "text": "Moved Permanently",
+        "correct": true,
+        "why": "The page has a new address for good. Browsers and search engines remember the new one and stop asking for the old."
+      },
+      {
+        "text": "Found",
+        "correct": false,
+        "why": "That is 302, a TEMPORARY move. Nothing is remembered, so the old address is tried again next time."
+      },
+      {
+        "text": "Not Modified",
+        "correct": false,
+        "why": "That is 304, which tells the browser its cached copy is still good."
+      },
+      {
+        "text": "Created",
+        "correct": false,
+        "why": "That is 201, usually the answer to a POST that made something new."
+      }
+    ],
+    "hint": "There are two redirects, 301 and 302. One is forever.",
+    "verify": {
+      "runner": "python",
+      "program": "from http import HTTPStatus\nprint(HTTPStatus(301).phrase)\n"
+    }
+  },
+  {
+    "section": "technical",
+    "topic": "networking",
+    "kind": "concept",
+    "id": "net-which-range-is-client-error",
+    "subtopic": "HTTP status code ranges",
+    "difficulty": 2,
+    "prompt": "Which range of HTTP status codes means the CLIENT made the mistake?",
+    "options": [
+      {
+        "text": "4xx",
+        "correct": true,
+        "why": "The 400s blame the request: not found, forbidden, bad request. Sending the same request again will not help."
+      },
+      {
+        "text": "5xx",
+        "correct": false,
+        "why": "The 500s blame the server. The request was fine, so trying again later may work."
+      },
+      {
+        "text": "2xx",
+        "correct": false,
+        "why": "The 200s mean success. Nothing went wrong at all."
+      },
+      {
+        "text": "3xx",
+        "correct": false,
+        "why": "The 300s are redirects. The page has moved, which is nobody’s mistake."
+      }
+    ],
+    "hint": "Which group holds 404 and 403?",
+    "verify": {
+      "runner": "python",
+      "program": "from http import HTTPStatus\nranges = {\"1xx\": 100, \"2xx\": 200, \"3xx\": 301, \"4xx\": 404, \"5xx\": 500}\nhits = [k for k, c in ranges.items() if HTTPStatus(c).is_client_error]\nprint(hits[0] if len(hits) == 1 else f\"not unique: {hits}\")\n"
+    }
+  },
+  {
+    "section": "technical",
+    "topic": "networking",
+    "kind": "concept",
+    "id": "net-osi-layer-of-ip",
+    "subtopic": "OSI model",
+    "difficulty": 2,
+    "prompt": "In the OSI model, which layer does the IP protocol belong to?",
+    "options": [
+      {
+        "text": "Layer 3, the network layer",
+        "correct": true,
+        "why": "IP carries a packet from one network to another using addresses. Choosing a path between networks is exactly what layer 3 does."
+      },
+      {
+        "text": "Layer 2, the data link layer",
+        "correct": false,
+        "why": "Layer 2 moves frames between devices on the SAME local network, using MAC addresses. It cannot cross between networks."
+      },
+      {
+        "text": "Layer 4, the transport layer",
+        "correct": false,
+        "why": "Layer 4 is TCP and UDP. They sit on top of IP and look after the conversation, not the address."
+      },
+      {
+        "text": "Layer 7, the application layer",
+        "correct": false,
+        "why": "Layer 7 is where HTTP and DNS live, right next to the program the user sees."
+      }
+    ],
+    "hint": "Which layer is named after the thing IP addresses identify?",
+    "verify": {
+      "runner": "review",
+      "reviewed": true
+    }
+  },
+  {
+    "section": "technical",
+    "topic": "networking",
+    "kind": "concept",
+    "id": "net-osi-layer-of-switch",
+    "subtopic": "OSI model",
+    "difficulty": 2,
+    "prompt": "A normal network switch works at which OSI layer?",
+    "options": [
+      {
+        "text": "Layer 2, the data link layer",
+        "correct": true,
+        "why": "A switch reads MAC addresses and sends each frame out of the one port where that device sits. MAC addresses are layer 2."
+      },
+      {
+        "text": "Layer 1, the physical layer",
+        "correct": false,
+        "why": "That is a hub or a cable. A hub copies the signal to every port because it reads no addresses at all."
+      },
+      {
+        "text": "Layer 3, the network layer",
+        "correct": false,
+        "why": "That is a router, which reads IP addresses and joins different networks together."
+      },
+      {
+        "text": "Layer 4, the transport layer",
+        "correct": false,
+        "why": "Layer 4 is TCP and UDP, which are handled by the two computers, not by the box in the middle."
+      }
+    ],
+    "hint": "Which kind of address does a switch read?",
+    "verify": {
+      "runner": "review",
+      "reviewed": true
+    }
+  },
+  {
+    "section": "technical",
+    "topic": "networking",
+    "kind": "concept",
+    "id": "net-tcp-vs-udp-delivery",
+    "subtopic": "TCP and UDP",
+    "difficulty": 2,
+    "prompt": "Which is true about TCP compared with UDP?",
+    "options": [
+      {
+        "text": "TCP checks that data arrived and resends what was lost",
+        "correct": true,
+        "why": "TCP numbers every piece, waits for the other side to confirm, and sends again if a confirmation never comes. That makes it reliable but slower."
+      },
+      {
+        "text": "TCP is faster because it does not wait",
+        "correct": false,
+        "why": "That is UDP. UDP just fires the data off, which is why it suits live video and games where a late piece is useless anyway."
+      },
+      {
+        "text": "TCP sends data without making a connection first",
+        "correct": false,
+        "why": "That is UDP again. TCP always sets up a connection first, with the three-way handshake."
+      },
+      {
+        "text": "TCP has no port numbers",
+        "correct": false,
+        "why": "Both TCP and UDP use port numbers. That is how one machine runs many services at once."
+      }
+    ],
+    "hint": "One of the two promises delivery. Which one, and what does that promise cost?",
+    "verify": {
+      "runner": "review",
+      "reviewed": true
+    }
+  },
+  {
+    "section": "technical",
+    "topic": "networking",
+    "kind": "concept",
+    "id": "net-tcp-handshake-order",
+    "subtopic": "TCP handshake",
+    "difficulty": 3,
+    "prompt": "What is the order of the TCP three-way handshake?",
+    "options": [
+      {
+        "text": "SYN, then SYN-ACK, then ACK",
+        "correct": true,
+        "why": "The client asks to start (SYN). The server agrees and asks back in one message (SYN-ACK). The client confirms (ACK). Now both sides know the other can hear them."
+      },
+      {
+        "text": "ACK, then SYN, then SYN-ACK",
+        "correct": false,
+        "why": "You cannot confirm something before it has been asked. The first message must be the SYN."
+      },
+      {
+        "text": "SYN, then ACK, then SYN-ACK",
+        "correct": false,
+        "why": "The server saves a round trip by combining its agreement and its own request into one SYN-ACK."
+      },
+      {
+        "text": "SYN, then SYN, then ACK",
+        "correct": false,
+        "why": "The server does send its own SYN, but it is bundled with the ACK, which is why there are three steps and not four."
+      }
+    ],
+    "hint": "Three messages, and the middle one does two jobs at once.",
+    "verify": {
+      "runner": "review",
+      "reviewed": true
+    }
+  },
+  {
+    "section": "technical",
+    "topic": "networking",
+    "kind": "concept",
+    "id": "net-what-dns-does",
+    "subtopic": "DNS",
+    "difficulty": 1,
+    "prompt": "What is the job of DNS?",
+    "options": [
+      {
+        "text": "It turns a name such as example.com into an IP address",
+        "correct": true,
+        "why": "Computers route by numbers, but people remember names. DNS is the phone book that turns one into the other."
+      },
+      {
+        "text": "It hands out an IP address to a device that joins the network",
+        "correct": false,
+        "why": "That is DHCP. DNS does not give out addresses, it looks them up."
+      },
+      {
+        "text": "It encrypts traffic between a browser and a server",
+        "correct": false,
+        "why": "That is TLS, the S in HTTPS."
+      },
+      {
+        "text": "It lets many devices share one public address",
+        "correct": false,
+        "why": "That is NAT, which your home router does."
+      }
+    ],
+    "hint": "Think of it as the phone book of the internet.",
+    "verify": {
+      "runner": "review",
+      "reviewed": true
+    }
+  },
+  {
+    "section": "technical",
+    "topic": "networking",
+    "kind": "concept",
+    "id": "net-what-dhcp-does",
+    "subtopic": "DHCP",
+    "difficulty": 2,
+    "prompt": "What is the job of DHCP?",
+    "options": [
+      {
+        "text": "It gives a device an IP address automatically when it joins",
+        "correct": true,
+        "why": "Without DHCP somebody would have to type an address into every phone and laptop by hand, and make sure no two were the same."
+      },
+      {
+        "text": "It turns a website name into an IP address",
+        "correct": false,
+        "why": "That is DNS. DHCP hands addresses out, DNS looks them up."
+      },
+      {
+        "text": "It decides the best path between two networks",
+        "correct": false,
+        "why": "That is routing, done by routers using their routing tables."
+      },
+      {
+        "text": "It checks that data arrived safely",
+        "correct": false,
+        "why": "That is TCP, at the transport layer."
+      }
+    ],
+    "hint": "Why does your phone get an address the moment it joins the wifi?",
+    "verify": {
+      "runner": "review",
+      "reviewed": true
+    }
+  },
+  {
+    "section": "technical",
+    "topic": "networking",
+    "kind": "concept",
+    "id": "net-what-nat-does",
+    "subtopic": "NAT",
+    "difficulty": 3,
+    "prompt": "What does NAT do on a home router?",
+    "options": [
+      {
+        "text": "It lets many private addresses share one public address",
+        "correct": true,
+        "why": "Every device at home has a private address. The router swaps that for its single public address on the way out, and remembers which reply belongs to which device. This is a big part of why IPv4 has lasted so long."
+      },
+      {
+        "text": "It gives each device at home its own public address",
+        "correct": false,
+        "why": "The opposite. There are not enough public IPv4 addresses for that, which is the problem NAT solves."
+      },
+      {
+        "text": "It encrypts everything leaving the house",
+        "correct": false,
+        "why": "NAT only rewrites addresses. Encryption is TLS, and it is a separate job."
+      },
+      {
+        "text": "It turns names into addresses",
+        "correct": false,
+        "why": "That is DNS, which turns a name into an address. NAT works on the addresses themselves, after DNS has done its job."
+      }
+    ],
+    "hint": "How do ten devices at home get online through one address from the internet company?",
+    "verify": {
+      "runner": "review",
+      "reviewed": true
+    }
+  }
+]
