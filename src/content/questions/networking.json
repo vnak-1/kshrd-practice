@@ -191,7 +191,7 @@
       {
         "text": "2",
         "correct": true,
-        "why": "/30 leaves 2 host bits, so 4 addresses. Take away the network and broadcast addresses and 2 are left. That is why /30 is used for a link between two routers."
+        "why": "/30 leaves 2 host bits, so 4 addresses. Take away the network and the broadcast address and 2 are left. That is why /30 suits a link between two routers."
       },
       {
         "text": "4",
@@ -199,9 +199,9 @@
         "why": "That is the total. Two of the four are always reserved."
       },
       {
-        "text": "1",
+        "text": "3",
         "correct": false,
-        "why": "A link needs an address at each end, and /30 does give two."
+        "why": "This takes away only one reserved address. Both the network and the broadcast address are reserved, so two go."
       },
       {
         "text": "30",
@@ -340,7 +340,7 @@
       {
         "text": "172.16.5.1",
         "correct": false,
-        "why": "This is the FIRST address of the 172 private block, so it is private."
+        "why": "172.16 is where the private block starts, so this address sits inside it."
       },
       {
         "text": "192.168.0.1",
@@ -551,7 +551,7 @@
       {
         "text": "Internal Server Error",
         "correct": true,
-        "why": "Something broke on the SERVER side. The request was fine, so sending it again usually changes nothing."
+        "why": "Something broke on the SERVER side. The request itself was fine, so there is nothing to fix in it. Trying again later may work if the fault was temporary."
       },
       {
         "text": "Not Found",

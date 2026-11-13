@@ -313,9 +313,9 @@
         "why": "That is ORDER BY price DESC. Biggest first is never the default."
       },
       {
-        "text": "bag then pen then book",
+        "text": "An error, ORDER BY needs ASC or DESC",
         "correct": false,
-        "why": "This is sorted by name, not by price."
+        "why": "ASC is the default, so leaving it out is allowed. The query runs and sorts smallest first."
       },
       {
         "text": "pen then bag then book",
@@ -560,9 +560,9 @@
         "why": "That is a plain inner JOIN, which would drop Vuth. LEFT keeps him."
       },
       {
-        "text": "6",
+        "text": "9",
         "correct": false,
-        "why": "That is 3 x 2, every pair. The ON clause prevents it."
+        "why": "That is 3 x 3, every user paired with every order. The ON clause stops that from happening."
       },
       {
         "text": "2",
