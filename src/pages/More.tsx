@@ -8,6 +8,21 @@ import { TOPIC_META } from '../lib/topics'
 
 type Note = { kind: 'ok' | 'bad'; text: string } | null
 
+/**
+ * true when the app was opened from a home-screen icon rather than from the
+ * browser. iOS does not support the standard display-mode query on older
+ * versions, so Safari's own `navigator.standalone` is checked as well.
+ */
+function isInstalled(): boolean {
+  if (typeof window === 'undefined') return false
+  try {
+    if (window.matchMedia('(display-mode: standalone)').matches) return true
+  } catch {
+    // matchMedia can throw in odd embedded browsers. Treat it as "not installed".
+  }
+  return (navigator as Navigator & { standalone?: boolean }).standalone === true
+}
+
 export function More() {
   const state = useAppState()
   const [note, setNote] = useState<Note>(null)
@@ -197,6 +212,31 @@ export function More() {
           </button>
         )}
       </div>
+
+      {isInstalled() ? null : (
+        <div className="card stack-s">
+          <h2 className="section" style={{ marginTop: 0 }}>
+            Put it on your home screen
+          </h2>
+          <p className="sub">
+            Then it opens like a normal app, with no address bar, and it works with no
+            internet.
+          </p>
+          <ol className="sub steps">
+            <li>
+              Open this page in <b>Safari</b> on iPhone, or <b>Chrome</b> on Android.
+            </li>
+            <li>
+              Tap the <b>Share</b> button on iPhone, or the <b>three dots</b> menu on
+              Android.
+            </li>
+            <li>
+              Choose <b>Add to Home Screen</b>.
+            </li>
+            <li>Open the app from the new icon.</li>
+          </ol>
+        </div>
+      )}
 
       <div className="card stack-s">
         <h2 className="section" style={{ marginTop: 0 }}>
