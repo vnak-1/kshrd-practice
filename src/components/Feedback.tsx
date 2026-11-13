@@ -53,7 +53,9 @@ export function Feedback({ question, picked, restate = true }: Props) {
         <h3>Why the others are wrong</h3>
         {question.options.map((option, i) =>
           option.correct ? null : (
-            <div className="why-item no" key={i}>
+            // The one you picked is marked so your own mistake stands out
+            // from the other wrong answers, which you never chose.
+            <div className={picked === i ? 'why-item no yours' : 'why-item no'} key={i}>
               <span className="tag">{picked === i ? 'YOURS' : 'NO'}</span>
               <span className="body">
                 <b className={label}>{option.text}</b>

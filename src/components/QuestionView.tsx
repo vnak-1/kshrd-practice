@@ -23,7 +23,13 @@ export function QuestionView({ question, order, picked, checked, revealAnswer, o
 
       {question.code ? <CodeBlock code={question.code} /> : null}
 
-      <div className="options" role="radiogroup" aria-label="Answer choices">
+      <div
+        // "revealed" fades the options that are neither the answer nor the
+        // one picked, so the eye lands on the two that matter.
+        className={checked && revealAnswer ? 'options revealed' : 'options'}
+        role="radiogroup"
+        aria-label="Answer choices"
+      >
         {order.map((original, shown) => {
           const option = question.options[original]
           const isPicked = picked === original

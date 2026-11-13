@@ -175,7 +175,9 @@ export function Session() {
 
         {question ? (
           <>
-            <div className="card">
+            {/* The key makes React build a fresh card for each question,
+                so the slide-in plays again every time you move on. */}
+            <div className="card qcard-in" key={question.id}>
               <QuestionView
                 question={question}
                 order={orderFor(session, index, question)}

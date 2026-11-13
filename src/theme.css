@@ -1,0 +1,637 @@
+/* theme.css — the look.
+   ======================================================================
+   This file is loaded AFTER styles.css, so what is here wins.
+
+   Why a second file: styles.css holds the layout and the rules that stop
+   an iPhone from scrolling the wrong way. Those are easy to break and
+   hard to test. Keeping colour and motion apart means a change to the
+   look can never move a box by accident.
+
+   Two things in here are deliberate and must not be "tidied up":
+
+   1. NO padding, font-size or gap is changed on .card, .code or .option.
+      The question text is written to fit 34 characters per code line and
+      29 per code option, measured at 375px against those exact boxes.
+      Change the padding and every code question has to be re-measured.
+
+   2. Motion is only ever put on leaves: a card, a button, an option.
+      Never on .app or .page. A transform on either of those re-anchors
+      the fixed bottom bar and it stops sticking to the bottom.
+
+   Everything fades out under prefers-reduced-motion, at the end.        */
+
+/* ---------------------------------------------------------------- 1. colour
+   Light first, then dark. Both sets are complete, so neither depends
+   on the other. Text on a coloured background is kept at WCAG AA.      */
+
+:root {
+  --bg: #f1f4fa;
+  --bg-tint: #e7edfa;
+  --card: #ffffff;
+  --card-2: #eef2fa;
+  --text: #101828;
+  --muted: #566075;
+  --border: #dde3ee;
+  --border-strong: #c3ccdd;
+
+  --accent: #3538cd;
+  --accent-2: #2563eb;
+  --accent-text: #ffffff;
+  --accent-soft: #e8eaff;
+
+  --gold: #a35b06;
+  --gold-soft: #fdf0dc;
+  --gold-line: #e9a23b;
+
+  --good: #0a6b3d;
+  --good-bg: #e6f6ed;
+  --good-line: #12925a;
+  --bad: #a61b1b;
+  --bad-bg: #fdeced;
+  --bad-line: #d2434a;
+  --warn-bg: #fdf4e3;
+  --warn-line: #b3801b;
+
+  --code-bg: #141b2e;
+  --code-text: #e4ebf7;
+  --focus: #3538cd;
+
+  --shadow: 0 1px 2px rgba(16, 24, 40, 0.05), 0 10px 28px -12px rgba(16, 24, 40, 0.18);
+  --shadow-lift: 0 2px 4px rgba(16, 24, 40, 0.06), 0 18px 40px -14px rgba(16, 24, 40, 0.28);
+  --ring: 0 0 0 4px rgba(53, 56, 205, 0.16);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    --bg: #070b15;
+    --bg-tint: #0d1527;
+    --card: #121a2d;
+    --card-2: #19233a;
+    --text: #e9eefb;
+    --muted: #9eadc8;
+    --border: #26324c;
+    --border-strong: #3a4968;
+
+    --accent: #6672ff;
+    --accent-2: #3b82f6;
+    --accent-text: #ffffff;
+    --accent-soft: #19234a;
+
+    --gold: #f0b866;
+    --gold-soft: #2a2010;
+    --gold-line: #8a6a24;
+
+    --good: #68e2a0;
+    --good-bg: #0e2a1d;
+    --good-line: #2d8558;
+    --bad: #ffa1a1;
+    --bad-bg: #2c1317;
+    --bad-line: #a9444b;
+    --warn-bg: #2a2110;
+    --warn-line: #8d7026;
+
+    --code-bg: #04080f;
+    --code-text: #dae4f6;
+    --focus: #8fb0ff;
+
+    --shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+    --shadow-lift: 0 10px 30px -10px rgba(0, 0, 0, 0.75);
+    --ring: 0 0 0 4px rgba(102, 114, 255, 0.22);
+  }
+}
+
+/* A soft wash at the top of the page. It is a background only: it moves
+   no box and it is not a transform, so the fixed bars are untouched. */
+body {
+  background:
+    radial-gradient(1200px 420px at 50% -220px, var(--bg-tint), transparent 70%),
+    var(--bg);
+  background-attachment: scroll;
+}
+
+/* ------------------------------------------------------------- 2. surfaces */
+
+.card {
+  border-color: var(--border);
+  box-shadow: var(--shadow);
+  /* padding is NOT set here on purpose — see the note at the top */
+
+  /* The wrong-answer shake moves an option 5px sideways and the right-answer
+     pop makes it slightly wider. `.app` already clips that, but `clip` is
+     ignored on iOS 15 and older, where the page would gain a few pixels of
+     sideways scroll mid-animation and twitch. Catching it on the card works
+     everywhere. It does not make a scroll box, so nothing else changes, and
+     the code block still scrolls inside itself. */
+  overflow-x: clip;
+}
+
+.tile,
+.banner {
+  box-shadow: var(--shadow);
+  transition:
+    transform 140ms ease,
+    box-shadow 140ms ease,
+    border-color 140ms ease;
+}
+
+.tile:active,
+.banner:active {
+  transform: scale(0.985);
+  box-shadow: var(--shadow-lift);
+}
+
+/* ------------------------------------------------------- 3. buttons */
+
+.btn {
+  transition:
+    transform 120ms ease,
+    box-shadow 160ms ease,
+    background 160ms ease,
+    border-color 160ms ease;
+}
+
+.btn-primary {
+  background: linear-gradient(180deg, var(--accent-2), var(--accent));
+  border-color: transparent;
+  color: var(--accent-text);
+  box-shadow: 0 6px 18px -6px rgba(53, 56, 205, 0.55);
+  letter-spacing: 0.01em;
+}
+
+.btn-primary:active:not(:disabled) {
+  transform: translateY(1px) scale(0.99);
+  box-shadow: 0 3px 10px -6px rgba(53, 56, 205, 0.6);
+}
+
+.btn-secondary:active:not(:disabled) {
+  transform: scale(0.99);
+  border-color: var(--border-strong);
+}
+
+.btn:disabled {
+  opacity: 0.55;
+  box-shadow: none;
+}
+
+.btn:focus-visible,
+.option:focus-visible,
+.tile:focus-visible,
+.banner:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+  box-shadow: var(--ring);
+}
+
+/* --------------------------------------------------- 4. answer options
+   The press, the pick and the reveal. Scale only, so no box moves and
+   the character limits still hold.                                     */
+
+.option {
+  transition:
+    border-color 140ms ease,
+    background 140ms ease,
+    transform 110ms ease,
+    box-shadow 140ms ease;
+}
+
+.option:active:not(:disabled) {
+  transform: scale(0.985);
+}
+
+.option.selected {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+  box-shadow: var(--ring);
+}
+
+.option.is-correct {
+  border-color: var(--good-line);
+  background: var(--good-bg);
+  animation: answer-pop 360ms ease-out;
+}
+
+.option.is-wrong {
+  border-color: var(--bad-line);
+  background: var(--bad-bg);
+  animation: answer-shake 380ms ease-in-out;
+}
+
+/* The A / B / C mark, and the tick or cross that replaces it. */
+.option .mark {
+  transition:
+    background 140ms ease,
+    color 140ms ease,
+    border-color 140ms ease;
+}
+
+.option.is-correct .mark,
+.option.is-wrong .mark {
+  animation: mark-pop 340ms cubic-bezier(0.2, 1.3, 0.4, 1);
+}
+
+.option.is-correct .mark {
+  background: var(--good-line);
+  border-color: var(--good-line);
+  color: #ffffff;
+}
+
+.option.is-wrong .mark {
+  background: var(--bad-line);
+  border-color: var(--bad-line);
+  color: #ffffff;
+}
+
+/* An option that is neither picked nor the answer fades back, so the eye
+   goes to the two that matter. Opacity only: nothing moves. */
+.options.revealed .option:not(.is-correct):not(.is-wrong) {
+  opacity: 0.55;
+}
+
+/* --------------------------------------------------- 5. the answer panel */
+
+.feedback {
+  animation: panel-rise 280ms ease-out;
+}
+
+.verdict {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 700;
+  font-size: 17px;
+}
+
+.verdict .dot {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 999px;
+  font-size: 15px;
+  color: #ffffff;
+  animation: mark-pop 380ms cubic-bezier(0.2, 1.3, 0.4, 1);
+}
+
+.verdict.good .dot {
+  background: var(--good-line);
+}
+
+.verdict.bad .dot {
+  background: var(--bad-line);
+}
+
+.why-item {
+  border-radius: 12px;
+  transition: background 140ms ease;
+}
+
+.why-item.ok {
+  border-left: 3px solid var(--good-line);
+}
+
+.why-item.no {
+  border-left: 3px solid var(--border-strong);
+}
+
+/* The wrong answer you actually chose. It is the one to read. */
+.why-item.no.yours {
+  border-left-color: var(--bad-line);
+  background: var(--bad-bg);
+}
+
+/* ------------------------------------------------------- 6. progress bar */
+
+.progress {
+  background: var(--border);
+  height: 10px;
+}
+
+.progress > * {
+  background: linear-gradient(90deg, var(--accent-2), var(--accent));
+  border-radius: 999px;
+  transition: width 420ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* -------------------------------------------------------- 7. big numbers */
+
+.big-number {
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.02em;
+  font-weight: 800;
+}
+
+/* --------------------------------------------------- 8. new: the hero card
+   The countdown block on the home screen. One card, two numbers, a thin
+   accent line along the top.                                            */
+
+.hero {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  padding: 18px;
+  background:
+    radial-gradient(520px 200px at 100% -60px, var(--accent-soft), transparent 70%),
+    var(--card);
+  box-shadow: var(--shadow);
+}
+
+.hero::before {
+  content: '';
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--accent), var(--accent-2), var(--gold-line));
+}
+
+.hero-grid {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 12px;
+}
+
+.hero-split {
+  width: 1px;
+  align-self: stretch;
+  background: var(--border);
+}
+
+.hero-cell .big-number {
+  line-height: 1.05;
+}
+
+.hero-cell.right {
+  text-align: right;
+}
+
+/* ------------------------------------------------------ 9. new: the streak
+   Days practised in a row. Gold, because it is the one number that is
+   about keeping going rather than being right.                         */
+
+.streak {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 5px 11px;
+  border-radius: 999px;
+  background: var(--gold-soft);
+  border: 1px solid var(--gold-line);
+  color: var(--gold);
+  font-size: 14px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  /* keeps "12 days" on one line, so it never pushes the title about */
+  white-space: nowrap;
+  flex: 0 0 auto;
+}
+
+.streak .flame {
+  font-size: 14px;
+  line-height: 1;
+}
+
+.streak.cold {
+  background: var(--card-2);
+  border-color: var(--border);
+  color: var(--muted);
+}
+
+/* ------------------------------------------- 10. new: topic progress bars
+   A thin bar under each topic row, so the list shows how far along each
+   topic is without opening it.                                          */
+
+.tbar {
+  /* set, because these sit inside a <span> in the topic rows */
+  display: block;
+  height: 5px;
+  width: 100%;
+  margin-top: 8px;
+  border-radius: 999px;
+  background: var(--border);
+  overflow: hidden;
+}
+
+.tbar > span {
+  display: block;
+  height: 100%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--accent-2), var(--accent));
+  transition: width 520ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.tbar.done > span {
+  background: linear-gradient(90deg, var(--good-line), var(--good-line));
+}
+
+.tmeta {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  margin-top: 6px;
+  font-size: 13px;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+
+/* --------------------------------------------- 11. new: the score ring
+   Drawn with conic-gradient, so it is one element and no SVG.          */
+
+.ring {
+  --pct: 0;
+  --ring-color: var(--accent);
+  position: relative;
+  width: 132px;
+  height: 132px;
+  margin: 0 auto;
+  border-radius: 999px;
+  background: conic-gradient(
+    var(--ring-color) calc(var(--pct) * 1%),
+    var(--border) 0
+  );
+  display: grid;
+  place-items: center;
+  animation: ring-in 620ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.ring::after {
+  content: '';
+  position: absolute;
+  inset: 11px;
+  border-radius: 999px;
+  background: var(--card);
+}
+
+.ring-label {
+  position: relative;
+  /* above .ring::after, which paints the hole in the middle of the ring
+     and would otherwise cover the number, being the later element */
+  z-index: 1;
+  text-align: center;
+  line-height: 1.1;
+  display: grid;
+  gap: 2px;
+}
+
+.ring-pct {
+  font-size: 34px;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.02em;
+}
+
+.ring-sub {
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.ring.is-good {
+  --ring-color: var(--good-line);
+}
+
+.ring.is-bad {
+  --ring-color: var(--bad-line);
+}
+
+/* ------------------------------------------------- 12. bottom nav polish */
+
+.nav {
+  background: color-mix(in srgb, var(--card) 92%, transparent);
+  border-top: 1px solid var(--border);
+}
+
+.nav a {
+  transition:
+    color 140ms ease,
+    background 140ms ease;
+}
+
+.nav a[aria-current='page'] {
+  color: var(--accent);
+}
+
+/* ------------------------------------------------------------ 13. chips */
+
+/* A chip that is a link, such as a topic shortcut. The plain .chip is also
+   used as a read-only counter ("3 / 10"), which must stay neutral. */
+a.chip {
+  text-decoration: none;
+  color: var(--accent);
+  border-color: var(--accent-soft);
+  background: var(--accent-soft);
+  font-weight: 600;
+}
+
+.chip {
+  transition:
+    background 140ms ease,
+    border-color 140ms ease,
+    transform 110ms ease;
+}
+
+.chip:active {
+  transform: scale(0.97);
+}
+
+/* ------------------------------------------------------- 14. keyframes */
+
+@keyframes answer-pop {
+  0% {
+    transform: scale(1);
+  }
+  45% {
+    transform: scale(1.018);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes answer-shake {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  20% {
+    transform: translateX(-5px);
+  }
+  40% {
+    transform: translateX(4px);
+  }
+  60% {
+    transform: translateX(-3px);
+  }
+  80% {
+    transform: translateX(2px);
+  }
+}
+
+@keyframes mark-pop {
+  0% {
+    transform: scale(0.4);
+    opacity: 0;
+  }
+  60% {
+    transform: scale(1.18);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes panel-rise {
+  0% {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes ring-in {
+  0% {
+    transform: scale(0.9) rotate(-8deg);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1) rotate(0);
+    opacity: 1;
+  }
+}
+
+@keyframes card-in {
+  0% {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* A question card sliding in as you move through a set. */
+.qcard-in {
+  animation: card-in 240ms ease-out;
+}
+
+/* --------------------------------------------- 15. reduced motion
+   One switch. Everything above becomes still. The colours stay, so
+   nothing is lost: right and wrong are an icon and a word as well as
+   a colour, as they were before.                                     */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}

@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import type { CSSProperties } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { Feedback } from '../components/Feedback'
 import { PageHeader } from '../components/PageHeader'
@@ -6,6 +7,19 @@ import { lookupMaybe } from '../lib/content'
 import { DEFAULT_SET_SIZE, isAnswerCorrect, scoreSession } from '../lib/session'
 import { poolFor, startSet } from '../lib/start'
 import { useAppState } from '../lib/store'
+
+/**
+ * One short line about the score. It is encouragement, not a grade: the
+ * real exam's pass mark is not published, so no line here claims you
+ * passed or failed.
+ */
+function verdictLine(percent: number): string {
+  if (percent === 100) return 'Every one right. Well done.'
+  if (percent >= 80) return 'Strong set. Keep going.'
+  if (percent >= 60) return 'Good. Read the ones you missed.'
+  if (percent >= 40) return 'Halfway there. The wrong ones are the lesson.'
+  return 'A hard set. Read every reason below, then try again.'
+}
 
 export function Review() {
   const state = useAppState()
@@ -50,7 +64,25 @@ export function Review() {
         <PageHeader title="Results" backTo="/" />
 
         <div className="card">
-          <div className="score-ring">{score.percent}%</div>
+          {/* The ring fills to the score. The number inside says it in
+              words as well, so the ring is decoration, never the only
+              way to read the result. */}
+          <div
+            className={`ring ${score.percent >= 70 ? 'is-good' : score.percent < 40 ? 'is-bad' : ''}`}
+            style={{ '--pct': score.percent } as CSSProperties}
+            role="img"
+            aria-label={`Score ${score.percent} percent`}
+          >
+            <span className="ring-label">
+              <span className="ring-pct">{score.percent}%</span>
+              <span className="ring-sub">
+                {score.correct}/{score.total}
+              </span>
+            </span>
+          </div>
+          <p className="sub" style={{ textAlign: 'center', marginTop: 12 }}>
+            {verdictLine(score.percent)}
+          </p>
           <p className="sub" style={{ textAlign: 'center' }}>
             {score.correct} right out of {score.total}
             {score.answered < score.total

@@ -1,10 +1,13 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { ALL_QUESTIONS, lookup } from '../lib/content'
-import { daysUntilExam, EXAM_DATE } from '../lib/countdown'
+import { ALL_QUESTIONS, lookup, topicCount } from '../lib/content'
+import { TOPIC_META } from '../lib/topics'
+import { daysUntilExam, EXAM_DATE, today } from '../lib/countdown'
+import { weekFor, weekRangeLabel } from '../lib/plan'
 import { mistakeIds } from '../lib/progress'
 import { DEFAULT_SET_SIZE, scoreSession } from '../lib/session'
 import { startSet } from '../lib/start'
+import { practisedToday, streakLength } from '../lib/streak'
 import { useAppState } from '../lib/store'
 import { ChevronRight } from '../components/Icons'
 
@@ -26,6 +29,11 @@ export function Home() {
   const total = ALL_QUESTIONS.length
   const setSize = Math.min(DEFAULT_SET_SIZE, total)
   const [asking, setAsking] = useState(false)
+  const day = today()
+  const streak = streakLength(state.daysPractised, day)
+  const doneToday = practisedToday(state.daysPractised, day)
+  const answered = Object.values(state.stats).filter((s) => s.seen > 0).length
+  const seenPercent = total === 0 ? 0 : Math.round((answered / total) * 100)
 
   function startMixed() {
     startSet({ source: { kind: 'mixed' }, mode: 'learn', size: setSize })
@@ -40,9 +48,27 @@ export function Home() {
 
   return (
     <div className="stack">
-      <div>
-        <h1 className="title">KSHRD Practice</h1>
-        <p className="sub">Written test · {EXAM_LABEL}</p>
+      <div className="row-between" style={{ alignItems: 'flex-start', gap: 12 }}>
+        <div>
+          <h1 className="title">KSHRD Practice</h1>
+          <p className="sub">Written test · {EXAM_LABEL}</p>
+        </div>
+        {state.daysPractised.length > 0 ? (
+          <span
+            className={doneToday ? 'streak' : 'streak cold'}
+            title={doneToday ? 'Practised today' : 'Practise today to keep it'}
+          >
+            <span className="flame" aria-hidden="true">
+              {doneToday ? '🔥' : '🌙'}
+            </span>
+            {streak} day{streak === 1 ? '' : 's'}
+            <span className="sr-only">
+              {doneToday
+                ? ' practised in a row, including today'
+                : ' practised in a row. Practise today to keep the run going.'}
+            </span>
+          </span>
+        ) : null}
       </div>
 
       {unfinished ? (
@@ -58,25 +84,49 @@ export function Home() {
         </Link>
       ) : null}
 
-      <div className="card">
-        <div className="row-between">
-          <div>
+      <div className="hero">
+        <div className="hero-grid">
+          <div className="hero-cell">
             <div className="big-number">{days > 0 ? days : 0}</div>
-            <p className="sub">
+            <p className="sub" style={{ margin: 0 }}>
               {days > 1
                 ? 'days left'
                 : days === 1
                   ? 'day left'
                   : days === 0
-                    ? 'The exam is today. Good luck.'
-                    : 'The exam date has passed.'}
+                    ? 'the exam is today'
+                    : 'the exam has passed'}
             </p>
           </div>
-          <div style={{ textAlign: 'right' }}>
+          <div className="hero-split" aria-hidden="true" />
+          <div className="hero-cell right">
             <div className="big-number">{total}</div>
-            <p className="sub">questions ready</p>
+            <p className="sub" style={{ margin: 0 }}>
+              questions ready
+            </p>
           </div>
         </div>
+
+        {total > 0 ? (
+          <>
+            <div
+              className="tbar"
+              role="progressbar"
+              aria-valuemin={0}
+              aria-valuemax={total}
+              aria-valuenow={answered}
+              aria-label="Questions you have answered at least once"
+            >
+              <span style={{ width: `${seenPercent}%` }} />
+            </div>
+            <div className="tmeta">
+              <span>
+                {answered} seen · {total - answered} still new
+              </span>
+              <span>{seenPercent}%</span>
+            </div>
+          </>
+        ) : null}
       </div>
 
       {total === 0 ? (
@@ -122,6 +172,8 @@ export function Home() {
         </>
       )}
 
+      <ThisWeek />
+
       {mistakes.length > 0 ? (
         <Link className="tile" to="/mistakes">
           <span className="grow">
@@ -135,6 +187,51 @@ export function Home() {
       ) : null}
 
       {session?.finished ? <LastResult /> : null}
+    </div>
+  )
+}
+
+/**
+ * What the study plan says to work on this week, with a way straight into
+ * it. Only topics that actually have questions get a button; the rest are
+ * still named, so the card never hides part of the week's work.
+ */
+function ThisWeek() {
+  const week = weekFor(today())
+  if (!week) return null
+  const ready = week.topics.filter((t) => topicCount(t) > 0)
+  const notReady = week.topics.filter((t) => topicCount(t) === 0)
+
+  return (
+    <div className="card stack-s">
+      <div className="row-between">
+        <h2 className="section" style={{ marginTop: 0, marginBottom: 0 }}>
+          {week.label}
+        </h2>
+        <span className="sub" style={{ margin: 0 }}>
+          {weekRangeLabel(week)}
+        </span>
+      </div>
+      <p className="sub" style={{ margin: 0 }}>
+        {week.focus}
+      </p>
+
+      {ready.length > 0 ? (
+        <div className="chip-row">
+          {ready.map((topic) => (
+            <Link key={topic} className="chip" to={`/start/${topic}`}>
+              {TOPIC_META[topic].label}
+            </Link>
+          ))}
+        </div>
+      ) : null}
+
+      {notReady.length > 0 ? (
+        <p className="sub" style={{ margin: 0 }}>
+          No questions in the app yet for{' '}
+          {notReady.map((t) => TOPIC_META[t].label).join(', ')}.
+        </p>
+      ) : null}
     </div>
   )
 }

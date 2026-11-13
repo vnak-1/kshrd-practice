@@ -53,18 +53,37 @@ function TopicTile({
     state,
     questions.map((q) => q.id),
   )
+  const seenPercent =
+    questions.length === 0 ? 0 : Math.round((done.answered / questions.length) * 100)
+  const allSeen = done.answered >= questions.length && questions.length > 0
+
   return (
     <Link className="tile" to={`/start/${topic}`}>
       <span className="grow">
         <span className="name">{meta.label}</span>
-        <span className="meta">
-          {meta.blurb}
-          {done.answered > 0
-            ? ` · ${Math.round(done.accuracy * 100)}% right so far`
-            : ''}
+        <span className="meta">{meta.blurb}</span>
+
+        {/* How far through the topic you are. A bar says it faster than a
+            sentence, and it shows at a glance which topic to open next. */}
+        <span
+          className={allSeen ? 'tbar done' : 'tbar'}
+          role="progressbar"
+          aria-valuemin={0}
+          aria-valuemax={questions.length}
+          aria-valuenow={done.answered}
+          aria-label={`${meta.label}: ${done.answered} of ${questions.length} seen`}
+        >
+          <span style={{ width: `${seenPercent}%` }} />
+        </span>
+        <span className="tmeta">
+          <span>
+            {done.answered} of {questions.length} seen
+          </span>
+          <span>
+            {done.answered > 0 ? `${Math.round(done.accuracy * 100)}% right` : 'not started'}
+          </span>
         </span>
       </span>
-      <span className="count">{questions.length}</span>
       <ChevronRight className="arrow" />
     </Link>
   )
