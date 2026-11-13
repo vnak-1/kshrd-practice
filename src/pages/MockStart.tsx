@@ -66,8 +66,17 @@ export function MockStart() {
             What is real and what is a guess
           </h2>
           <p className="sub" style={{ margin: 0 }}>
-            <b>Real:</b> the written test lasts three hours, it is one sitting with one
-            clock, and it is on paper. That is from KSHRD&rsquo;s own site.
+            <b>Real:</b> the date, the place and the subjects. KSHRD list the nine
+            technical subjects on their own recruitment page, and this app follows that
+            list.
+          </p>
+          <p className="sub" style={{ margin: 0 }}>
+            <b>Three hours is our best information, but we could not confirm it.</b>{' '}
+            KSHRD&rsquo;s FAQ does ask &ldquo;How long does the written test take?&rdquo;,
+            so a real answer exists. But the answer does not load on their site, and it
+            is missing from every saved copy of that page going back to December 2024. We
+            set three hours because practising long costs you little if the real test is
+            shorter. Ask them to be sure.
           </p>
           <p className="sub" style={{ margin: 0 }}>
             <b>A guess:</b> how many questions there are and how they are split between

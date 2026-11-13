@@ -177,8 +177,7 @@ export function Home() {
           <span className="grow">
             <span className="name">Mock exam</span>
             <span className="meta">
-              Three hours, every section, answers at the end. The real test is three
-              hours too.
+              Three hours, every section, answers at the end
             </span>
           </span>
           <ChevronRight className="arrow" />

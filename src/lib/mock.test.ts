@@ -5,6 +5,7 @@ import {
   DEFAULT_MOCK_SIZE,
   MOCK_MINUTES,
   drawMock,
+  coverageOf,
   quotasFor,
   scoreBySection,
 } from './mock'
@@ -189,5 +190,37 @@ describe('scoreBySection', () => {
   it('skips a question that is no longer in the app', () => {
     const rows = scoreBySection([paper[0], undefined, paper[2]], [0, 0, 0])
     expect(rows.reduce((sum, r) => sum + r.total, 0)).toBe(2)
+  })
+})
+
+describe('coverageOf', () => {
+  const every: Topic[] = ['java', 'sql', 'css', 'logic']
+
+  it('lists what was asked, most asked first', () => {
+    const paper = [
+      q('j1', 'technical', 'java'),
+      q('j2', 'technical', 'java'),
+      q('s1', 'technical', 'sql'),
+    ]
+    const { asked } = coverageOf(paper, every)
+    expect(asked).toEqual([
+      { topic: 'java', count: 2 },
+      { topic: 'sql', count: 1 },
+    ])
+  })
+
+  it('names the subjects the paper never touched', () => {
+    const paper = [q('j1', 'technical', 'java')]
+    expect(coverageOf(paper, every).missed).toEqual(['sql', 'css', 'logic'])
+  })
+
+  it('reports nothing missed when every subject came up', () => {
+    const paper = every.map((t, i) => q(`x${i}`, 'technical', t))
+    expect(coverageOf(paper, every).missed).toEqual([])
+  })
+
+  it('ignores a question that is no longer in the app', () => {
+    const { asked } = coverageOf([undefined, q('j1', 'technical', 'java')], every)
+    expect(asked).toEqual([{ topic: 'java', count: 1 }])
   })
 })

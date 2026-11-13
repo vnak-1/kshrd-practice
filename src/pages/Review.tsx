@@ -4,8 +4,10 @@ import { Link, useNavigate } from 'react-router-dom'
 import { Feedback } from '../components/Feedback'
 import { PageHeader } from '../components/PageHeader'
 import { lookupMaybe } from '../lib/content'
-import { scoreBySection } from '../lib/mock'
-import { SECTION_LABEL } from '../lib/topics'
+import type { Question } from '../types'
+import { TOPICS } from '../types'
+import { coverageOf, scoreBySection } from '../lib/mock'
+import { SECTION_LABEL, TOPIC_META } from '../lib/topics'
 import { DEFAULT_SET_SIZE, isAnswerCorrect, scoreSession } from '../lib/session'
 import { poolFor, startMock, startSet } from '../lib/start'
 import { useAppState } from '../lib/store'
@@ -21,6 +23,44 @@ function verdictLine(percent: number): string {
   if (percent >= 60) return 'Good. Read the ones you missed.'
   if (percent >= 40) return 'Halfway there. The wrong ones are the lesson.'
   return 'A hard set. Read every reason below, then try again.'
+}
+
+/**
+ * The subjects this paper asked about, and the ones it skipped.
+ *
+ * A mock is a sample of the question bank, so it can miss a whole subject
+ * by chance. Without this the score quietly suggests you are ready for the
+ * lot.
+ */
+function Coverage({ questions }: { questions: readonly (Question | undefined)[] }) {
+  const { asked, missed } = coverageOf(questions, TOPICS)
+  if (asked.length === 0) return null
+
+  return (
+    <div className="card stack-s">
+      <h2 className="section" style={{ marginTop: 0 }}>
+        What this paper asked you
+      </h2>
+      <div className="chip-row">
+        {asked.map(({ topic, count }) => (
+          <span key={topic} className="chip">
+            {TOPIC_META[topic].label} {count}
+          </span>
+        ))}
+      </div>
+      {missed.length > 0 ? (
+        <p className="sub" style={{ margin: 0 }}>
+          <b>Not asked at all:</b> {missed.map((t) => TOPIC_META[t].label).join(', ')}. The
+          real exam can cover {missed.length === 1 ? 'that' : 'those'}, so this score does
+          not say you are ready for {missed.length === 1 ? 'it' : 'them'}.
+        </p>
+      ) : (
+        <p className="sub" style={{ margin: 0 }}>
+          Every subject in the app came up in this paper.
+        </p>
+      )}
+    </div>
+  )
 }
 
 export function Review() {
@@ -130,6 +170,11 @@ export function Review() {
             ))}
           </div>
         ) : null}
+
+        {/* What this paper actually asked about. A mock draws a sample, so
+            a subject can be missed entirely. Saying so stops a thin paper
+            reading as "you are ready for all of it". */}
+        {session.source.kind === 'mock' ? <Coverage questions={questions} /> : null}
 
         <h2 className="section">Every question</h2>
         {session.ids.map((id, i) => {

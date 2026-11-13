@@ -1,27 +1,37 @@
-import type { Question, Section } from '../types'
+import type { Question, Section, Topic } from '../types'
 import { SECTIONS } from '../types'
 import { shuffle } from './shuffle'
 
 /**
  * Picking the questions for a full mock exam.
  *
- * WHAT IS KNOWN about the real paper, from KSHRD's own site:
- *   - it lasts three hours
- *   - it is one sitting with a single countdown, not timed per section
- *   - it is on paper, and the sections are Aptitude, Technical and
- *     English Writing
+ * CONFIRMED on KSHRD's own recruitment page:
+ *   - the date, the venue, and the nine technical subjects
+ *   - the three sections: Aptitude, Technical and English Writing
  *
- * WHAT IS NOT KNOWN, and nobody could find out:
+ * NOT CONFIRMED, despite trying hard:
+ *   - THE THREE HOURS. Their FAQ asks "How long does the written test
+ *     take?", so a real answer exists, but the answer never loads: the
+ *     site's content API returns nothing, and all five saved copies of
+ *     that page from December 2024 to November 2025 contain the question
+ *     with no answer. The word "hour" appears in none of them. An earlier
+ *     research pass reported 3 hours from this FAQ; that could not be
+ *     reproduced, so it is NOT treated as a fact here.
  *   - how many questions there are
  *   - how the marks are split between the sections
  *   - whether a wrong answer loses marks
  *
- * So the length and the mix below are a sensible guess, not a copy of the
- * real paper, and the start screen says so. There is deliberately no
- * negative marking anywhere in this file.
+ * Three hours is kept anyway, because practising long costs almost
+ * nothing if the real test turns out to be shorter, and the start screen
+ * tells the reader it is unconfirmed. There is deliberately no negative
+ * marking anywhere in this file.
  */
 
-/** Three hours, the one length that is actually known to be right. */
+/**
+ * Three hours. Our best information, NOT a verified fact: see above. If
+ * anyone ever reads the real answer off KSHRD's FAQ, change this one
+ * number and the start screen's wording together.
+ */
 export const MOCK_MINUTES = 180
 
 /** Offered lengths. 80 is the default: long enough to feel like the real
@@ -176,6 +186,31 @@ export interface SectionScore {
   total: number
   correct: number
   percent: number
+}
+
+/**
+ * Which topics a finished paper actually asked about, and which it never
+ * touched.
+ *
+ * A mock draws a sample, so a short paper can easily skip a whole subject.
+ * Without this the score reads as "you are ready", when really the paper
+ * never asked about CSS. Shown on the results page.
+ */
+export function coverageOf(
+  questions: readonly (Question | undefined)[],
+  everyTopic: readonly Topic[],
+): { asked: { topic: Topic; count: number }[]; missed: Topic[] } {
+  const count = new Map<Topic, number>()
+  for (const question of questions) {
+    if (!question) continue
+    count.set(question.topic, (count.get(question.topic) ?? 0) + 1)
+  }
+  const asked = everyTopic
+    .filter((t) => (count.get(t) ?? 0) > 0)
+    .map((topic) => ({ topic, count: count.get(topic) ?? 0 }))
+    .sort((a, b) => b.count - a.count)
+  const missed = everyTopic.filter((t) => (count.get(t) ?? 0) === 0)
+  return { asked, missed }
 }
 
 /**
