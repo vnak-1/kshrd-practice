@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <!-- viewport-fit=cover lets us paint under the notch and the home bar.
+         The CSS then adds env(safe-area-inset-*) padding so nothing is hidden. -->
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+    />
+    <meta name="theme-color" content="#0f172a" />
+    <meta
+      name="description"
+      content="Offline practice questions for the KSHRD IT scholarship written test."
+    />
+
+    <!-- iOS home-screen app. Safari ignores the manifest icons, so the
+         apple-touch-icon link below is the one iPhone actually uses. -->
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="KSHRD" />
+    <meta name="format-detection" content="telephone=no" />
+
+    <!-- Paths are written in full because the site is served from a sub-folder
+         (see `base` in vite.config.ts). -->
+    <link rel="icon" type="image/svg+xml" href="/kshrd-practice/favicon.svg" />
+    <link rel="apple-touch-icon" href="/kshrd-practice/apple-touch-icon.png" />
+
+    <title>KSHRD Practice</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <noscript>This app needs JavaScript turned on.</noscript>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

@@ -1,0 +1,871 @@
+/* Design rules this file follows (see PLAN.md "UX rules"):
+   - main action at the bottom, at least 48px tall, reachable with a thumb
+   - body text 16px or more; inputs exactly 16px so iOS does not zoom in
+   - right / wrong never shown by colour alone: there is always an icon + word
+   - a long code line wraps inside the block; the page never scrolls sideways
+   - safe-area padding so the notch and the home bar hide nothing            */
+
+:root {
+  --bg: #f4f6fb;
+  --card: #ffffff;
+  --card-2: #eef2f9;
+  --text: #0f172a;
+  --muted: #52607a;
+  --border: #d4dcea;
+  --accent: #1d4ed8;
+  --accent-text: #ffffff;
+  --accent-soft: #e6edff;
+  --good: #11672f;
+  --good-bg: #e8f6ed;
+  --good-line: #1f8a4a;
+  --bad: #a3121a;
+  --bad-bg: #fdecec;
+  --bad-line: #cf3b43;
+  --warn-bg: #fff6e3;
+  --warn-line: #b6821a;
+  --code-bg: #0f172a;
+  --code-text: #e2e8f0;
+  --focus: #1d4ed8;
+  --shadow: 0 1px 2px rgba(15, 23, 42, 0.06), 0 8px 24px rgba(15, 23, 42, 0.05);
+  --bar-h: 60px;
+  --safe-b: env(safe-area-inset-bottom, 0px);
+  --safe-t: env(safe-area-inset-top, 0px);
+  --safe-l: env(safe-area-inset-left, 0px);
+  --safe-r: env(safe-area-inset-right, 0px);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #0b1220;
+    --card: #141d31;
+    --card-2: #1b2640;
+    --text: #e8eef9;
+    --muted: #a3b2cb;
+    --border: #2a3752;
+    --accent: #2f6df6;
+    --accent-text: #ffffff;
+    --accent-soft: #16264a;
+    --good: #7ee2a8;
+    --good-bg: #11291e;
+    --good-line: #2f7d55;
+    --bad: #ff9d9d;
+    --bad-bg: #2d1417;
+    --bad-line: #a8434a;
+    --warn-bg: #2b2210;
+    --warn-line: #8e7127;
+    --code-bg: #060b16;
+    --code-text: #dbe5f5;
+    --focus: #7fa9ff;
+    --shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
+  }
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  max-width: 100%;
+  /* stops any one wide element from scrolling the whole page sideways */
+  overflow-x: hidden;
+  overscroll-behavior-y: none;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family:
+    -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', Roboto, Helvetica, Arial,
+    sans-serif;
+  font-size: 16px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+button,
+input,
+textarea,
+select {
+  font-family: inherit;
+}
+
+/* 16px exactly, or iOS Safari zooms the page in when the field is tapped. */
+input,
+textarea,
+select {
+  font-size: 16px;
+}
+
+:focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: 2px;
+  border-radius: 6px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ---------- layout ---------- */
+
+.app {
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+}
+
+.page {
+  flex: 1;
+  width: 100%;
+  max-width: 640px;
+  margin: 0 auto;
+  padding: calc(14px + var(--safe-t)) calc(16px + var(--safe-r)) 24px calc(16px + var(--safe-l));
+}
+
+/* leaves room for whichever fixed bar is on screen */
+.page.with-nav {
+  padding-bottom: calc(var(--bar-h) + var(--safe-b) + 24px);
+}
+.page.with-action {
+  padding-bottom: calc(96px + var(--safe-b));
+}
+
+.stack {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.stack-s {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+h1.title {
+  font-size: 26px;
+  line-height: 1.2;
+  margin: 4px 0 2px;
+  letter-spacing: -0.015em;
+}
+h2.section {
+  font-size: 15px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--muted);
+  margin: 18px 0 0;
+}
+p.sub {
+  margin: 0;
+  color: var(--muted);
+  font-size: 15px;
+}
+
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 16px;
+  box-shadow: var(--shadow);
+}
+.card.flat {
+  box-shadow: none;
+}
+
+/* ---------- buttons ---------- */
+
+.btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  min-height: 52px;
+  padding: 12px 18px;
+  border-radius: 14px;
+  border: 1px solid transparent;
+  font-size: 17px;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+.btn-primary {
+  background: var(--accent);
+  color: var(--accent-text);
+}
+.btn-primary:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+.btn-secondary {
+  background: var(--card);
+  color: var(--text);
+  border-color: var(--border);
+}
+.btn-danger {
+  background: var(--card);
+  color: var(--bad);
+  border-color: var(--bad-line);
+}
+.btn-row {
+  display: flex;
+  gap: 10px;
+}
+.btn-row > * {
+  flex: 1;
+}
+
+.link-btn {
+  background: none;
+  border: none;
+  padding: 10px 0;
+  min-height: 44px;
+  color: var(--accent);
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  text-align: left;
+}
+
+/* ---------- bottom navigation ---------- */
+
+.nav {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 30;
+  display: flex;
+  background: var(--card);
+  border-top: 1px solid var(--border);
+  padding-bottom: var(--safe-b);
+}
+.nav a {
+  flex: 1 1 0;
+  min-height: var(--bar-h);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--muted);
+  text-decoration: none;
+  -webkit-tap-highlight-color: transparent;
+}
+.nav a[aria-current='page'] {
+  color: var(--accent);
+}
+.nav svg {
+  width: 23px;
+  height: 23px;
+}
+.nav .badge {
+  position: absolute;
+  transform: translate(16px, -14px);
+  background: var(--bad-line);
+  color: #fff;
+  border-radius: 999px;
+  font-size: 10px;
+  line-height: 1;
+  padding: 3px 5px;
+  font-weight: 700;
+}
+
+/* ---------- fixed action bar (practice screens) ---------- */
+
+.actionbar {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 30;
+  background: var(--card);
+  border-top: 1px solid var(--border);
+  padding: 10px calc(16px + var(--safe-r)) calc(10px + var(--safe-b)) calc(16px + var(--safe-l));
+}
+.actionbar > div {
+  max-width: 640px;
+  margin: 0 auto;
+}
+
+/* ---------- progress ---------- */
+
+.progress-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 14px;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+.progress {
+  flex: 1;
+  height: 8px;
+  background: var(--border);
+  border-radius: 999px;
+  overflow: hidden;
+}
+.progress > span {
+  display: block;
+  height: 100%;
+  background: var(--accent);
+  border-radius: 999px;
+  transition: width 0.25s ease;
+}
+
+.chip {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: var(--card-2);
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 600;
+}
+.chip-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+/* ---------- question ---------- */
+
+.qprompt {
+  font-size: 19px;
+  line-height: 1.45;
+  font-weight: 600;
+  margin: 10px 0 0;
+}
+
+.code {
+  margin: 14px 0 0;
+  background: var(--code-bg);
+  color: var(--code-text);
+  border-radius: 12px;
+  padding: 12px 14px;
+  /* sideways scroll stays inside this box */
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  max-width: 100%;
+}
+.code pre {
+  margin: 0;
+  /* Wrap long lines. On a phone, hidden code is worse than a wrapped line:
+     you must see the whole program to trace what it prints. */
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;
+  font-size: 13.5px;
+  line-height: 1.6;
+  tab-size: 2;
+}
+
+.options {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 18px;
+}
+.option {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  width: 100%;
+  min-height: 52px;
+  padding: 13px 14px;
+  text-align: left;
+  border: 2px solid var(--border);
+  border-radius: 14px;
+  background: var(--card);
+  color: var(--text);
+  font-size: 16px;
+  line-height: 1.45;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+.option:disabled {
+  cursor: default;
+}
+.option .mark {
+  flex: 0 0 26px;
+  width: 26px;
+  height: 26px;
+  margin-top: 1px;
+  border-radius: 50%;
+  border: 2px solid var(--border);
+  display: grid;
+  place-items: center;
+  font-size: 15px;
+  font-weight: 800;
+  line-height: 1;
+}
+.option .otext {
+  /* long code-ish answers wrap instead of pushing the page sideways */
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+/* Syntax questions whose answers ARE code. Code must look like code, or the
+   reader cannot see the spacing and the brackets they are judging. */
+.option .otext.mono {
+  font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;
+  font-size: 13.5px;
+  line-height: 1.5;
+}
+.option .otext code,
+.inline-code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.95em;
+  background: var(--card-2);
+  border-radius: 5px;
+  padding: 1px 5px;
+}
+.option.selected {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+}
+.option.selected .mark {
+  border-color: var(--accent);
+  background: var(--accent);
+  color: var(--accent-text);
+}
+.option.is-correct {
+  border-color: var(--good-line);
+  background: var(--good-bg);
+}
+.option.is-correct .mark {
+  border-color: var(--good-line);
+  background: var(--good-line);
+  color: #fff;
+}
+.option.is-wrong {
+  border-color: var(--bad-line);
+  background: var(--bad-bg);
+}
+.option.is-wrong .mark {
+  border-color: var(--bad-line);
+  background: var(--bad-line);
+  color: #fff;
+}
+
+/* ---------- feedback ---------- */
+
+.feedback {
+  margin-top: 18px;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  background: var(--card);
+  padding: 16px;
+}
+.verdict {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 18px;
+  font-weight: 700;
+  margin: 0 0 4px;
+}
+.verdict.good {
+  color: var(--good);
+}
+.verdict.bad {
+  color: var(--bad);
+}
+.verdict .dot {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  color: #fff;
+  font-size: 16px;
+  flex: 0 0 28px;
+}
+.verdict.good .dot {
+  background: var(--good-line);
+}
+.verdict.bad .dot {
+  background: var(--bad-line);
+}
+.why {
+  border-top: 1px solid var(--border);
+  padding-top: 12px;
+  margin-top: 12px;
+}
+.why h3 {
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--muted);
+  margin: 0 0 8px;
+}
+.why-item {
+  display: flex;
+  gap: 10px;
+  padding: 8px 0;
+  font-size: 15px;
+  line-height: 1.5;
+}
+.why-item + .why-item {
+  border-top: 1px dashed var(--border);
+}
+.why-item .tag {
+  flex: 0 0 auto;
+  font-weight: 800;
+  font-size: 13px;
+}
+.why-item.ok .tag {
+  color: var(--good);
+}
+.why-item.no .tag {
+  color: var(--bad);
+}
+.why-item .body {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.why-item .body b {
+  display: block;
+  font-weight: 650;
+}
+.why-item .body span {
+  color: var(--muted);
+}
+
+.hint {
+  margin-top: 14px;
+  background: var(--accent-soft);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 12px 14px;
+  font-size: 15px;
+}
+
+/* ---------- lists ---------- */
+
+.tile {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+  min-height: 60px;
+  padding: 13px 14px;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: var(--card);
+  color: var(--text);
+  text-align: left;
+  text-decoration: none;
+  cursor: pointer;
+}
+/* Stack the name over the meta line. Both are spans, so without this they
+   run together on one line: "Fix your mistakes3 questions to get right twice". */
+.tile .grow {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.tile .name {
+  font-weight: 650;
+  font-size: 16px;
+}
+.tile .meta {
+  color: var(--muted);
+  font-size: 13.5px;
+}
+.tile .count {
+  color: var(--muted);
+  font-size: 14px;
+  font-variant-numeric: tabular-nums;
+}
+.tile .arrow {
+  color: var(--muted);
+}
+
+.empty {
+  text-align: center;
+  padding: 28px 16px;
+  color: var(--muted);
+}
+.empty .big {
+  font-size: 40px;
+  line-height: 1;
+  margin-bottom: 10px;
+}
+
+.banner {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px;
+  border-radius: 14px;
+  background: var(--accent-soft);
+  border: 1px solid var(--accent);
+  color: var(--text);
+  text-decoration: none;
+}
+.banner .grow {
+  flex: 1;
+  min-width: 0;
+}
+.banner strong {
+  display: block;
+}
+.banner small {
+  color: var(--muted);
+}
+
+/* Plain by default. A notice only turns red when something is wrong, so a
+   calm message like "Answer saved" never looks like an error. */
+.notice {
+  padding: 12px 14px;
+  border-radius: 12px;
+  background: var(--card-2);
+  border: 1px solid var(--border);
+  color: var(--text);
+  font-size: 15px;
+}
+
+.big-number {
+  font-size: 44px;
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.03em;
+  font-variant-numeric: tabular-nums;
+}
+
+.row-between {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.score-ring {
+  display: grid;
+  place-items: center;
+  width: 108px;
+  height: 108px;
+  border-radius: 50%;
+  margin: 4px auto 0;
+  border: 8px solid var(--accent);
+  font-size: 30px;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+}
+
+.review-item {
+  border-top: 1px solid var(--border);
+}
+.review-item .head {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  width: 100%;
+  min-height: 52px;
+  text-align: left;
+  padding: 14px 0;
+  background: none;
+  border: none;
+  color: var(--text);
+  font-size: 16px;
+  cursor: pointer;
+}
+.review-item .mark {
+  flex: 0 0 28px;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 700;
+}
+.review-item.ok .mark {
+  background: var(--good-line);
+}
+.review-item.no .mark {
+  background: var(--bad-line);
+}
+.review-item .text {
+  flex: 1;
+  min-width: 0;
+  display: grid;
+  gap: 3px;
+  overflow-wrap: anywhere;
+}
+.review-item .text span {
+  color: var(--muted);
+  font-size: 15px;
+}
+.review-item .feedback {
+  margin-bottom: 14px;
+}
+
+.pagehead {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.pagehead .back {
+  flex: 0 0 44px;
+  width: 44px;
+  height: 44px;
+  margin-left: -10px;
+  display: grid;
+  place-items: center;
+  background: none;
+  border: none;
+  border-radius: 12px;
+  color: var(--text);
+  cursor: pointer;
+}
+.pagehead h1 {
+  flex: 1;
+  min-width: 0;
+  margin: 0;
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  overflow-wrap: anywhere;
+}
+.pagehead .right {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+}
+
+.clock {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 40px;
+  padding: 8px 14px;
+  border-radius: 999px;
+  background: var(--card-2);
+  border: 1px solid var(--border);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+.clock.low {
+  background: var(--bad-bg);
+  border-color: var(--bad-line);
+  color: var(--bad);
+}
+
+.flagbtn {
+  width: 44px;
+  height: 44px;
+  display: grid;
+  place-items: center;
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  color: var(--muted);
+  cursor: pointer;
+}
+.flagbtn.on {
+  background: var(--accent-soft);
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.notice.good {
+  background: var(--good-bg);
+  border-color: var(--good-line);
+}
+.notice.bad {
+  background: var(--bad-bg);
+  border-color: var(--bad-line);
+}
+.notice.warn {
+  background: var(--warn-bg);
+  border-color: var(--warn-line);
+}
+
+.tile.flat {
+  background: none;
+  border: none;
+  border-top: 1px solid var(--border);
+  border-radius: 0;
+  box-shadow: none;
+  padding: 12px 0;
+}
+
+textarea {
+  width: 100%;
+  min-height: 96px;
+  padding: 12px;
+  margin: 8px 0;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: var(--card-2);
+  color: var(--text);
+  font-family: inherit;
+  resize: vertical;
+}
+
+details summary {
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  color: var(--accent);
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.update-toast {
+  position: fixed;
+  left: 12px;
+  right: 12px;
+  bottom: calc(var(--bar-h) + var(--safe-b) + 12px);
+  z-index: 40;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  border-radius: 14px;
+  background: var(--text);
+  color: var(--bg);
+  box-shadow: var(--shadow);
+  font-size: 15px;
+}
+.update-toast button {
+  margin-left: auto;
+  min-height: 40px;
+  padding: 8px 14px;
+  border-radius: 10px;
+  border: none;
+  background: var(--accent);
+  color: var(--accent-text);
+  font-weight: 700;
+  cursor: pointer;
+}

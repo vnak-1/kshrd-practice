@@ -1,0 +1,286 @@
+[
+  {
+    "id": "java-override-parent-reference",
+    "section": "technical",
+    "topic": "java",
+    "subtopic": "Polymorphism and overriding",
+    "difficulty": 2,
+    "kind": "output",
+    "prompt": "What does this Java code print?",
+    "code": {
+      "lang": "java",
+      "source": "class Animal {\n  void speak() {\n    System.out.println(\"animal\");\n  }\n}\nclass Dog extends Animal {\n  void speak() {\n    System.out.println(\"woof\");\n  }\n}\n// inside main:\nAnimal a = new Dog();\na.speak();"
+    },
+    "options": [
+      {
+        "text": "woof",
+        "correct": true,
+        "why": "The variable type is Animal, but the object is a Dog. Java picks the method from the object, not from the variable type. That is polymorphism, and it is decided while the program runs."
+      },
+      {
+        "text": "animal",
+        "correct": false,
+        "why": "This would be right if Java picked the method from the variable type. It does not. For instance methods Java always uses the real object."
+      },
+      {
+        "text": "animal then woof",
+        "correct": false,
+        "why": "An override replaces the parent method. It does not run both. Only super.speak() inside the child would run the parent one too."
+      },
+      {
+        "text": "It does not compile",
+        "correct": false,
+        "why": "A child class may override a parent method with the same name and the same parameters. That is normal Java, so it compiles."
+      }
+    ],
+    "hint": "The variable says Animal. The object says Dog. Which one wins?",
+    "verify": {
+      "runner": "java"
+    }
+  },
+  {
+    "id": "java-try-catch-finally-order",
+    "section": "technical",
+    "topic": "java",
+    "subtopic": "Exceptions",
+    "difficulty": 2,
+    "kind": "output",
+    "prompt": "What does this Java code print?",
+    "code": {
+      "lang": "java",
+      "source": "int[] n = new int[2];\ntry {\n  n[2] = 5;\n  System.out.println(\"set\");\n} catch (Exception e) {\n  System.out.println(\"caught\");\n} finally {\n  System.out.println(\"finally\");\n}"
+    },
+    "options": [
+      {
+        "text": "caught then finally",
+        "match": "caught\nfinally",
+        "correct": true,
+        "why": "n[2] is out of range for an array of size 2, so the line throws. The print after it is skipped, catch runs, and finally always runs at the end."
+      },
+      {
+        "text": "set then finally",
+        "match": "set\nfinally",
+        "correct": false,
+        "why": "The throw happens on the line before the print, so \"set\" is never reached."
+      },
+      {
+        "text": "caught only",
+        "correct": false,
+        "why": "A finally block runs whether or not there was an error. It cannot be skipped here."
+      },
+      {
+        "text": "The program crashes with an error",
+        "correct": false,
+        "why": "ArrayIndexOutOfBoundsException is a subclass of Exception, so catch (Exception e) catches it and the program ends normally."
+      }
+    ],
+    "hint": "An array of size 2 has index 0 and index 1 only.",
+    "verify": {
+      "runner": "java"
+    }
+  },
+  {
+    "id": "java-switch-fall-through",
+    "section": "technical",
+    "topic": "java",
+    "subtopic": "switch fall-through",
+    "difficulty": 2,
+    "kind": "output",
+    "prompt": "What does this Java code print?",
+    "code": {
+      "lang": "java",
+      "source": "int x = 2;\nswitch (x) {\n  case 1:\n    System.out.println(\"one\");\n  case 2:\n    System.out.println(\"two\");\n  case 3:\n    System.out.println(\"three\");\n    break;\n  default:\n    System.out.println(\"other\");\n}"
+    },
+    "options": [
+      {
+        "text": "two then three",
+        "match": "two\nthree",
+        "correct": true,
+        "why": "A case with no break falls into the next case. x is 2, so case 2 runs, then case 3 runs, and the break there stops it."
+      },
+      {
+        "text": "two",
+        "correct": false,
+        "why": "This needs a break at the end of case 2. Without one, Java keeps going into the next case."
+      },
+      {
+        "text": "two then three then other",
+        "match": "two\nthree\nother",
+        "correct": false,
+        "why": "The break in case 3 stops the switch, so default is never reached."
+      },
+      {
+        "text": "one then two then three",
+        "match": "one\ntwo\nthree",
+        "correct": false,
+        "why": "Fall-through only goes forward from the matching case. case 1 does not match, so it is skipped."
+      }
+    ],
+    "hint": "Which case has a break, and which does not?",
+    "verify": {
+      "runner": "java"
+    }
+  },
+  {
+    "id": "java-string-length-blank",
+    "section": "technical",
+    "topic": "java",
+    "subtopic": "String length",
+    "difficulty": 1,
+    "kind": "syntax",
+    "prompt": "Which one goes in the blank so this prints 5?",
+    "code": {
+      "lang": "java",
+      "source": "String s = \"hello\";\nSystem.out.println(____);"
+    },
+    "codeOptions": true,
+    "options": [
+      {
+        "text": "s.length()",
+        "correct": true,
+        "why": "A String in Java has a length() method. Round brackets are needed because it is a method, not a field."
+      },
+      {
+        "text": "s.length",
+        "correct": false,
+        "why": "Without the brackets Java looks for a field called length. Only arrays have that, not String. It does not compile."
+      },
+      {
+        "text": "s.size()",
+        "correct": false,
+        "why": "size() is for collections such as ArrayList and HashMap. String does not have it."
+      },
+      {
+        "text": "len(s)",
+        "correct": false,
+        "why": "len() is Python, not Java. Java has no such function, so this does not compile."
+      }
+    ],
+    "hint": "Arrays use length. Lists use size(). What does a String use?",
+    "verify": {
+      "runner": "java",
+      "output": "5"
+    }
+  },
+  {
+    "id": "java-incompatible-types-line",
+    "section": "technical",
+    "topic": "java",
+    "subtopic": "Static typing",
+    "difficulty": 2,
+    "kind": "syntax",
+    "prompt": "Which line stops this from compiling?",
+    "code": {
+      "lang": "java",
+      "source": "int n = 5;\nString s = \"hi\";\nn = s;\nSystem.out.println(n);"
+    },
+    "codeOptions": true,
+    "options": [
+      {
+        "text": "n = s;",
+        "correct": true,
+        "why": "n is an int and s is a String. Java is statically typed, so it will not put text into an int box. javac says: incompatible types."
+      },
+      {
+        "text": "int n = 5;",
+        "correct": false,
+        "why": "This is a normal int declaration with an int value. Nothing is wrong with it."
+      },
+      {
+        "text": "String s = \"hi\";",
+        "correct": false,
+        "why": "This is a normal String declaration with a String value. Nothing is wrong with it."
+      },
+      {
+        "text": "System.out.println(n);",
+        "correct": false,
+        "why": "println accepts an int and prints it. This line is fine on its own."
+      }
+    ],
+    "hint": "Look at the type on the left and the type on the right of each =.",
+    "verify": {
+      "runner": "java",
+      "expect": "compile_error:incompatible types"
+    }
+  },
+  {
+    "id": "java-null-pointer-uncaught",
+    "section": "technical",
+    "topic": "java",
+    "subtopic": "Null and exceptions",
+    "difficulty": 1,
+    "kind": "output",
+    "prompt": "What happens when this Java code runs?",
+    "code": {
+      "lang": "java",
+      "source": "String s = null;\nSystem.out.println(s.length());"
+    },
+    "options": [
+      {
+        "text": "It throws NullPointerException",
+        "correct": true,
+        "why": "s holds nothing, so there is no object to call length() on. Java stops the program and throws NullPointerException."
+      },
+      {
+        "text": "It prints 0",
+        "correct": false,
+        "why": "null is not an empty string. An empty string \"\" would print 0, but null has no length at all."
+      },
+      {
+        "text": "It prints null",
+        "correct": false,
+        "why": "println(s) would print the word null. But s.length() is called first, and that is what fails."
+      },
+      {
+        "text": "It does not compile",
+        "correct": false,
+        "why": "Setting a String to null and calling a method on it is valid Java. The problem only shows up while it runs."
+      }
+    ],
+    "hint": "What object does s point at?",
+    "verify": {
+      "runner": "java",
+      "expect": "exception:NullPointerException"
+    }
+  },
+  {
+    "id": "java-overload-int-vs-double",
+    "section": "technical",
+    "topic": "java",
+    "subtopic": "Method overloading",
+    "difficulty": 2,
+    "kind": "output",
+    "prompt": "What does this Java code print?",
+    "code": {
+      "lang": "java",
+      "source": "static void f(int a) {\n  System.out.println(\"int\");\n}\nstatic void f(double a) {\n  System.out.println(\"double\");\n}\n// inside main:\nf(5);"
+    },
+    "options": [
+      {
+        "text": "int",
+        "correct": true,
+        "why": "5 is an int, and there is a method that takes exactly an int. Java always picks the exact match before it widens the value to double."
+      },
+      {
+        "text": "double",
+        "correct": false,
+        "why": "Java only widens 5 to 5.0 if no int version exists. Here one does, so the int version wins."
+      },
+      {
+        "text": "int then double",
+        "match": "int\ndouble",
+        "correct": false,
+        "why": "Only one method runs. Overloading picks one of them, it does not run both."
+      },
+      {
+        "text": "It does not compile",
+        "correct": false,
+        "why": "Two methods may share a name while their parameter types differ. That is overloading, and it is valid Java."
+      }
+    ],
+    "hint": "What type is 5? Is there a method that takes exactly that type?",
+    "verify": {
+      "runner": "java"
+    }
+  }
+]
