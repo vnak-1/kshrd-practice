@@ -105,6 +105,32 @@ describe('QuestionView', () => {
     expect(screen.getByRole('radio', { name: /alpha/ }).className).toContain('selected')
   })
 
+  it('shows code answers in the code font, and word answers in the normal one', () => {
+    const { unmount } = render(
+      <QuestionView
+        question={{ ...question, codeOptions: true }}
+        order={ORDER}
+        picked={null}
+        checked={false}
+        revealAnswer
+        onPick={() => {}}
+      />,
+    )
+    expect(document.querySelectorAll('.otext.mono')).toHaveLength(4)
+    unmount()
+    render(
+      <QuestionView
+        question={question}
+        order={ORDER}
+        picked={null}
+        checked={false}
+        revealAnswer
+        onPick={() => {}}
+      />,
+    )
+    expect(document.querySelectorAll('.otext.mono')).toHaveLength(0)
+  })
+
   it('locks the options once the answer is checked', () => {
     render(
       <QuestionView

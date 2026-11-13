@@ -21,6 +21,10 @@ interface Props {
 export function Feedback({ question, picked, restate = true }: Props) {
   const correct = question.options.find((o) => o.correct)
   const wasRight = picked !== null && question.options[picked]?.correct === true
+  // When the answers ARE code, they must look like code here too, not only
+  // in the question above. Otherwise the reader cannot see the spacing and
+  // the brackets that the question is about.
+  const label = question.codeOptions ? 'olabel mono' : 'olabel'
 
   return (
     <section className="feedback" aria-live="polite">
@@ -39,7 +43,7 @@ export function Feedback({ question, picked, restate = true }: Props) {
         <div className="why-item ok">
           <span className="tag">ANSWER</span>
           <span className="body">
-            <b>{correct.text}</b>
+            <b className={label}>{correct.text}</b>
             <span>{correct.why}</span>
           </span>
         </div>
@@ -52,7 +56,7 @@ export function Feedback({ question, picked, restate = true }: Props) {
             <div className="why-item no" key={i}>
               <span className="tag">{picked === i ? 'YOURS' : 'NO'}</span>
               <span className="body">
-                <b>{option.text}</b>
+                <b className={label}>{option.text}</b>
                 <span>{option.why}</span>
               </span>
             </div>
