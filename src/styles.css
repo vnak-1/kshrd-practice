@@ -130,7 +130,15 @@ select {
   flex-direction: column;
   /* Stops any one wide element from scrolling the whole page sideways.
      `clip` does that without making this a scroll box, so the page itself
-     goes on scrolling as usual. Fixed bars are not clipped by it. */
+     goes on scrolling as usual. Fixed bars are not clipped by it.
+
+     DO NOT put this back to `overflow-x: hidden`, and do not move it up to
+     <html> or <body>. Either change turns that element into the scroll box,
+     which is a known way to stop an iPhone scrolling up and down at all.
+
+     `clip` needs Safari 16, so iOS 15 and older ignore this line and clip
+     nothing. That is safe here, because `.code pre` wraps its lines: no
+     element is ever wider than the screen, so there is nothing to clip. */
   overflow-x: clip;
 }
 
