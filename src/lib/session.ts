@@ -100,9 +100,19 @@ export function isOutOfTime(session: SessionState, now: number = Date.now()): bo
   return left !== null && left <= 0
 }
 
+/**
+ * "4:05" for a short set, "2:59:04" once an hour or more is left.
+ *
+ * The hours only appear from 60 minutes up, so every shorter clock in the
+ * app reads exactly as it did before. Without this a three-hour mock would
+ * start at "180:00".
+ */
 export function formatClock(ms: number): string {
   const total = Math.max(0, Math.round(ms / 1000))
-  const m = Math.floor(total / 60)
+  const h = Math.floor(total / 3600)
+  const m = Math.floor(total / 60) % 60
   const s = total % 60
-  return `${m}:${String(s).padStart(2, '0')}`
+  const ss = String(s).padStart(2, '0')
+  if (h === 0) return `${Math.floor(total / 60)}:${ss}`
+  return `${h}:${String(m).padStart(2, '0')}:${ss}`
 }

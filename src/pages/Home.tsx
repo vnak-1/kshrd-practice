@@ -172,6 +172,19 @@ export function Home() {
         </>
       )}
 
+      {total > 0 ? (
+        <Link className="tile" to="/mock">
+          <span className="grow">
+            <span className="name">Mock exam</span>
+            <span className="meta">
+              Three hours, every section, answers at the end. The real test is three
+              hours too.
+            </span>
+          </span>
+          <ChevronRight className="arrow" />
+        </Link>
+      ) : null}
+
       <ThisWeek />
 
       {mistakes.length > 0 ? (

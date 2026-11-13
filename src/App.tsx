@@ -6,6 +6,7 @@ import { mistakeIds } from './lib/progress'
 import { useAppState } from './lib/store'
 import { Home } from './pages/Home'
 import { Mistakes } from './pages/Mistakes'
+import { MockStart } from './pages/MockStart'
 import { More } from './pages/More'
 import { Practice } from './pages/Practice'
 import { Review } from './pages/Review'
@@ -32,6 +33,7 @@ function Shell() {
           <Route path="/" element={<Home />} />
           <Route path="/practice" element={<Practice />} />
           <Route path="/start/:topic" element={<StartSet />} />
+          <Route path="/mock" element={<MockStart />} />
           <Route path="/session" element={<Session />} />
           <Route path="/review" element={<Review />} />
           <Route path="/mistakes" element={<Mistakes />} />

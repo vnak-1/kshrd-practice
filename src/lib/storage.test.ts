@@ -202,3 +202,42 @@ describe('saving and loading', () => {
     }
   })
 })
+
+describe('a mock exam survives a reload', () => {
+  // The app auto-updates and reloads itself on every deploy. If parseState
+  // did not know the 'mock' source kind it would throw the whole session
+  // away, and three hours of work with it.
+  const halfDone = {
+    mode: 'timed' as const,
+    source: { kind: 'mock' as const },
+    ids: ['a', 'b', 'c'],
+    seed: 42,
+    index: 1,
+    picked: [0, null, null],
+    checked: [false, false, false],
+    startedAt: 1_700_000_000_000,
+    limitMs: 180 * 60_000,
+    finished: false,
+  }
+
+  it('keeps a mock session word for word', () => {
+    const state = parseState({ ...emptyState(), session: halfDone })
+    expect(state.session).toEqual(halfDone)
+  })
+
+  it('keeps the three-hour limit and where you had got to', () => {
+    const state = parseState(JSON.parse(JSON.stringify({ ...emptyState(), session: halfDone })))
+    expect(state.session?.limitMs).toBe(180 * 60_000)
+    expect(state.session?.index).toBe(1)
+    expect(state.session?.picked).toEqual([0, null, null])
+    expect(state.session?.source.kind).toBe('mock')
+  })
+
+  it('still rejects a source kind that means nothing', () => {
+    const state = parseState({
+      ...emptyState(),
+      session: { ...halfDone, source: { kind: 'nonsense' } },
+    })
+    expect(state.session).toBeNull()
+  })
+})

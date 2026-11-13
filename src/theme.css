@@ -494,6 +494,83 @@ body {
   --ring-color: var(--bad-line);
 }
 
+/* ------------------------------------------- 11b. the mock exam grid
+   Every question in the paper as a numbered square, so you can jump about
+   the way you would flick through a real booklet. It wraps; it never
+   scrolls sideways.                                                     */
+
+.qgrid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.qnum {
+  min-width: 42px;
+  min-height: 42px;
+  padding: 4px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: var(--card-2);
+  color: var(--text);
+  font-size: 15px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  transition:
+    background 140ms ease,
+    border-color 140ms ease,
+    transform 110ms ease;
+}
+
+.qnum:active {
+  transform: scale(0.95);
+}
+
+/* Answered. Not a tick, because the mark is not known to be right yet:
+   it only says you put something down. */
+.qnum.done {
+  background: var(--accent-soft);
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+/* Where you are now. */
+.qnum.here {
+  outline: 2px solid var(--focus);
+  outline-offset: 1px;
+}
+
+.qgrid.small .qnum {
+  min-width: 38px;
+  min-height: 38px;
+  font-size: 14px;
+}
+
+/* ------------------------------------------- 11c. section results
+   The per-section breakdown on the results page after a mock.         */
+
+.secrow {
+  display: grid;
+  gap: 6px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.secrow:last-child {
+  border-bottom: 0;
+}
+
+.secrow .top {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
 /* ------------------------------------------------- 12. bottom nav polish */
 
 .nav {

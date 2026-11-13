@@ -26,7 +26,13 @@ export function Session() {
   const [now, setNow] = useState(() => Date.now())
 
   const timed = session?.mode === 'timed' && session.limitMs !== null
+  // A mock is a paper, not a drill: you may skip, come back, change an
+  // answer and submit when you choose. So it has no Check step, and
+  // nothing is marked until the whole paper is handed in.
+  const isMock = session?.source.kind === 'mock'
   const index = session?.index ?? 0
+  const [showGrid, setShowGrid] = useState(false)
+  const [confirmSubmit, setConfirmSubmit] = useState(false)
   const feedbackRef = useRef<HTMLDivElement | null>(null)
   // True once the answer panel is on screen. Worked out up here because a
   // React hook cannot sit after the early return further down.
@@ -93,7 +99,12 @@ export function Session() {
       ? TOPIC_META[session.source.topic].label
       : session.source.kind === 'mistakes'
         ? 'Your mistakes'
-        : 'Mixed set'
+        : session.source.kind === 'mock'
+          ? 'Mock exam'
+          : 'Mixed set'
+  const unanswered = session.picked
+    .map((p, i) => (p === null ? i : -1))
+    .filter((i) => i >= 0)
 
   function pick(originalIndex: number) {
     update((s) => patchSession(s, (sess) => ({
@@ -127,6 +138,19 @@ export function Session() {
       return
     }
     update((s) => patchSession(s, (sess) => ({ ...sess, index: sess.index + 1 })))
+  }
+
+  /** Jump to any question. Used by the grid and by the unanswered list. */
+  function goTo(to: number) {
+    setShowGrid(false)
+    setConfirmSubmit(false)
+    update((s) => patchSession(s, (sess) => ({ ...sess, index: to })))
+  }
+
+  /** Hand the paper in. Every picked answer is marked by closeSet. */
+  function submit() {
+    update((s) => closeSet(s, today()))
+    navigate('/review')
   }
 
   const flagged = question ? state.flagged.includes(question.id) : false
@@ -168,10 +192,58 @@ export function Session() {
           >
             <span style={{ width: `${((index + 1) / session.ids.length) * 100}%` }} />
           </div>
-          <span className="chip">
-            {index + 1} / {session.ids.length}
-          </span>
+          {isMock ? (
+            <button
+              type="button"
+              className="chip"
+              aria-expanded={showGrid}
+              onClick={() => setShowGrid((v) => !v)}
+            >
+              {index + 1} / {session.ids.length}
+            </button>
+          ) : (
+            <span className="chip">
+              {index + 1} / {session.ids.length}
+            </span>
+          )}
         </div>
+
+        {/* The paper at a glance. Tap a number to jump straight there, the
+            way you would flick through pages of a real booklet. */}
+        {isMock && showGrid ? (
+          <div className="card stack-s">
+            <p className="sub" style={{ margin: 0 }}>
+              {unanswered.length === 0
+                ? 'Every question is answered.'
+                : `${unanswered.length} still blank.`}{' '}
+              Tap a number to go there.
+            </p>
+            <div className="qgrid">
+              {session.ids.map((id, i) => (
+                <button
+                  key={id}
+                  type="button"
+                  className={`qnum${session.picked[i] !== null ? ' done' : ''}${i === index ? ' here' : ''}`}
+                  aria-label={`Question ${i + 1}${session.picked[i] !== null ? ', answered' : ', blank'}`}
+                  aria-current={i === index ? 'true' : undefined}
+                  onClick={() => goTo(i)}
+                >
+                  {i + 1}
+                </button>
+              ))}
+            </div>
+            <button
+              className="btn btn-secondary"
+              type="button"
+              onClick={() => {
+                setShowGrid(false)
+                setConfirmSubmit(true)
+              }}
+            >
+              Hand in the paper
+            </button>
+          </div>
+        ) : null}
 
         {question ? (
           <>
@@ -221,7 +293,68 @@ export function Session() {
 
       <div className="actionbar">
         <div>
-          {!question ? (
+          {isMock ? (
+            confirmSubmit ? (
+              <div className="stack-s">
+                <p className="notice warn" style={{ margin: 0 }}>
+                  {unanswered.length === 0
+                    ? 'All answered. Hand it in?'
+                    : `${unanswered.length} question${unanswered.length === 1 ? '' : 's'} still blank. Hand it in anyway?`}
+                </p>
+                {unanswered.length > 0 ? (
+                  <div className="qgrid small">
+                    {unanswered.slice(0, 24).map((i) => (
+                      <button
+                        key={i}
+                        type="button"
+                        className="qnum"
+                        onClick={() => goTo(i)}
+                        aria-label={`Go to blank question ${i + 1}`}
+                      >
+                        {i + 1}
+                      </button>
+                    ))}
+                  </div>
+                ) : null}
+                <div className="btn-row">
+                  <button
+                    className="btn btn-secondary"
+                    type="button"
+                    onClick={() => setConfirmSubmit(false)}
+                  >
+                    Keep working
+                  </button>
+                  <button className="btn btn-primary" type="button" onClick={submit}>
+                    Hand it in
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <div className="btn-row">
+                <button
+                  className="btn btn-secondary"
+                  type="button"
+                  disabled={index === 0}
+                  onClick={() => goTo(index - 1)}
+                >
+                  Back
+                </button>
+                {last ? (
+                  <button
+                    className="btn btn-primary"
+                    type="button"
+                    onClick={() => setConfirmSubmit(true)}
+                  >
+                    Finish
+                  </button>
+                ) : (
+                  <button className="btn btn-primary" type="button" onClick={() => goTo(index + 1)}>
+                    Next
+                  </button>
+                )}
+              </div>
+            )
+          ) : !question ? (
             <button className="btn btn-primary" type="button" onClick={next}>
               {last ? 'See results' : 'Next'}
             </button>

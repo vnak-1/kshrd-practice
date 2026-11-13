@@ -200,3 +200,19 @@ describe('formatClock', () => {
     expect(formatClock(630_000)).toBe('10:30')
   })
 })
+
+describe('formatClock with hours', () => {
+  // A three-hour mock would otherwise start at "180:00".
+  it('shows hours from one hour up', () => {
+    expect(formatClock(180 * 60_000)).toBe('3:00:00')
+    expect(formatClock(60 * 60_000)).toBe('1:00:00')
+  })
+
+  it('pads minutes and seconds once hours appear', () => {
+    expect(formatClock(3_600_000 + 4 * 60_000 + 5000)).toBe('1:04:05')
+  })
+
+  it('drops the hours again below one hour', () => {
+    expect(formatClock(59 * 60_000 + 59_000)).toBe('59:59')
+  })
+})

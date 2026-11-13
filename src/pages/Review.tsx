@@ -4,8 +4,10 @@ import { Link, useNavigate } from 'react-router-dom'
 import { Feedback } from '../components/Feedback'
 import { PageHeader } from '../components/PageHeader'
 import { lookupMaybe } from '../lib/content'
+import { scoreBySection } from '../lib/mock'
+import { SECTION_LABEL } from '../lib/topics'
 import { DEFAULT_SET_SIZE, isAnswerCorrect, scoreSession } from '../lib/session'
-import { poolFor, startSet } from '../lib/start'
+import { poolFor, startMock, startSet } from '../lib/start'
 import { useAppState } from '../lib/store'
 
 /**
@@ -54,6 +56,14 @@ export function Review() {
   )
 
   function again() {
+    // A mock must go back through startMock, or it would be rebuilt as a
+    // flat random set with a one-minute-per-question clock instead of a
+    // section-by-section paper with three hours.
+    if (source.kind === 'mock') {
+      startMock(session?.ids.length)
+      navigate('/session')
+      return
+    }
     startSet({ source, mode, size, minutes: size })
     navigate('/session')
   }
@@ -91,6 +101,36 @@ export function Review() {
           </p>
         </div>
 
+        {/* After a mock, where you stood section by section. That is what
+            tells you which part of the paper to work on next. */}
+        {session.source.kind === 'mock' ? (
+          <div className="card">
+            <h2 className="section" style={{ marginTop: 0 }}>
+              By section
+            </h2>
+            {scoreBySection(questions, session.picked).map((row) => (
+              <div key={row.section} className="secrow">
+                <div className="top">
+                  <span>{SECTION_LABEL[row.section]}</span>
+                  <span>
+                    {row.correct}/{row.total} · {row.percent}%
+                  </span>
+                </div>
+                <div
+                  className={`tbar${row.percent >= 70 ? ' done' : ''}`}
+                  role="progressbar"
+                  aria-valuemin={0}
+                  aria-valuemax={row.total}
+                  aria-valuenow={row.correct}
+                  aria-label={`${SECTION_LABEL[row.section]}: ${row.correct} of ${row.total} right`}
+                >
+                  <span style={{ width: `${row.percent}%` }} />
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : null}
+
         <h2 className="section">Every question</h2>
         {session.ids.map((id, i) => {
           const q = questions[i]
@@ -127,7 +167,9 @@ export function Review() {
               the button would promise 0 questions, so show a way out instead. */}
           {size > 0 ? (
             <button className="btn btn-primary" type="button" onClick={again}>
-              Practice {size} more question{size === 1 ? '' : 's'}
+              {source.kind === 'mock'
+                ? 'Sit another mock'
+                : `Practice ${size} more question${size === 1 ? '' : 's'}`}
             </button>
           ) : (
             <Link className="btn btn-primary" to="/practice">

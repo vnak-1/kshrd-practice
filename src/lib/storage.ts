@@ -10,6 +10,8 @@ export type SessionSource =
   | { kind: 'topic'; topic: Topic }
   | { kind: 'mixed' }
   | { kind: 'mistakes' }
+  /** A full mock exam: every section, three hours, answers at the end. */
+  | { kind: 'mock' }
 
 export interface SessionState {
   mode: SessionMode
@@ -129,7 +131,7 @@ function isSession(value: unknown): value is SessionState {
 function isSource(value: unknown): value is SessionState['source'] {
   if (!value || typeof value !== 'object') return false
   const s = value as { kind?: unknown; topic?: unknown }
-  if (s.kind === 'mixed' || s.kind === 'mistakes') return true
+  if (s.kind === 'mixed' || s.kind === 'mistakes' || s.kind === 'mock') return true
   return s.kind === 'topic' && typeof s.topic === 'string'
 }
 
