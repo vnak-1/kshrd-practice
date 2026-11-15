@@ -135,16 +135,28 @@ body {
          after a real Tab keypress. outline 2px at offset 2px, and --ring
          spreads 4px. A bare element.focus() can report the UA ring instead.
        answer-shake displacement .................. 5px
-         read from @keyframes answer-shake below, NOT observed live, and the
-         page cannot tell you that. With the Claude browser pane hidden:
-         requestAnimationFrame fired 0 times in 3.2 seconds, and a probe
-         animation's currentTime stayed at 0 while its own playState said
-         "running" -- yet document.visibilityState said "visible" and
-         document.hidden was false. setTimeout keeps firing, so a timer-based
-         sampler cheerfully records the frozen value and reports 0px with no
-         error. Nothing inside the page detects this. Only tabs_context, from
-         outside, says whether the pane is displayed. Check it before you
-         believe any measurement of motion or timing.
+         read from @keyframes answer-shake below, NOT observed live. Trying to
+         observe it gave 0px over 80 frames, and the reason is NOT the one
+         this comment gave until now.
+
+         The world really was stopped: rAF fired 0 times in 3.2s, a probe
+         animation's currentTime stayed at 0 while its playState said
+         "running", and setTimeout stretched 15ms to ~106ms. But a later run
+         of the SAME probe, with the browser pane reported hidden in exactly
+         the same way, gave 31 frames in 509ms, currentTime 482ms and 23
+         distinct transforms. A second session saw 60fps while hidden too. So
+         a hidden pane does NOT reliably stop animations and the cause of the
+         freeze is unknown.
+
+         Do not guard with the pane state, and do not guard from inside the
+         page either: document.visibilityState reads "visible" and
+         document.hidden is false while the pane is hidden, and hasFocus()
+         cannot tell a hidden pane from an unfocused window.
+
+         GUARD WITH A PROBE. In the same run, animate something whose motion
+         you already know and assert it moved; if it did not, your real
+         measurement is void. Self-validating, needs no list of bad
+         conditions, and it would have caught the 0px at once.
        answer-pop widening ........................ 2.8px a side
          scale 1.018 on a 309px option.
 
