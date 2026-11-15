@@ -46,8 +46,11 @@ const POOL: Question[] = [
 
 const rand = () => makeRandom(12345)()
 
-describe('the known facts', () => {
-  it('is three hours, the one length that is actually confirmed', () => {
+describe('the length we practise at', () => {
+  // Three hours is our best information, NOT a confirmed fact: KSHRD's FAQ
+  // asks how long the test takes but never serves the answer. This test only
+  // pins the number so it cannot drift by accident.
+  it('is three hours, which is unconfirmed but deliberate', () => {
     expect(MOCK_MINUTES).toBe(180)
   })
 })

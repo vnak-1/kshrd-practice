@@ -15,7 +15,12 @@ export function MockStart() {
   const [asking, setAsking] = useState(false)
 
   const unfinished = state.session && !state.session.finished ? state.session : null
-  const quotas = quotasFor(ALL_QUESTIONS, size).filter((q) => q.want > 0)
+  const allQuotas = quotasFor(ALL_QUESTIONS, size)
+  const quotas = allQuotas.filter((q) => q.want > 0)
+  // English has no multiple-choice questions written yet. The quota list below
+  // hides empty sections, so without saying this a reader sees only Aptitude
+  // and Technical and never learns a whole section is missing.
+  const noEnglish = (allQuotas.find((q) => q.section === 'english')?.available ?? 0) === 0
 
   function begin() {
     startMock(size)
@@ -129,6 +134,13 @@ export function MockStart() {
             Spread across the topics inside each section. Sections with no questions
             written yet are skipped, and their share goes to the others.
           </p>
+          {noEnglish ? (
+            <p className="sub" style={{ margin: 0 }}>
+              <b>English is missing from this list on purpose.</b> No English questions
+              are written yet, so this paper asks none. Do not read a good score here as
+              being ready for the English part.
+            </p>
+          ) : null}
         </div>
 
         <p className="sub">
