@@ -10,7 +10,7 @@
     "id": "gram-article-a-before-consonant",
     "subtopic": "Articles",
     "difficulty": 1,
-    "prompt": "Which is correct?",
+    "prompt": "You have not mentioned it before. Which is correct?",
     "options": [
       {
         "text": "I am a university student.",
@@ -46,7 +46,7 @@
     "id": "gram-article-an-before-vowel",
     "subtopic": "Articles",
     "difficulty": 1,
-    "prompt": "Which is correct?",
+    "prompt": "You have not mentioned it before. Which is correct?",
     "options": [
       {
         "text": "She works as an engineer.",
@@ -82,7 +82,7 @@
     "id": "gram-plural-s",
     "subtopic": "Plurals",
     "difficulty": 1,
-    "prompt": "Which is correct?",
+    "prompt": "You have not mentioned it before. Which is correct?",
     "options": [
       {
         "text": "I have three brothers.",
@@ -244,9 +244,9 @@
         "why": "The first half is right. \"Much ideas\" is wrong because ideas are countable."
       },
       {
-        "text": "I do not have many times, but I have many ideas.",
+        "text": "I do not have much times, but I have many ideas.",
         "correct": false,
-        "why": "\"Times\" means occasions, as in \"three times\". That changes the meaning completely."
+        "why": "\"Much\" never goes with a plural. \"Times\" is also the wrong word: it means occasions, as in \"three times\"."
       }
     ],
     "hint": "Can you put a number in front of it?"
@@ -280,9 +280,9 @@
         "why": "\"Have\" is not used this way in English. The pattern is \"there is\" or \"there are\"."
       },
       {
-        "text": "It has many reasons for this.",
+        "text": "There is much reasons for this.",
         "correct": false,
-        "why": "This changes the meaning to something specific having reasons, and it is not the normal way to open this idea."
+        "why": "Two faults: \"is\" cannot go with a plural, and \"much\" never goes with a countable noun like reasons."
       }
     ],
     "hint": "Look at the word after the verb, not before it."
@@ -460,9 +460,9 @@
         "why": "\"On\" is not used with good in this sense."
       },
       {
-        "text": "She is good with mathematics.",
+        "text": "She is good of mathematics.",
         "correct": false,
-        "why": "\"Good with\" suits people or tools, as in \"good with children\". A subject takes \"at\"."
+        "why": "\"Of\" never follows \"good\" in this sense. No English pairing puts them together."
       }
     ],
     "hint": "Good ___ a skill."
@@ -622,7 +622,7 @@
     "id": "gram-first-conditional",
     "subtopic": "Conditionals",
     "difficulty": 2,
-    "prompt": "Which is correct?",
+    "prompt": "Which is correct for one real future possibility?",
     "options": [
       {
         "text": "If I pass the exam, I will study there.",
