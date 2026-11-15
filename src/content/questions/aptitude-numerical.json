@@ -17,7 +17,7 @@
       {
         "text": "680 dollars",
         "correct": false,
-        "why": "This adds the 10 percent tax to the first price of 800 instead of to the discounted 600."
+        "why": "This works the tax out from the original 800 instead of from the discounted 600, so it adds 80 to 600 rather than 60."
       },
       {
         "text": "600 dollars",
