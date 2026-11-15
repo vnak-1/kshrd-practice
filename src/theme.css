@@ -124,11 +124,30 @@ body {
      exactly the same reason they ignore it on `.app` (src/styles.css:142).
      Clipping one level closer buys nothing on the browser it was added for.
 
-     Measured at 375x812: an option sits 17px inside this card's padding box.
-     The wrong-answer shake moves it 5px, the right-answer pop widens it about
-     3px a side, and a focus ring reaches 4px. Nothing comes within 12px of the
-     clip edge, so this line does not fire on any browser today. It stays as
-     insurance against future content that really is too wide. It is not
+     Measured on the question screen at 375x812, each number with its source,
+     because two sessions have now got this wrong by measuring the wrong thing:
+
+       option inset from this card's padding box ... 17px each side
+         getBoundingClientRect, real .option on #/session. NOT the mode
+         buttons on #/start/<topic>, which share the class and the width.
+       focus decoration reach ..................... 4px
+         computed style of .option while matches(':focus-visible') is true
+         after a real Tab keypress. outline 2px at offset 2px, and --ring
+         spreads 4px. A bare element.focus() can report the UA ring instead.
+       answer-shake displacement .................. 5px
+         read from @keyframes answer-shake below, not observed live: a hidden
+         browser pane runs the page in the background and does not advance
+         animations, so a live sample there reads 0px.
+       answer-pop widening ........................ 2.8px a side
+         scale 1.018 on a 309px option.
+
+     THE 4px AND THE 5px DO NOT ADD. After Check every option is disabled, so
+     it cannot hold focus — o.focus() on one leaves document.activeElement on
+     the Next button — and the shake only runs after Check. So the worst reach
+     outside an option is 5px, not 9px, against a 17px inset.
+
+     12px of margin, so this line does not fire on any browser today. It stays
+     as insurance against future content that really is too wide. It is not
      load-bearing; removing it would change nothing now.
 
      So on iOS 15 the shake is unclipped at page level too, and a wrong answer
