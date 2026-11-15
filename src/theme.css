@@ -116,12 +116,26 @@ body {
   box-shadow: var(--shadow);
   /* padding is NOT set here on purpose — see the note at the top */
 
-  /* The wrong-answer shake moves an option 5px sideways and the right-answer
-     pop makes it slightly wider. `.app` already clips that, but `clip` is
-     ignored on iOS 15 and older, where the page would gain a few pixels of
-     sideways scroll mid-animation and twitch. Catching it on the card works
-     everywhere. It does not make a scroll box, so nothing else changes, and
-     the code block still scrolls inside itself. */
+  /* A cheap guard. NOT the iOS 15 fix the old comment here claimed.
+     Corrected 2026-11-15 after another session read the file and caught it.
+
+     The old wording said "catching it on the card works everywhere". False.
+     `overflow-x: clip` needs Safari 16, so iOS 15 and older ignore it here for
+     exactly the same reason they ignore it on `.app` (src/styles.css:142).
+     Clipping one level closer buys nothing on the browser it was added for.
+
+     Measured at 375x812: an option sits 17px inside this card's padding box.
+     The wrong-answer shake moves it 5px, the right-answer pop widens it about
+     3px a side, and a focus ring reaches 4px. Nothing comes within 12px of the
+     clip edge, so this line does not fire on any browser today. It stays as
+     insurance against future content that really is too wide. It is not
+     load-bearing; removing it would change nothing now.
+
+     So on iOS 15 the shake is unclipped at page level too, and a wrong answer
+     can add ~5px of sideways scroll while the animation runs. We accept that
+     twitch. `overflow-x: hidden` is the only thing that clips on iOS 15, and
+     with a visible `overflow-y` it computes `overflow-y` to `auto`, turning
+     every card into a scroll box. A 5px wobble on an old iPhone is cheaper. */
   overflow-x: clip;
 }
 
