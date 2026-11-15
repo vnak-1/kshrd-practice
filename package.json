@@ -14,7 +14,8 @@
     "count": "node scripts/count.mjs",
     "test": "vitest run",
     "check": "npm run validate && npm run verify && npm run test && npm run build",
-    "cold-read": "node scripts/cold-read.mjs"
+    "cold-read": "node scripts/cold-read.mjs",
+    "why-audit": "node scripts/why-audit.mjs"
   },
   "dependencies": {
     "react": "^19.3.1",

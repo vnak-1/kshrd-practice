@@ -9,11 +9,11 @@
     "prompt": "The markup has no <tbody>. How many <tbody> elements are in the DOM after the browser parses it?",
     "code": {
       "lang": "html",
-      "source": "<table>\n  <tr><td>a</td></tr>\n</table>"
+      "source": "<table>\n  <tr><td>a</td></tr>\n  <tr><td>b</td></tr>\n</table>"
     },
     "verify": {
       "runner": "node",
-      "program": "import { JSDOM } from 'jsdom'\nconst dom = new JSDOM(`<table>\n  <tr><td>a</td></tr>\n</table>`)\nconst { document } = dom.window\nconsole.log(document.querySelectorAll('tbody').length)\n"
+      "program": "import { JSDOM } from 'jsdom'\nconst dom = new JSDOM(`<table>\n  <tr><td>a</td></tr>\n  <tr><td>b</td></tr>\n</table>`)\nconst { document } = dom.window\nconsole.log(document.querySelectorAll('tbody').length)\n"
     },
     "options": [
       {

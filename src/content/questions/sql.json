@@ -978,7 +978,7 @@
       {
         "text": "pen, book and bag",
         "correct": false,
-        "why": "No value can be above its own average unless they are all equal. At least one must be below."
+        "why": "They cannot all be above their own average. At least one value must sit at or below it."
       }
     ],
     "hint": "Work out the inner query first. What is the average of 10, 20 and 50?"

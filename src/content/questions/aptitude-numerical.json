@@ -25,9 +25,9 @@
         "why": "600 is the price after the discount. The tax has not been added yet."
       },
       {
-        "text": "720 dollars",
+        "text": "750 dollars",
         "correct": false,
-        "why": "This takes 25 percent off and then adds 25 percent back, which is not what the question says."
+        "why": "This takes 25 percent off and then adds 25 percent back. The tax is 10 percent, not 25."
       }
     ],
     "hint": "Work the two steps in order. The tax goes on the new price.",

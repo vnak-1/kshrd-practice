@@ -838,14 +838,14 @@
       {
         "text": "10",
         "correct": false,
-        "why": "This ignores the array. The starting value is only where the running total begins.",
+        "why": "That is the starting value on its own. It is also what you get if you forget the 10 completely, because 1 + 2 + 3 + 4 is 10 as well. Either way the two halves still have to be added together.",
         "match": "10"
       },
       {
-        "text": "24",
+        "text": "19",
         "correct": false,
-        "why": "This adds 10 once per item. The starting value is used once, not four times.",
-        "match": "24"
+        "why": "This is 10 + 2 + 3 + 4. It treats the starting value as a replacement for the first item, which is what reduce does when you give it NO starting value. Give it one and every item is still added.",
+        "match": "19"
       },
       {
         "text": "4",
@@ -1320,7 +1320,7 @@
       {
         "text": "b then true",
         "correct": false,
-        "why": "|| behaves the same way as &&. It returns the value \"c\", not a boolean.",
+        "why": "The first line is right. Like &&, || hands back one of the operands and not a boolean, so the second line prints \"c\" itself, not true.",
         "match": "b\ntrue"
       }
     ],
