@@ -135,9 +135,16 @@ body {
          after a real Tab keypress. outline 2px at offset 2px, and --ring
          spreads 4px. A bare element.focus() can report the UA ring instead.
        answer-shake displacement .................. 5px
-         read from @keyframes answer-shake below, not observed live: a hidden
-         browser pane runs the page in the background and does not advance
-         animations, so a live sample there reads 0px.
+         read from @keyframes answer-shake below, NOT observed live, and the
+         page cannot tell you that. With the Claude browser pane hidden:
+         requestAnimationFrame fired 0 times in 3.2 seconds, and a probe
+         animation's currentTime stayed at 0 while its own playState said
+         "running" -- yet document.visibilityState said "visible" and
+         document.hidden was false. setTimeout keeps firing, so a timer-based
+         sampler cheerfully records the frozen value and reports 0px with no
+         error. Nothing inside the page detects this. Only tabs_context, from
+         outside, says whether the pane is displayed. Check it before you
+         believe any measurement of motion or timing.
        answer-pop widening ........................ 2.8px a side
          scale 1.018 on a 309px option.
 
