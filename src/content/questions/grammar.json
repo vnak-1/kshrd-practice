@@ -1,0 +1,866 @@
+[
+  {
+    "section": "english",
+    "topic": "grammar",
+    "kind": "concept",
+    "verify": {
+      "runner": "review",
+      "reviewed": true
+    },
+    "id": "gram-article-a-before-consonant",
+    "subtopic": "Articles",
+    "difficulty": 1,
+    "prompt": "Which is correct?",
+    "options": [
+      {
+        "text": "I am a university student.",
+        "correct": true,
+        "why": "Use \"a\" before a CONSONANT SOUND. \"University\" starts with a \"yoo\" sound, which is a consonant sound, so \"a\" is right even though the letter is a vowel."
+      },
+      {
+        "text": "I am an university student.",
+        "correct": false,
+        "why": "This follows the letter instead of the sound. The rule is about how the word is said, not how it is spelled."
+      },
+      {
+        "text": "I am university student.",
+        "correct": false,
+        "why": "A singular countable noun needs an article. Khmer has no articles, so this one is easy to drop."
+      },
+      {
+        "text": "I am the university student.",
+        "correct": false,
+        "why": "\"The\" points at one particular student both people already know about. Here you are saying what you are, so it must be \"a\"."
+      }
+    ],
+    "hint": "Say the word out loud. What sound starts it?"
+  },
+  {
+    "section": "english",
+    "topic": "grammar",
+    "kind": "concept",
+    "verify": {
+      "runner": "review",
+      "reviewed": true
+    },
+    "id": "gram-article-an-before-vowel",
+    "subtopic": "Articles",
+    "difficulty": 1,
+    "prompt": "Which is correct?",
+    "options": [
+      {
+        "text": "She works as an engineer.",
+        "correct": true,
+        "why": "\"Engineer\" starts with a vowel sound, so it takes \"an\". The extra n just makes it easier to say."
+      },
+      {
+        "text": "She works as a engineer.",
+        "correct": false,
+        "why": "Two vowel sounds would collide. English puts an n between them."
+      },
+      {
+        "text": "She works as engineer.",
+        "correct": false,
+        "why": "A job title after \"as\" needs an article in English."
+      },
+      {
+        "text": "She works as the engineer.",
+        "correct": false,
+        "why": "\"The\" would mean one specific engineer already mentioned. This sentence is saying what her job is."
+      }
+    ],
+    "hint": "a before a consonant sound, an before a vowel sound."
+  },
+  {
+    "section": "english",
+    "topic": "grammar",
+    "kind": "concept",
+    "verify": {
+      "runner": "review",
+      "reviewed": true
+    },
+    "id": "gram-plural-s",
+    "subtopic": "Plurals",
+    "difficulty": 1,
+    "prompt": "Which is correct?",
+    "options": [
+      {
+        "text": "I have three brothers.",
+        "correct": true,
+        "why": "English marks the plural on the NOUN as well as with the number. Both have to agree."
+      },
+      {
+        "text": "I have three brother.",
+        "correct": false,
+        "why": "Khmer does not add anything to the noun when a number is already there, so this carries over easily. English still needs the -s."
+      },
+      {
+        "text": "I have three brothers people.",
+        "correct": false,
+        "why": "\"People\" adds nothing. \"Brothers\" already says who they are."
+      },
+      {
+        "text": "I have the three brothers.",
+        "correct": false,
+        "why": "\"The\" would mean three particular brothers the reader already knows about. Introducing them for the first time needs no article here."
+      }
+    ],
+    "hint": "The number is not enough on its own in English."
+  },
+  {
+    "section": "english",
+    "topic": "grammar",
+    "kind": "concept",
+    "verify": {
+      "runner": "review",
+      "reviewed": true
+    },
+    "id": "gram-past-tense-marking",
+    "subtopic": "Verb tense",
+    "difficulty": 1,
+    "prompt": "Which is correct?",
+    "options": [
+      {
+        "text": "Last year I studied programming.",
+        "correct": true,
+        "why": "English marks past time on the VERB, even when a time word like \"last year\" is already there."
+      },
+      {
+        "text": "Last year I study programming.",
+        "correct": false,
+        "why": "Khmer leaves the verb alone and lets the time word do the work. English needs both."
+      },
+      {
+        "text": "Last year I am studying programming.",
+        "correct": false,
+        "why": "\"Am\" is present. You cannot mix a present verb with a finished past time."
+      },
+      {
+        "text": "Last year I have studied programming.",
+        "correct": false,
+        "why": "The present perfect cannot take a finished time like \"last year\". Use it for \"I have studied programming for two years\", with no end point."
+      }
+    ],
+    "hint": "The time word does not excuse the verb."
+  },
+  {
+    "section": "english",
+    "topic": "grammar",
+    "kind": "concept",
+    "verify": {
+      "runner": "review",
+      "reviewed": true
+    },
+    "id": "gram-subject-verb-agreement",
+    "subtopic": "Subject and verb agreement",
+    "difficulty": 1,
+    "prompt": "Which is correct?",
+    "options": [
+      {
+        "text": "He works at a bank.",
+        "correct": true,
+        "why": "With he, she or it in the present simple, the verb takes -s. It is the only place English still marks the person."
+      },
+      {
+        "text": "He work at a bank.",
+        "correct": false,
+        "why": "The -s is missing. This is the single most common slip for writers whose language does not change the verb."
+      },
+      {
+        "text": "He working at a bank.",
+        "correct": false,
+        "why": "\"Working\" needs a helper: \"He is working\". On its own it is not a finished verb."
+      },
+      {
+        "text": "He are working at a bank.",
+        "correct": false,
+        "why": "\"Are\" goes with you, we or they. With he it must be \"is\"."
+      }
+    ],
+    "hint": "he, she, it — add the s."
+  },
+  {
+    "section": "english",
+    "topic": "grammar",
+    "kind": "concept",
+    "verify": {
+      "runner": "review",
+      "reviewed": true
+    },
+    "id": "gram-agreement-long-subject",
+    "subtopic": "Subject and verb agreement",
+    "difficulty": 3,
+    "prompt": "Which is correct?",
+    "options": [
+      {
+        "text": "The list of students is on the desk.",
+        "correct": true,
+        "why": "The subject is \"the list\", which is singular. \"Of students\" only describes it, so the verb must agree with \"list\", not with the nearest word."
+      },
+      {
+        "text": "The list of students are on the desk.",
+        "correct": false,
+        "why": "This agrees with \"students\" because it sits next to the verb. The real subject is further back."
+      },
+      {
+        "text": "The list of student is on the desk.",
+        "correct": false,
+        "why": "The verb is right but \"student\" should be plural: a list of more than one."
+      },
+      {
+        "text": "The lists of students is on the desk.",
+        "correct": false,
+        "why": "Now the subject is plural, so the verb would have to be \"are\"."
+      }
+    ],
+    "hint": "Find the real subject. It is not always the nearest noun."
+  },
+  {
+    "section": "english",
+    "topic": "grammar",
+    "kind": "concept",
+    "verify": {
+      "runner": "review",
+      "reviewed": true
+    },
+    "id": "gram-much-vs-many",
+    "subtopic": "Countable and uncountable",
+    "difficulty": 2,
+    "prompt": "Which is correct?",
+    "options": [
+      {
+        "text": "I do not have much time, but I have many ideas.",
+        "correct": true,
+        "why": "\"Much\" goes with things you cannot count, like time. \"Many\" goes with things you can, like ideas."
+      },
+      {
+        "text": "I do not have many time, but I have much ideas.",
+        "correct": false,
+        "why": "The two are swapped. Time cannot be counted one by one; ideas can."
+      },
+      {
+        "text": "I do not have much time, but I have much ideas.",
+        "correct": false,
+        "why": "The first half is right. \"Much ideas\" is wrong because ideas are countable."
+      },
+      {
+        "text": "I do not have many times, but I have many ideas.",
+        "correct": false,
+        "why": "\"Times\" means occasions, as in \"three times\". That changes the meaning completely."
+      }
+    ],
+    "hint": "Can you put a number in front of it?"
+  },
+  {
+    "section": "english",
+    "topic": "grammar",
+    "kind": "concept",
+    "verify": {
+      "runner": "review",
+      "reviewed": true
+    },
+    "id": "gram-there-is-are",
+    "subtopic": "There is and there are",
+    "difficulty": 1,
+    "prompt": "Which is correct?",
+    "options": [
+      {
+        "text": "There are many reasons for this.",
+        "correct": true,
+        "why": "The verb agrees with what COMES AFTER it. \"Reasons\" is plural, so it is \"are\"."
+      },
+      {
+        "text": "There is many reasons for this.",
+        "correct": false,
+        "why": "\"There\" is not the subject. The thing that follows decides the verb, and \"reasons\" is plural."
+      },
+      {
+        "text": "There have many reasons for this.",
+        "correct": false,
+        "why": "\"Have\" is not used this way in English. The pattern is \"there is\" or \"there are\"."
+      },
+      {
+        "text": "It has many reasons for this.",
+        "correct": false,
+        "why": "This changes the meaning to something specific having reasons, and it is not the normal way to open this idea."
+      }
+    ],
+    "hint": "Look at the word after the verb, not before it."
+  },
+  {
+    "section": "english",
+    "topic": "grammar",
+    "kind": "concept",
+    "verify": {
+      "runner": "review",
+      "reviewed": true
+    },
+    "id": "gram-its-vs-it-is",
+    "subtopic": "Commonly confused words",
+    "difficulty": 2,
+    "prompt": "Which is correct?",
+    "options": [
+      {
+        "text": "The company changed its name because it is growing.",
+        "correct": true,
+        "why": "\"Its\" with no apostrophe means belonging to it. \"It is\" with the apostrophe is short for it is. This sentence needs one of each."
+      },
+      {
+        "text": "The company changed it's name because its growing.",
+        "correct": false,
+        "why": "Both are the wrong way round. The test: if \"it is\" fits, use the apostrophe."
+      },
+      {
+        "text": "The company changed it's name because it is growing.",
+        "correct": false,
+        "why": "The first one is wrong. \"The company changed it is name\" makes no sense."
+      },
+      {
+        "text": "The company changed its name because its growing.",
+        "correct": false,
+        "why": "The second one is wrong. It should be \"it is growing\" or \"it’s growing\"."
+      }
+    ],
+    "hint": "Try reading it as \"it is\". Does the sentence still work?"
+  },
+  {
+    "section": "english",
+    "topic": "grammar",
+    "kind": "concept",
+    "verify": {
+      "runner": "review",
+      "reviewed": true
+    },
+    "id": "gram-their-there-theyre",
+    "subtopic": "Commonly confused words",
+    "difficulty": 2,
+    "prompt": "Which is correct?",
+    "options": [
+      {
+        "text": "They are proud of their work because they’re skilled.",
+        "correct": true,
+        "why": "\"Their\" shows belonging. \"They’re\" is short for they are. Each one is doing a different job here."
+      },
+      {
+        "text": "They are proud of there work because their skilled.",
+        "correct": false,
+        "why": "\"There\" means a place. It cannot show who something belongs to."
+      },
+      {
+        "text": "They are proud of they’re work because there skilled.",
+        "correct": false,
+        "why": "\"They are work\" makes no sense, which is the quick way to catch this one."
+      },
+      {
+        "text": "They are proud of their work because there skilled.",
+        "correct": false,
+        "why": "The first half is right. The second needs \"they are\", so \"they’re\"."
+      }
+    ],
+    "hint": "One means belonging, one means a place, one is two words squashed."
+  },
+  {
+    "section": "english",
+    "topic": "grammar",
+    "kind": "concept",
+    "verify": {
+      "runner": "review",
+      "reviewed": true
+    },
+    "id": "gram-word-order-adverb",
+    "subtopic": "Word order",
+    "difficulty": 2,
+    "prompt": "Which is correct?",
+    "options": [
+      {
+        "text": "I like programming very much.",
+        "correct": true,
+        "why": "In English \"very much\" goes at the END, after the thing you like."
+      },
+      {
+        "text": "I very like programming.",
+        "correct": false,
+        "why": "This puts the intensifier before the verb, which is the order many other languages use. English does not allow it here."
+      },
+      {
+        "text": "I like very programming.",
+        "correct": false,
+        "why": "\"Very\" cannot sit directly in front of a noun like this."
+      },
+      {
+        "text": "Very I like programming.",
+        "correct": false,
+        "why": "Nothing in English starts a sentence this way."
+      }
+    ],
+    "hint": "Where does \"very much\" go in an English sentence?"
+  },
+  {
+    "section": "english",
+    "topic": "grammar",
+    "kind": "concept",
+    "verify": {
+      "runner": "review",
+      "reviewed": true
+    },
+    "id": "gram-preposition-interested-in",
+    "subtopic": "Prepositions",
+    "difficulty": 2,
+    "prompt": "Which is correct?",
+    "options": [
+      {
+        "text": "I am interested in software development.",
+        "correct": true,
+        "why": "\"Interested\" always takes \"in\". These pairings have to be learned one by one; no rule predicts them."
+      },
+      {
+        "text": "I am interested on software development.",
+        "correct": false,
+        "why": "\"On\" is used with other words, such as \"focus on\", but not with interested."
+      },
+      {
+        "text": "I am interested about software development.",
+        "correct": false,
+        "why": "\"About\" goes with words like curious or worried, not interested."
+      },
+      {
+        "text": "I am interested to software development.",
+        "correct": false,
+        "why": "\"Interested to\" only works before a verb, as in \"interested to hear\". Before a noun it is \"in\"."
+      }
+    ],
+    "hint": "This is one to memorise, not to work out."
+  },
+  {
+    "section": "english",
+    "topic": "grammar",
+    "kind": "concept",
+    "verify": {
+      "runner": "review",
+      "reviewed": true
+    },
+    "id": "gram-preposition-good-at",
+    "subtopic": "Prepositions",
+    "difficulty": 1,
+    "prompt": "Which is correct?",
+    "options": [
+      {
+        "text": "She is good at mathematics.",
+        "correct": true,
+        "why": "\"Good at\" is the fixed pairing for a skill."
+      },
+      {
+        "text": "She is good in mathematics.",
+        "correct": false,
+        "why": "\"Good in\" is common in speech in some places but is not standard written English for a skill."
+      },
+      {
+        "text": "She is good on mathematics.",
+        "correct": false,
+        "why": "\"On\" is not used with good in this sense."
+      },
+      {
+        "text": "She is good with mathematics.",
+        "correct": false,
+        "why": "\"Good with\" suits people or tools, as in \"good with children\". A subject takes \"at\"."
+      }
+    ],
+    "hint": "Good ___ a skill."
+  },
+  {
+    "section": "english",
+    "topic": "grammar",
+    "kind": "concept",
+    "verify": {
+      "runner": "review",
+      "reviewed": true
+    },
+    "id": "gram-run-on-sentence",
+    "subtopic": "Sentence boundaries",
+    "difficulty": 3,
+    "prompt": "Which is correct?",
+    "options": [
+      {
+        "text": "I finished the project. It took three weeks.",
+        "correct": true,
+        "why": "These are two complete sentences, so they need a full stop between them, or a joining word such as \"and\"."
+      },
+      {
+        "text": "I finished the project, it took three weeks.",
+        "correct": false,
+        "why": "A comma cannot join two complete sentences. This is a comma splice and it is one of the most heavily marked errors in exam writing."
+      },
+      {
+        "text": "I finished the project it took three weeks.",
+        "correct": false,
+        "why": "Nothing separates them at all, so the reader cannot tell where the first idea stops."
+      },
+      {
+        "text": "I finished the project, took three weeks.",
+        "correct": false,
+        "why": "The second part now has no subject, so it reads as though you took three weeks rather than the project."
+      }
+    ],
+    "hint": "Can each half stand alone as a sentence? Then a comma is not enough."
+  },
+  {
+    "section": "english",
+    "topic": "grammar",
+    "kind": "concept",
+    "verify": {
+      "runner": "review",
+      "reviewed": true
+    },
+    "id": "gram-sentence-fragment",
+    "subtopic": "Sentence boundaries",
+    "difficulty": 3,
+    "prompt": "Which is a complete sentence?",
+    "options": [
+      {
+        "text": "Because the deadline was short, we worked faster.",
+        "correct": true,
+        "why": "The \"because\" part leans on something, and the second half supplies it. Together they are complete."
+      },
+      {
+        "text": "Because the deadline was short.",
+        "correct": false,
+        "why": "\"Because\" opens a reason and then leaves the reader waiting. A reason on its own is a fragment."
+      },
+      {
+        "text": "Working faster every day.",
+        "correct": false,
+        "why": "There is no subject and no finished verb. \"Working\" needs a helper such as \"we were\"."
+      },
+      {
+        "text": "Which we finished on time.",
+        "correct": false,
+        "why": "\"Which\" has to point back at something. On its own there is nothing for it to attach to."
+      }
+    ],
+    "hint": "A sentence needs a subject, a verb, and no loose ends."
+  },
+  {
+    "section": "english",
+    "topic": "grammar",
+    "kind": "concept",
+    "verify": {
+      "runner": "review",
+      "reviewed": true
+    },
+    "id": "gram-comparative-form",
+    "subtopic": "Comparatives",
+    "difficulty": 2,
+    "prompt": "Which is correct?",
+    "options": [
+      {
+        "text": "Python is easier to read than Java.",
+        "correct": true,
+        "why": "Short adjectives add -er. A \"y\" at the end becomes \"i\" first, giving easier."
+      },
+      {
+        "text": "Python is more easy to read than Java.",
+        "correct": false,
+        "why": "\"More\" is for longer adjectives, such as \"more difficult\". A two-syllable word ending in y takes -er."
+      },
+      {
+        "text": "Python is more easier to read than Java.",
+        "correct": false,
+        "why": "This marks the comparison twice. Use one or the other, never both."
+      },
+      {
+        "text": "Python is easier to read then Java.",
+        "correct": false,
+        "why": "\"Then\" means next in time. Comparison uses \"than\"."
+      }
+    ],
+    "hint": "Two ways to compare, and you may only use one."
+  },
+  {
+    "section": "english",
+    "topic": "grammar",
+    "kind": "concept",
+    "verify": {
+      "runner": "review",
+      "reviewed": true
+    },
+    "id": "gram-then-vs-than",
+    "subtopic": "Commonly confused words",
+    "difficulty": 1,
+    "prompt": "Which is correct?",
+    "options": [
+      {
+        "text": "I studied, then I rested. It was harder than I expected.",
+        "correct": true,
+        "why": "\"Then\" is about time, what happened next. \"Than\" is for comparing two things."
+      },
+      {
+        "text": "I studied, than I rested. It was harder then I expected.",
+        "correct": false,
+        "why": "Both are swapped. The two words sound almost the same but do completely different jobs."
+      },
+      {
+        "text": "I studied, then I rested. It was harder then I expected.",
+        "correct": false,
+        "why": "The first is right. The second is a comparison, so it needs \"than\"."
+      },
+      {
+        "text": "I studied, than I rested. It was harder than I expected.",
+        "correct": false,
+        "why": "The second is right. The first is about time, so it needs \"then\"."
+      }
+    ],
+    "hint": "One has an A, and so does the word \"compare\"."
+  },
+  {
+    "section": "english",
+    "topic": "grammar",
+    "kind": "concept",
+    "verify": {
+      "runner": "review",
+      "reviewed": true
+    },
+    "id": "gram-first-conditional",
+    "subtopic": "Conditionals",
+    "difficulty": 2,
+    "prompt": "Which is correct?",
+    "options": [
+      {
+        "text": "If I pass the exam, I will study there.",
+        "correct": true,
+        "why": "For a real future possibility, English uses the PRESENT after \"if\" and \"will\" in the other half. The \"if\" half never takes will."
+      },
+      {
+        "text": "If I will pass the exam, I will study there.",
+        "correct": false,
+        "why": "\"Will\" is not used after \"if\" in this pattern, even though the meaning is about the future."
+      },
+      {
+        "text": "If I pass the exam, I study there.",
+        "correct": false,
+        "why": "This reads as a habit, something that happens every time, not a plan for one future event."
+      },
+      {
+        "text": "If I passed the exam, I will study there.",
+        "correct": false,
+        "why": "This mixes a past form with \"will\". For an unlikely case it would be \"If I passed, I would study\"."
+      }
+    ],
+    "hint": "Only one half of the sentence gets \"will\"."
+  },
+  {
+    "section": "english",
+    "topic": "grammar",
+    "kind": "concept",
+    "verify": {
+      "runner": "review",
+      "reviewed": true
+    },
+    "id": "gram-passive-voice",
+    "subtopic": "Passive voice",
+    "difficulty": 2,
+    "prompt": "Which is the correct passive form of \"The team built the app\"?",
+    "options": [
+      {
+        "text": "The app was built by the team.",
+        "correct": true,
+        "why": "The passive is a form of \"be\" plus the past participle: was built. The thing that was acted on moves to the front."
+      },
+      {
+        "text": "The app was build by the team.",
+        "correct": false,
+        "why": "\"Build\" is the plain form. After \"was\" you need the past participle, \"built\"."
+      },
+      {
+        "text": "The app is built by the team.",
+        "correct": false,
+        "why": "The original is past, so the passive must be past too."
+      },
+      {
+        "text": "The app has built by the team.",
+        "correct": false,
+        "why": "\"Has built\" is active and means the app did the building."
+      }
+    ],
+    "hint": "A form of \"be\" plus the third form of the verb."
+  },
+  {
+    "section": "english",
+    "topic": "grammar",
+    "kind": "concept",
+    "verify": {
+      "runner": "review",
+      "reviewed": true
+    },
+    "id": "gram-relative-who-which",
+    "subtopic": "Relative clauses",
+    "difficulty": 2,
+    "prompt": "Which is correct?",
+    "options": [
+      {
+        "text": "The developer who wrote this code is experienced.",
+        "correct": true,
+        "why": "\"Who\" is for people. \"Which\" is for things."
+      },
+      {
+        "text": "The developer which wrote this code is experienced.",
+        "correct": false,
+        "why": "\"Which\" is for things, not people."
+      },
+      {
+        "text": "The developer who he wrote this code is experienced.",
+        "correct": false,
+        "why": "\"Who\" is already the subject, so \"he\" repeats it. Only one subject is allowed."
+      },
+      {
+        "text": "The developer whom wrote this code is experienced.",
+        "correct": false,
+        "why": "\"Whom\" is for the object. Here the developer is doing the writing, so it is \"who\"."
+      }
+    ],
+    "hint": "People or things?"
+  },
+  {
+    "section": "english",
+    "topic": "grammar",
+    "kind": "concept",
+    "verify": {
+      "runner": "review",
+      "reviewed": true
+    },
+    "id": "gram-gerund-after-preposition",
+    "subtopic": "Verb forms",
+    "difficulty": 3,
+    "prompt": "Which is correct?",
+    "options": [
+      {
+        "text": "I am good at solving problems.",
+        "correct": true,
+        "why": "After a preposition such as \"at\", a verb always takes the -ing form."
+      },
+      {
+        "text": "I am good at solve problems.",
+        "correct": false,
+        "why": "The plain form cannot follow a preposition."
+      },
+      {
+        "text": "I am good at to solve problems.",
+        "correct": false,
+        "why": "Never put \"to\" plus a verb straight after a preposition."
+      },
+      {
+        "text": "I am good at solved problems.",
+        "correct": false,
+        "why": "The past form does not fit here. It would describe problems that were solved."
+      }
+    ],
+    "hint": "What form follows at, in, on, of?"
+  },
+  {
+    "section": "english",
+    "topic": "grammar",
+    "kind": "concept",
+    "verify": {
+      "runner": "review",
+      "reviewed": true
+    },
+    "id": "gram-advice-uncountable",
+    "subtopic": "Countable and uncountable",
+    "difficulty": 2,
+    "prompt": "Which is correct?",
+    "options": [
+      {
+        "text": "He gave me some useful advice.",
+        "correct": true,
+        "why": "\"Advice\" cannot be counted in English, so it takes no -s and no \"an\". To count it you say \"a piece of advice\"."
+      },
+      {
+        "text": "He gave me some useful advices.",
+        "correct": false,
+        "why": "Advice has no plural form. This is a very common slip because many languages do count it."
+      },
+      {
+        "text": "He gave me an useful advice.",
+        "correct": false,
+        "why": "Two problems: advice takes no \"a\", and \"useful\" starts with a \"yoo\" sound so it would be \"a\" anyway."
+      },
+      {
+        "text": "He gave me a useful advices.",
+        "correct": false,
+        "why": "\"A\" and a plural cannot go together."
+      }
+    ],
+    "hint": "Some English words simply have no plural. Information is another."
+  },
+  {
+    "section": "english",
+    "topic": "grammar",
+    "kind": "concept",
+    "verify": {
+      "runner": "review",
+      "reviewed": true
+    },
+    "id": "gram-capital-and-full-stop",
+    "subtopic": "Punctuation",
+    "difficulty": 1,
+    "prompt": "Which is correct?",
+    "options": [
+      {
+        "text": "I want to join this programme. It will help my career.",
+        "correct": true,
+        "why": "Every sentence starts with a capital and ends with a full stop. In a timed essay this is free marks."
+      },
+      {
+        "text": "i want to join this programme, it will help my career.",
+        "correct": false,
+        "why": "Two faults: neither sentence starts with a capital, and a comma cannot join two complete sentences."
+      },
+      {
+        "text": "I want to join this programme it will help my career.",
+        "correct": false,
+        "why": "No full stop between two complete sentences, so they run together."
+      },
+      {
+        "text": "I Want To Join This Programme.",
+        "correct": false,
+        "why": "Only the first word takes a capital, unless a word is a name."
+      }
+    ],
+    "hint": "The easiest marks in the whole paper."
+  },
+  {
+    "section": "english",
+    "topic": "grammar",
+    "kind": "concept",
+    "verify": {
+      "runner": "review",
+      "reviewed": true
+    },
+    "id": "gram-essay-linking-words",
+    "subtopic": "Essay structure",
+    "difficulty": 1,
+    "prompt": "You want to add an opposite idea to your last sentence. Which word fits?",
+    "options": [
+      {
+        "text": "However",
+        "correct": true,
+        "why": "\"However\" signals that what follows goes against what came before. It is the clearest way to show a turn in your argument."
+      },
+      {
+        "text": "Therefore",
+        "correct": false,
+        "why": "\"Therefore\" introduces a RESULT of what came before, not an opposite."
+      },
+      {
+        "text": "Moreover",
+        "correct": false,
+        "why": "\"Moreover\" adds another point on the same side."
+      },
+      {
+        "text": "For example",
+        "correct": false,
+        "why": "That introduces an illustration of the same point, not a contrast."
+      }
+    ],
+    "hint": "Which one turns the argument around?"
+  }
+]
