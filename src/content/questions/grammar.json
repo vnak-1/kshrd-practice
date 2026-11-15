@@ -496,9 +496,9 @@
         "why": "Nothing separates them at all, so the reader cannot tell where the first idea stops."
       },
       {
-        "text": "I finished the project, took three weeks.",
+        "text": "I finished the project, however it took three weeks.",
         "correct": false,
-        "why": "The second part now has no subject, so it reads as though you took three weeks rather than the project."
+        "why": "“However” is not a joining word like “and”. It cannot hold two complete sentences together with only a comma. Write “I finished the project. However, it took three weeks.”"
       }
     ],
     "hint": "Can each half stand alone as a sentence? Then a comma is not enough."

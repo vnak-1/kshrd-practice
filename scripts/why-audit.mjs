@@ -57,18 +57,25 @@ const PROMISES_A_VALUE =
   /\b(gives?|returns?|prints?|evaluates? to|yields?|equals?|produces?|outputs?|would be|would give|would match|would do|comes? to|comes out|results? in|adds? up to|divides?|multiplies|counts?|sorts?|that is \d|totals?)\b/i
 
 const toRun = []
+const cover = {}
 let reasons = 0
 let questions = 0
+const allTopics = new Set()
 
 for (const file of readdirSync(QUESTION_DIR).sort()) {
   if (!file.endsWith('.json')) continue
   for (const q of JSON.parse(readFileSync(join(QUESTION_DIR, file), 'utf8'))) {
+    allTopics.add(q.topic)
     if (only && q.topic !== only) continue
     questions++
+    const c = (cover[q.topic] ??= { q: 0, why: 0, run: 0 })
+    c.q++
     for (const o of q.options ?? []) {
       if (o.correct) continue
       reasons++
+      c.why++
       if (PROMISES_A_VALUE.test(o.why ?? '')) {
+        c.run++
         toRun.push({ topic: q.topic, id: q.id, opt: o.text, why: o.why })
       }
     }
@@ -82,7 +89,34 @@ for (const topic of Object.keys(byTopic).sort()) {
   for (const r of byTopic[topic]) console.log(`  ${r.id} -> "${r.opt}"\n    ${r.why}`)
 }
 
+// Coverage, printed per topic and totalled.
+//
+// This exists because of how the Nov 15 audit went wrong. An ad-hoc print loop
+// named its topics by hand -- logic, numerical, analytical -- and grammar fell
+// out of the list. 60 reasons were never read, and NOTHING SAID SO, because a
+// loop does not report what it was not asked to cover. The risk was worst
+// exactly where the check was weakest: grammar is review-only, so no runner
+// touches it either.
+//
+// So this script enumerates topics from the filesystem, never from a list, and
+// prints what it covered so an omission has to show itself.
+console.log('\n topic        questions  reasons  to run')
+for (const topic of Object.keys(cover).sort()) {
+  const c = cover[topic]
+  console.log(
+    ' ' + topic.padEnd(13) + String(c.q).padStart(6) + String(c.why).padStart(9) + String(c.run).padStart(8),
+  )
+}
+console.log(' ' + 'TOTAL'.padEnd(13) + String(questions).padStart(6) + String(reasons).padStart(9) + String(toRun.length).padStart(8))
+
+const missing = [...allTopics].filter((t) => !(t in cover)).sort()
+if (missing.length > 0) {
+  console.log(`\nwhy-audit: PARTIAL VIEW. These topics are NOT shown: ${missing.join(', ')}`)
+}
+
 console.log(
-  `\nwhy-audit: ${questions} question(s), ${reasons} wrong-option reason(s).\n` +
-    `${toRun.length} of them promise a value. RUN each one. This script checked nothing.`,
+  `\nwhy-audit: ${questions} question(s), ${reasons} wrong-option reason(s) across ` +
+    `${Object.keys(cover).length} topic(s).\n` +
+    `${toRun.length} of them promise a value. RUN each one. This script checked nothing.\n` +
+    `Not covered by this script at all: the ${questions} reasons on the RIGHT answers.`,
 )
