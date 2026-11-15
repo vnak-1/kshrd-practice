@@ -38,7 +38,20 @@ try {
   }
 } catch {
   // Missing on a fresh clone and in CI. The patterns above still run.
+  //
+  // This file CANNOT exist in CI: it holds the owner's real name, school and
+  // student number, and committing it would publish the very words it exists to
+  // keep out. So in CI the name check genuinely cannot run, and this script used
+  // to print "name checks skipped" and exit 0 — a green run that never checked
+  // the most sensitive rule in the project. See IN_CI below.
 }
+/**
+ * In CI the word list is absent by design, so the name check is skipped and the
+ * run still passes on the generic patterns alone. On a DEVELOPER machine the
+ * same absence means the protection is silently off, which is a different thing
+ * and must fail. Set by GitHub Actions; `CI=1 npm run validate` reproduces it.
+ */
+const IN_CI = Boolean(process.env.CI || process.env.GITHUB_ACTIONS)
 for (const word of privateWords) {
   FORBIDDEN.push(new RegExp(word.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'i'))
 }
@@ -369,9 +382,19 @@ if (problems.length > 0) {
   process.exit(1)
 }
 
+if (privateWords.length === 0 && !IN_CI) {
+  console.error('validate: scripts/private-words.local.json is missing.')
+  console.error('  Without it the name, school and student-number check DOES NOT RUN,')
+  console.error('  and this script would otherwise pass without saying the protection is off.')
+  console.error('  Create it as a JSON array of strings to keep out of the public repo,')
+  console.error('  e.g. ["Family Name", "Given Name", "School Name", "2023123456"].')
+  console.error('  It is gitignored on purpose: committing it would publish those words.')
+  process.exit(1)
+}
+
 const guard = privateWords.length
   ? `${privateWords.length} private word(s) guarded`
-  : 'NO private word list found (scripts/private-words.local.json) — name checks skipped'
+  : 'NAME CHECK DID NOT RUN (no word list in CI) — only a local run covers names'
 console.log(
   `validate: ${count} question(s) in ${files.length} file(s) are all well formed. ${guard}.`,
 )
