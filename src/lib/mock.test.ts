@@ -120,6 +120,24 @@ describe('drawMock', () => {
     expect(lastAptitude).toBeLessThan(firstTechnical)
   })
 
+  // The real pool had no English questions when this file was written, so the
+  // order test above could only prove aptitude comes before technical. English
+  // questions exist now, so prove the English block really lands last.
+  it('puts the English block last when English questions exist', () => {
+    const withEnglish = [...POOL, ...many('gram', 'english', 'grammar', 24)]
+    const order = drawMock({ pool: withEnglish, size: 80, rand }).map((x) => x.section)
+    expect(order.indexOf('english')).toBeGreaterThan(order.lastIndexOf('technical'))
+    expect(order.lastIndexOf('aptitude')).toBeLessThan(order.indexOf('technical'))
+  })
+
+  it('gives English its share once it has questions, instead of skipping it', () => {
+    const withEnglish = [...POOL, ...many('gram', 'english', 'grammar', 24)]
+    const english = drawMock({ pool: withEnglish, size: 80, rand }).filter(
+      (x) => x.section === 'english',
+    )
+    expect(english.length).toBeGreaterThan(0)
+  })
+
   it('spreads a section across its topics instead of taking all of one', () => {
     const drawn = drawMock({ pool: POOL, size: 80, rand })
     const technical = drawn.filter((x) => x.section === 'technical')
