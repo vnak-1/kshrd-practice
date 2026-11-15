@@ -17,9 +17,9 @@ export function MockStart() {
   const unfinished = state.session && !state.session.finished ? state.session : null
   const allQuotas = quotasFor(ALL_QUESTIONS, size)
   const quotas = allQuotas.filter((q) => q.want > 0)
-  // English has no multiple-choice questions written yet. The quota list below
-  // hides empty sections, so without saying this a reader sees only Aptitude
-  // and Technical and never learns a whole section is missing.
+  // The quota list below hides a section that holds nothing, so without a word
+  // about English a reader sees only Aptitude and Technical and never learns a
+  // whole section is absent.
   const noEnglish = (allQuotas.find((q) => q.section === 'english')?.available ?? 0) === 0
 
   function begin() {
@@ -134,13 +134,21 @@ export function MockStart() {
             Spread across the topics inside each section. Sections with no questions
             written yet are skipped, and their share goes to the others.
           </p>
-          {noEnglish ? (
-            <p className="sub" style={{ margin: 0 }}>
-              <b>English is missing from this list on purpose.</b> No English questions
-              are written yet, so this paper asks none. Do not read a good score here as
-              being ready for the English part.
-            </p>
-          ) : null}
+          {/* This note must NOT disappear once English questions exist. KSHRD
+              call the subject "English Writing", and the one person we have who
+              sat the paper says English was the only part that was not multiple
+              choice. So English multiple choice is practice FOR the writing,
+              never a stand-in for it, and a full English row would otherwise
+              quietly read as "covered". */}
+          <p className="sub" style={{ margin: 0 }}>
+            <b>About English.</b>{' '}
+            {noEnglish
+              ? 'No English questions are written yet, so this paper asks none and there is no English row above.'
+              : 'The English questions above ask about grammar and usage.'}{' '}
+            KSHRD call that subject &ldquo;English Writing&rdquo;, so the real one is
+            almost certainly an essay. This mock does not mark writing, now or later, so
+            nothing here can tell you that part is ready.
+          </p>
         </div>
 
         <p className="sub">
